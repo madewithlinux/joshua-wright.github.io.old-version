@@ -58,13 +58,13 @@ section.nav ul {
 section.nav ul li { 
 	/*so that the items appear all on the same line*/
 	float: left;
-	margin: 10px;
+	margin: 8px;
 }
 
 section.nav ul li a {
 	background-color: #fff;
 	display: block;
-	padding: 15px 15px;
+	padding: 12px;
 	color: #000;
 	text-decoration: none;
 	font-weight: 700;
@@ -89,4 +89,11 @@ a.btn:hover {
 	background-color: rgba(0,0,0,.3);
 	/*transition time whenever background color changes*/
 	transition: background-color .25s;
+}
+
+
+
+/*footer*/
+footer {
+	padding-bottom: 20px;
 }
