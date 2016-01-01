@@ -3,6 +3,7 @@
 html {
 	font-family: 'Open Sans', sans-serif;
 	max-width: 1200px;
+	font-style: 16px;
 	/*top-bottom, left-right*/
 	margin: 0 auto;
 	position: relative;
@@ -73,8 +74,14 @@ section.nav ul li a {
 section.nav ul li a:hover { background-color: #aaa; transition: background-color .25s;}
 
 
-section.main {padding: 0 20px 40px 20px;}
-footer {padding: 0 20px;}
+section.main {
+	padding: 0 20px 40px 20px;
+	background-color: #fff;
+}
+footer {
+	padding: 0 20px;
+	background-color: #fff;
+}
 
 a.btn {
 	font-size: 1.2em;
@@ -96,4 +103,32 @@ a.btn:hover {
 /*footer*/
 footer {
 	padding-bottom: 20px;
+}
+
+
+
+/*mobile devices*/
+@media screen and (max-width: 600px) {
+	header {
+		padding-left: 0;
+		padding-right: 0;
+		margin-left: 0;
+		margin-right: 0;
+	}
+	header h1 {
+		padding-top: 0;
+		padding-bottom: 0;
+		margin-top: 0;
+		margin-bottom: 0;
+	}
+	header p {
+		/*margin-top: 10px;*/
+		margin-bottom: 0;
+		font-size: 0.9em;
+	}
+
+	section.nav ul li a {
+		padding-top: 6px;
+		padding-bottom: 6px;
+	}
 }
