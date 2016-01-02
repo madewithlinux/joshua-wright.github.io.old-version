@@ -1,0 +1,127 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <title>Josh Wright on GitHub</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" media="screen" href="../css/main.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+    <script type="text/javascript">
+    $(document).ready(function(){
+
+        /*factoring*/
+        $("#number_to_factor").bind("enterKey", function(){
+            var num = $("#number_to_factor")[0].value;
+            $("#factor_output").empty();
+            for (var i=1; i<=num; i++) {
+                if (num % i === 0) {
+                    // console.log(i);
+                    $("#factor_output").append("<tr><td>" + i + "</td><td>" + (num / i) + "</tr></td>");
+                }
+            }
+
+        })
+        $('#number_to_factor').keyup(function(e){
+            if(e.keyCode == 13)
+            {
+                $(this).trigger("enterKey");
+            }
+        });
+        $("#factor_button").click(function(){
+            $('#number_to_factor').trigger("enterKey");
+        });
+        $("#factor_clear").click(function(){
+            $("#factor_output").empty();
+        });
+
+
+        /*primes*/
+        $("#max_prime").bind("enterKey", function(){
+            var time_start = new Date().getTime();
+            var max_prime = $("#max_prime")[0].value;
+            $("#prime_output").empty();
+            var i = 2;
+            primes = [];
+            /*fill the initial array*/
+            for (var j=0; j<max_prime; j++) {
+                primes.push(true);
+            }
+            /*cross out the non-primes*/
+            while (i*i < max_prime) {
+                for (var j = i*i; j<max_prime; j+= i) {
+                    primes[j] = false;
+                }
+                i++;
+            }
+            var time_taken = new Date().getTime() - time_start;
+            /*output the remaining primes*/
+            $("#prime_output").append("Time: " + time_taken + "ms<br>");
+            for (var k=2; k<primes.length; k++) {
+                if (primes[k]) {
+                    $("#prime_output").append(k + " ");
+                }
+            }
+        })
+        $('#max_prime').keyup(function(e){
+            if(e.keyCode == 13)
+            {
+                $(this).trigger("enterKey");
+            }
+        });
+        $("#prime_button").click(function(){
+            $('#max_prime').trigger("enterKey");
+        });
+        $("#prime_clear").click(function(){
+            $("#prime_output").empty();
+        });
+
+    })
+    </script>
+</head>
+<body>
+    <header>
+        <h1>JavaScript Examples</h1>
+    </header>
+    <section class="nav">
+        <ul>
+            <li><a href="../index.html" title="Home">Home</a></li>
+            <li><a href="https://github.com/madewithlinux/" title="GitHub">GitHub</a></li>
+            <li><a href="../Josh_Wright_Resume.pdf" title="Resume">R&eacute;sum&eacute;</a></li>
+            <li><a href="https://www.linkedin.com/in/madewithlinux/" title="LinkedIn Profile">LinkedIn</a></li>
+        </ul>
+    </section>
+    <section class="main">
+        <p>
+            Use your browser's web console to inspect the code in this page
+        </p>
+        
+        <h2>Factors:</h2>
+        <p>
+            Number to factor:
+            <input type="number" name="number_to_factor" id="number_to_factor">
+            <input type="button" name="factor_button" id="factor_button" value="go">
+            <input type="button" name="factor_clear" id="factor_clear" value="clear">
+            <br>
+            <!-- Factors:
+            <br> -->
+            <table id="factor_output"></table>
+        </p>
+        <!-- <p>Factors:<br></p> -->
+
+        <h2>Find Primes using the Sieve of Eratosthenes:</h2>
+        <p>
+            Find primes between 0 and:
+            <input type="number" name="max_prime" id="max_prime">
+            <input type="button" name="prime_button" id="prime_button" value="go">
+            <input type="button" name="prime_clear" id="prime_clear" value="clear">
+            <br>
+            <div id="prime_output"></div>
+        </p>
+
+
+    </section>
+    <footer>
+        &copy; Josh Wright <br>
+        <a href="mailto:madewithlinux.josh@gmail.com" title="madewithlinux.josh@gmail.com">madewithlinux.josh@gmail.com</a>
+    </footer>
+</body>
+</html>
