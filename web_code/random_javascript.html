@@ -9,24 +9,27 @@
     <script type="text/javascript">
 $(document).ready(function(){
 
-    /*factoring*/
+    ///////////////
+    // factoring //
+    ///////////////
     $("#number_to_factor").bind("enterKey", function(){
         var num = $("#number_to_factor")[0].value;
         $("#factor_output").empty();
         for (var i=1; i<=num; i++) {
             if (num % i === 0) {
-                // console.log(i);
                 $("#factor_output").append("<tr><td>" + i + "</td><td>" + (num / i) + "</tr></td>");
             }
         }
 
     })
+    /*when the user releases the enter key, trigger the action*/
     $('#number_to_factor').keyup(function(e){
         if(e.keyCode == 13)
         {
             $(this).trigger("enterKey");
         }
     });
+    /*also trigger the action when the button is clicked*/
     $("#factor_button").click(function(){
         $('#number_to_factor').trigger("enterKey");
     });
@@ -35,7 +38,9 @@ $(document).ready(function(){
     });
 
 
-    /*primes*/
+    ////////////
+    // primes //
+    ////////////
     $("#max_prime").bind("enterKey", function(){
         var time_start = new Date().getTime();
         var max_prime = $("#max_prime")[0].value;
@@ -62,12 +67,14 @@ $(document).ready(function(){
             }
         }
     })
+    /*when the user releases the enter key, trigger the action*/
     $('#max_prime').keyup(function(e){
         if(e.keyCode == 13)
         {
             $(this).trigger("enterKey");
         }
     });
+    /*also trigger the action when the button is clicked*/
     $("#prime_button").click(function(){
         $('#max_prime').trigger("enterKey");
     });
@@ -76,18 +83,28 @@ $(document).ready(function(){
     });
 
 
-    /*RPN Calculator*/
-    var stack = [0];
-    // stack = [0];
+    ////////////////////
+    // RPN Calculator //
+    ////////////////////
 
+    /*the stack will be represented using an array*/
+    var stack = [0];
+
+    /*this function prints the stack to the webpage*/
     function update_stack() {
+        /*empty out the HTML already in the stack*/
         $("#stack_output").empty();
-        for (var i=0; i<stack.length; i++) {
+        /*print out the stack one item per line*/
+        for (var i=(stack.length-1); i>=0; i--) {
+            /*print the stack in reverse order since the last (top) element is the one we care most about*/
             $("#stack_output").append(stack[i] + "<br>");
         }
-    }
+    };
+    /*update the stack the first time so it shows on the page*/
     update_stack();
 
+    /*convert the numbers to strings and then back to numbers because we want to add digits to the
+     * right end of them regardless of if the number has a decimal point*/
     $("#button_0").click(function(){ stack.push(Number(stack.pop().toString() + "0")); update_stack(); });
     $("#button_1").click(function(){ stack.push(Number(stack.pop().toString() + "1")); update_stack(); });
     $("#button_2").click(function(){ stack.push(Number(stack.pop().toString() + "2")); update_stack(); });
@@ -99,10 +116,13 @@ $(document).ready(function(){
     $("#button_8").click(function(){ stack.push(Number(stack.pop().toString() + "8")); update_stack(); });
     $("#button_9").click(function(){ stack.push(Number(stack.pop().toString() + "9")); update_stack(); });
     
+    /*here we leave the number as a string and let JavaScript figure out how to do math with it later*/
     $("#button_decimal").click(function(){ stack.push(stack.pop().toString() + "."); update_stack(); });
 
     $("#button_plus"    ).click(function(){stack.push(stack.pop() + stack.pop()); update_stack(); });
     $("#button_multiply").click(function(){stack.push(stack.pop() * stack.pop()); update_stack(); });
+    /*addition and subtraction are special because we must swap around the operands, because 
+     * popping them from the stack gives us them in reverse order*/
     $("#button_minus"   ).click(function(){
         var rhs = stack.pop();
         var lhs = stack.pop();
@@ -116,15 +136,29 @@ $(document).ready(function(){
         update_stack();
     });
 
+    /*clear all items on the stack*/
     $("#button_clear").click(function(){ stack = []; update_stack(); });
+    /*reset the top element on the stack*/
     $("#button_clear_entry").click(function(){ stack[stack.length-1] = 0; update_stack(); });
+    /*push a 0 onto the stack for us to work with*/
     $("#button_enter").click(function(){ stack.push(0); update_stack(); });
+    /*remove the last digit of the top element on the stack*/
     $("#button_backspace").click(function(){
         stack.push(Number(stack.pop().toString().slice(0,-1)));
         update_stack();
     });
 
-})
+    /*size the buttons of the calculator*/
+    var size = $("#numpad").css("width").slice(0,-2) ;
+    if (size > 500) {
+        size = 500;
+    }
+    $("#numpad").css("height", size/4);
+    $("#numpad").css("width", size/4);
+    $(".numpad_button").css("height", size/4);
+    $(".numpad_button").css("width", size/4);
+
+});
     </script>
 </head>
 <body>
@@ -151,8 +185,6 @@ $(document).ready(function(){
             <input type="button" name="factor_button" id="factor_button" value="go">
             <input type="button" name="factor_clear" id="factor_clear" value="clear">
             <br>
-            <!-- Factors:
-            <br> -->
             <table id="factor_output"></table>
         </p>
         <!-- <p>Factors:<br></p> -->
@@ -168,38 +200,42 @@ $(document).ready(function(){
         </p>
 
         <h2>RPN Calculator:</h2>
+        <!-- arrange the buttons in a table -->
         <table id="numpad">
         <tr>
-            <td><input type="button" name="" id="button_7"           value="7"></td>
-            <td><input type="button" name="" id="button_8"           value="8"></td>
-            <td><input type="button" name="" id="button_9"           value="9"></td>
-            <td><input type="button" name="" id="button_clear"       value="C"></td>
+            <!-- give each button a class and an ID so we can refer to just 
+            one or all of them easily using jQuery -->
+            <td><input type="button" class="numpad_button" id="button_7"           value="7"></td>
+            <td><input type="button" class="numpad_button" id="button_8"           value="8"></td>
+            <td><input type="button" class="numpad_button" id="button_9"           value="9"></td>
+            <td><input type="button" class="numpad_button" id="button_clear"       value="C"></td>
         </tr>
         <tr>
-            <td><input type="button" name="" id="button_4"           value="4"></td>
-            <td><input type="button" name="" id="button_5"           value="5"></td>
-            <td><input type="button" name="" id="button_6"           value="6"></td>
-            <td><input type="button" name="" id="button_clear_entry" value="CE"></td>
+            <td><input type="button" class="numpad_button" id="button_4"           value="4"></td>
+            <td><input type="button" class="numpad_button" id="button_5"           value="5"></td>
+            <td><input type="button" class="numpad_button" id="button_6"           value="6"></td>
+            <td><input type="button" class="numpad_button" id="button_clear_entry" value="CE"></td>
         </tr>
         <tr>
-            <td><input type="button" name="" id="button_1"           value="1"></td>
-            <td><input type="button" name="" id="button_2"           value="2"></td>
-            <td><input type="button" name="" id="button_3"           value="3"></td>
-            <td><input type="button" name="" id="button_backspace"   value="<-"></td>
+            <td><input type="button" class="numpad_button" id="button_1"           value="1"></td>
+            <td><input type="button" class="numpad_button" id="button_2"           value="2"></td>
+            <td><input type="button" class="numpad_button" id="button_3"           value="3"></td>
+            <td><input type="button" class="numpad_button" id="button_backspace"   value="<-"></td>
         </tr>
         <tr>
-            <td><input type="button" name="" id="button_0"           value="0"></td>
-            <td><input type="button" name="" id="button_decimal"     value="."></td>
-            <td><input type="button" name="" id="button_enter"       value="->"></td>
+            <td><input type="button" class="numpad_button" id="button_0"           value="0"></td>
+            <td><input type="button" class="numpad_button" id="button_decimal"     value="."></td>
+            <td><input type="button" class="numpad_button" id="button_enter"       value="->"></td>
             <td></td>
         </tr>
         <tr>
-            <td><input type="button" name="" id="button_plus"        value="+"></td>
-            <td><input type="button" name="" id="button_minus"       value="-"></td>
-            <td><input type="button" name="" id="button_multiply"    value="x"></td>
-            <td><input type="button" name="" id="button_divide"      value="/"></td>
+            <td><input type="button" class="numpad_button" id="button_plus"        value="+"></td>
+            <td><input type="button" class="numpad_button" id="button_minus"       value="-"></td>
+            <td><input type="button" class="numpad_button" id="button_multiply"    value="x"></td>
+            <td><input type="button" class="numpad_button" id="button_divide"      value="/"></td>
         </tr>
         </table>
+        <!-- this empty div is where we will print the stack -->
         <p>Stack: <div id="stack_output"></div></p>
 
 

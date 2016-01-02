@@ -4,7 +4,11 @@
 #numpad tr {
 	position: relative;
 	width: 25%;
-	height: 3em;
+	padding: 0;
+	/*height: 3em;*/
+}
+#numpad tr td {
+	padding: 0;
 }
 
 #numpad tr td input {
@@ -13,4 +17,6 @@
 	width: 100%;
 	height: 100%;
 	font-size: 3em;
+	border: none;
+	padding: 0;
 }
