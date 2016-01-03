@@ -239,6 +239,70 @@ $(document).ready(function(){
         <p>Stack: <div id="stack_output"></div></p>
 
 
+        <h1><a href="https://en.wikipedia.org/wiki/Rose_(mathematics)" title="parametric rose">Parametric Rose</a></h1>
+        <p>
+        Plotted using the HTML5 &lt;canvas&gt; tag and JavaScript <br>
+	        Resolution: 
+	            <input class="res" type="number" onkeyup="if (event.keyCode == 13) plot()" id="res_x" value="500"> x 
+	            <input class="res" type="number" onkeyup="if (event.keyCode == 13) plot()" id="res_y" value="500"> 
+	        <br>
+	        k = 
+	            <input type="number" onkeyup="if (event.keyCode == 13) plot()" id="input_n" value="3"> 
+	            <input type="number" onkeyup="if (event.keyCode == 13) plot()" id="input_d" value="7"> /
+	            <input type="button" id="btn_go" value="go" onclick="plot()">
+	        <br>
+	        line width: <input type="number" onkeyup="if (event.keyCode == 13) plot()" id="input_linewidth" value="3">
+	    </p>
+	    <canvas id="main_canvas" width="800" height="800"></canvas>
+<script type="text/javascript">
+function rose(k, t) {
+	/*this is the function that calculates the points on the parametric rose*/
+    return [
+        Math.cos(k * t) * Math.cos(t),
+        Math.cos(k * t) * Math.sin(t)
+    ];
+}
+function plot(){
+	/*this function re-plots the rose when one of the inputs changes*/
+    var canvas = document.getElementById('main_canvas');
+    var width  = document.getElementById('res_x').value;
+    var height = document.getElementById('res_y').value;
+    canvas.width  = width;
+    canvas.height = height;
+    var context = canvas.getContext("2d");
+    var input_n = document.getElementById('input_n').value;
+    var input_d = document.getElementById('input_d').value;
+    var k = input_n / input_d;
+
+    middle = [width/2, height/2];
+    scale = Math.min(width, height) / 2.1;
+    var threshold = 1e-4;   
+    var point;
+    var i = 0.01*Math.PI;
+    context.beginPath();
+    var old_point = [1, 0];
+    context.beginPath();
+    context.moveTo(middle[0] + scale * old_point[0], middle[1] + scale * old_point[1]);
+    context.lineWidth = document.getElementById('input_linewidth').value;
+    do {
+        point = rose(k, i);
+        context.lineTo(middle[0] + scale * point[0], middle[1] + scale * point[1]);
+        old_point = point;
+        i += 0.01*Math.PI;
+    } while ( (Math.abs(point[0] - 1) > threshold) || (Math.abs(point[1]) > threshold));
+    context.stroke();
+};
+plot();
+</script>
+<style type="text/css">
+#main_canvas {
+    padding: 0; margin: 0;
+}
+body { padding: 0; margin: 0; }
+input { width: 30px; }
+input.res { width: 60px; }
+</style>
+
     </section>
     <footer>
         &copy; Josh Wright <br>
