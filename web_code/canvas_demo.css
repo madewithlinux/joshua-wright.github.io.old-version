@@ -1,0 +1,113 @@
+html {
+	font-family: "Open Sans", sans;
+	width: 100%;
+	height: 100%;
+}
+
+div.config {
+    font-size: 16px;
+	/*width: 20em;*/
+	width: 400px;
+	float: left;
+    display: inline-block;
+    /*increase line height or else number input boxes collide with each other*/
+    line-height: 1.5;
+    background: #272822;
+    color: #F8F8F2;
+    padding: 1em;
+}
+h1 {text-align: center; margin-top: 0;}
+#main_canvas {
+	display: block;
+	float: right;
+	/*float: left;*/
+    padding: 0;
+    margin: 0;
+}
+
+body {
+	padding: 0;
+	margin: 0;
+}
+p {
+	margin: 15px 0;
+	/*needed so that each paragraph will fill to expand it's children*/
+	position: relative;
+	overflow: auto;
+}
+a:visited {color: #bbb;}
+
+span.right {
+	float: right;
+	display: inline-block;
+}
+input {
+	width: 30px;
+}
+
+input[type="checkbox"] {
+	opacity: 0;
+	width: 0;
+	height: 0;
+}
+input[type="checkbox"] + label {
+	display: inline-block;
+	width: 0.9em;
+	height: 0.9em;
+	border: solid 2px #F8F8F2;
+}
+input[type="checkbox"]:checked + label {
+	background: #66D9EF;
+}
+
+
+input[type="number"] {
+    text-align: right;
+    font-size: 1em;
+    border: none;
+    padding: 0px;
+    color: #272822;
+    background: #F8F8F2;
+    border-bottom: solid 2px #66D9EF;
+}
+input[type=number]::-webkit-inner-spin-button, 
+input[type=number]::-webkit-outer-spin-button { 
+	/*hides the up-down arrows*/
+	-webkit-appearance: none; 
+	margin: 0; 
+}
+.wide_column {
+	width: 40%;
+	float: right;
+	display: block;
+}
+
+input[type="radio"] {
+    display: none;
+}
+input[type="radio"] + label {
+    float: right;
+    width: 100%;
+}
+input[type="radio"]:checked + label {
+    background: #F92672;
+    color: #F8F8F2;
+}
+input.wide_num {
+	width: 60px;
+}
+input.full_wide {
+	width: 100%;
+}
+
+
+@media screen and (max-width: 600px) {
+	div.config {
+		width: 100%;
+		/*fixes the horizontal scrolling*/
+		box-sizing: border-box;
+	}
+	#main_canvas {
+		float: left;
+	}	
+}

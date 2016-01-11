@@ -3,83 +3,44 @@
 <head>
     <title>Analog Clock</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <!-- <link rel="stylesheet" type="text/css" media="screen" href="../css/main.css"> -->
-    <!-- <link rel="stylesheet" type="text/css" media="screen" href="rpn_calculator.css"> -->
+    <!-- <link rel="stylesheet" type="text/css" media="screen" href="clock.css"> -->
+    <link rel="stylesheet" type="text/css" media="screen" href="canvas_demo.css">
     <link href='https://fonts.googleapis.com/css?family=PT+Sans' rel='stylesheet' type='text/css'>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
     <link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'>
     <script src="clock.js"></script>
-<style type="text/css">
-div.config {
-    display: inline-block;
-    float: left;
-    font-family: "Open Sans", sans;
-    font-size: 1.3em;
-    background: #272822;
-    color: #F8F8F2;
-    padding: 1em;
-    /*border: 3px solid #2AA198;*/
-}
-h1 {
-    margin: 0 0;
-    margin-bottom: 0.5em;
-}
-p {
-    padding: 0;
-    margin: 15px 0;
-}
-canvas {
-    display: inline-block;
-    float: right;
-}
-input[type="number"] {
-    float: right;
-    width: 40%;
-    text-align:right;
-    font-size: 1em;
-    border: none;
-    padding: 0px;
-    color: #272822;
-    background: #F8F8F2;
-    /*border-bottom: solid 2px #c9c9c9;*/
-}
-input[type=number]::-webkit-inner-spin-button, 
-input[type=number]::-webkit-outer-spin-button { 
-  -webkit-appearance: none; 
-  margin: 0; 
-}
-
-input[type="radio"] {
-    display: none;
-}
-label {
-    float: right;
-    width: 40%
-}
-input[type="radio"]:checked+label {
-    background: #F92672;
-    color: #F8F8F2;
-}
-</style>
 </head>
 <body>
     <div class="config">
     <h1>Analog Clock</h1>
-    <p> Size: <input type="number" name="clock_size" id="clock_size" value="650"> </p>
-    <p> Line Width: <input type="number" name="line_width" id="line_width" value="2"> </p>
+    <p> Size:
+        <span class="right wide_column">
+        <input class="full_wide" type="number" name="clock_size" id="clock_size" value="650">
+        </span>
+    </p>
+    <p> Line Width:
+        <span class="right wide_column">
+        <input class="full_wide" type="number" name="line_width" id="line_width" value="2">
+        </span>
+        </p>
     <p> Style:
+        <span class="right wide_column">
         <input type="radio" name="clock_style" id="clock_style_classic" value="classic">
-        <label for="clock_style_classic">Classic</label> <br>
+        <label for="clock_style_classic">Classic</label>
+        <br>
         <input type="radio" name="clock_style" id="clock_style_modern"  value="modern" checked="checked">
         <label for="clock_style_modern">Modern</label> <br> 
+        </span>
     </p>
     <p> Numbers:
+        <span class="right wide_column">
         <input type="radio" name="clock_number_style" id="clock_number_style_all"   value="all"  checked="checked">
-        <label for="clock_number_style_all"  >All</label> <br>
+        <label class="full_wide" for="clock_number_style_all"  >All</label> <br>
         <input type="radio" name="clock_number_style" id="clock_number_style_major" value="major">
-        <label for="clock_number_style_major">Major</label> <br>
+        <label class="full_wide" for="clock_number_style_major">Major</label> <br>
         <input type="radio" name="clock_number_style" id="clock_number_style_none"  value="none" >
-        <label for="clock_number_style_none" >None</label> <br>
+        <label class="full_wide" for="clock_number_style_none" >None</label> <br>
+        </span>
     </p>
     </div>
     <canvas id="main_canvas" width="800" height="800"></canvas>

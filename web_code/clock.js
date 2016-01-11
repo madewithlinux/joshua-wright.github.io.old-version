@@ -2,8 +2,17 @@ $(document).ready(function() {
     var c = $("#main_canvas")[0];
     var ctx = c.getContext('2d');
     var middle = [c.width / 2, c.height / 2];
-    // var font = "Courier";
     var font = "'PT Sans'";
+
+    /*make the canvas device-width if it starts out as wider*/
+    (function(){
+        var canvas = $('#main_canvas')[0];
+        if (window.innerWidth < canvas.width) {
+            $('#clock_size')[0].value = window.innerWidth;
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerWidth;
+        }
+    })();
 
     /**
      * compute x-coordinate of a circle
@@ -106,7 +115,8 @@ $(document).ready(function() {
 
     render_clock_arc = function(hours, minutes, seconds, use_numbers) {
         /*constants*/
-        var thickness = 50;
+        var thickness = c.width / 12;
+        // var thickness = 100;
         var spacing = 10;
         var colors = [ "#AE81FF", "#A6E22E", "#66D9EF"];
         var maximums = [60, 60, 12];
@@ -123,9 +133,8 @@ $(document).ready(function() {
         $.each([seconds, minutes, hours], function(i, v) {
             var line_padding = (thickness + spacing) * i;
             ctx.beginPath();
-            ctx.lineWidth = Number($('input[name=line_width]').val());
             ctx.strokeStyle = colors[i];
-            ctx.lineWidth = 50;
+            ctx.lineWidth = thickness;
             ctx.lineCap = "round";
             ctx.arc(
                 middle[0], middle[1], 

@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Parametric Rose</title>
+    <!-- this meta viewport tag makes stuff work on mobile devices -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'>
+    <!-- <link rel="stylesheet" type="text/css" media="screen" href="parametric_rose.css"> -->
+    <link rel="stylesheet" type="text/css" media="screen" href="canvas_demo.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+    <script src="parametric_rose.js"></script>
+</head>
+<body>
+    <div class="config">
+        <h1>Parametric Rose</h1>
+        <p>Plotted using the HTML5 &lt;canvas&gt; tag and JavaScript. <a href="https://en.wikipedia.org/wiki/Rose_(mathematics)" title="parametric rose">Explanation</a> of the math behind the graph.</p>
+        <p>
+            Resolution:
+            <span class="right">
+            <input class="wide_num" type="number" onkeyup="if (event.keyCode == 13) plot()" id="res_x" value="500"> x 
+            <input class="wide_num" type="number" onkeyup="if (event.keyCode == 13) plot()" id="res_y" value="500"> 
+            </span>
+        <br>
+            k =
+            <span class="right">
+            <input type="number" onkeyup="if (event.keyCode == 13) plot()" id="input_n" value="3"> / 
+            <input type="number" onkeyup="if (event.keyCode == 13) plot()" id="input_d" value="7">
+            <!-- <input type="button" id="btn_go" value="go" onclick="plot()"> -->
+            </span>
+        <br>
+            line width:
+            <span class="right">
+            <input type="number" onkeyup="if (event.keyCode == 13) plot()" id="input_linewidth" value="3">
+            </span>
+        </p>
+        <p>
+            Wavy? <span class="right"><input type="checkbox" id="waves" onclick="plot()"><label for="waves"></span>
+            <br> Wavyness: <span class="right"><input class="wide_num" type="number" onkeyup="if (event.keyCode == 13) plot()" id="input_wavyness" value="8"></span>
+            <br> Hide while rendering?: <span class="right"><input type="checkbox" id="hide_while_rendering" checked="true"><label for="hide_while_rendering"></span>
+            <br> <span id="progress"></span>
+        </p>
+    </div>
+    <canvas id="main_canvas" width="500" height="500"></canvas>
+</body>
+</html>

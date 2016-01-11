@@ -4,7 +4,6 @@
     <title>Josh Wright on GitHub</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" type="text/css" media="screen" href="../css/main.css">
-    <link rel="stylesheet" type="text/css" media="screen" href="rpn_calculator.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
     <script type="text/javascript">
 $(document).ready(function(){
@@ -82,84 +81,8 @@ $(document).ready(function(){
         $("#prime_output").empty();
     });
 
-
-    ////////////////////
-    // RPN Calculator //
-    ////////////////////
-
-    /*the stack will be represented using an array*/
-    var stack = [0];
-
-    /*this function prints the stack to the webpage*/
-    function update_stack() {
-        /*empty out the HTML already in the stack*/
-        $("#stack_output").empty();
-        /*print out the stack one item per line*/
-        for (var i=(stack.length-1); i>=0; i--) {
-            /*print the stack in reverse order since the last (top) element is the one we care most about*/
-            $("#stack_output").append(stack[i] + "<br>");
-        }
-    };
-    /*update the stack the first time so it shows on the page*/
-    update_stack();
-
-    /*convert the numbers to strings and then back to numbers because we want to add digits to the
-     * right end of them regardless of if the number has a decimal point*/
-    $("#button_0").click(function(){ stack.push(Number(stack.pop().toString() + "0")); update_stack(); });
-    $("#button_1").click(function(){ stack.push(Number(stack.pop().toString() + "1")); update_stack(); });
-    $("#button_2").click(function(){ stack.push(Number(stack.pop().toString() + "2")); update_stack(); });
-    $("#button_3").click(function(){ stack.push(Number(stack.pop().toString() + "3")); update_stack(); });
-    $("#button_4").click(function(){ stack.push(Number(stack.pop().toString() + "4")); update_stack(); });
-    $("#button_5").click(function(){ stack.push(Number(stack.pop().toString() + "5")); update_stack(); });
-    $("#button_6").click(function(){ stack.push(Number(stack.pop().toString() + "6")); update_stack(); });
-    $("#button_7").click(function(){ stack.push(Number(stack.pop().toString() + "7")); update_stack(); });
-    $("#button_8").click(function(){ stack.push(Number(stack.pop().toString() + "8")); update_stack(); });
-    $("#button_9").click(function(){ stack.push(Number(stack.pop().toString() + "9")); update_stack(); });
-    
-    /*here we leave the number as a string and let JavaScript figure out how to do math with it later*/
-    $("#button_decimal").click(function(){ stack.push(stack.pop().toString() + "."); update_stack(); });
-
-    $("#button_plus"    ).click(function(){stack.push(stack.pop() + stack.pop()); update_stack(); });
-    $("#button_multiply").click(function(){stack.push(stack.pop() * stack.pop()); update_stack(); });
-    /*addition and subtraction are special because we must swap around the operands, because 
-     * popping them from the stack gives us them in reverse order*/
-    $("#button_minus"   ).click(function(){
-        var rhs = stack.pop();
-        var lhs = stack.pop();
-        stack.push(lhs - rhs);
-        update_stack();
-    });
-    $("#button_divide"  ).click(function(){
-        var rhs = stack.pop();
-        var lhs = stack.pop();
-        stack.push(lhs / rhs);
-        update_stack();
-    });
-
-    /*clear all items on the stack*/
-    $("#button_clear").click(function(){ stack = []; update_stack(); });
-    /*reset the top element on the stack*/
-    $("#button_clear_entry").click(function(){ stack[stack.length-1] = 0; update_stack(); });
-    /*push a 0 onto the stack for us to work with*/
-    $("#button_enter").click(function(){ stack.push(0); update_stack(); });
-    /*remove the last digit of the top element on the stack*/
-    $("#button_backspace").click(function(){
-        stack.push(Number(stack.pop().toString().slice(0,-1)));
-        update_stack();
-    });
-
-    /*size the buttons of the calculator*/
-    var size = $("#numpad").css("width").slice(0,-2) ;
-    if (size > 500) {
-        size = 500;
-    }
-    $("#numpad").css("height", size/4);
-    $("#numpad").css("width", size/4);
-    $(".numpad_button").css("height", size/4);
-    $(".numpad_button").css("width", size/4);
-
 });
-    </script>
+</script>
 </head>
 <body>
     <header>
@@ -178,7 +101,10 @@ $(document).ready(function(){
             Use your browser's web console to inspect the code in this page
         </p>
         
-        <a href="clock.html">Analog Clock using the HTML5 canvas and JavaScript</a>
+        <a class="btn" href="rpn_calculator.html">JavaScript RPN Calculator</a> <br>
+        <a class="btn" href="clock.html">Analog Clock</a> (using the HTML5 canvas and JavaScript) <br>
+        <a class="btn" href="parametric_rose.html">Parametric rose graph</a> <br>
+        
 
         <h2>Factors:</h2>
         <p>
@@ -200,111 +126,6 @@ $(document).ready(function(){
             <br>
             <div id="prime_output"></div>
         </p>
-
-        <h2>RPN Calculator:</h2>
-        <!-- arrange the buttons in a table -->
-        <table id="numpad">
-        <tr>
-            <!-- give each button a class and an ID so we can refer to just 
-            one or all of them easily using jQuery -->
-            <td><input type="button" class="numpad_button" id="button_7"           value="7"></td>
-            <td><input type="button" class="numpad_button" id="button_8"           value="8"></td>
-            <td><input type="button" class="numpad_button" id="button_9"           value="9"></td>
-            <td><input type="button" class="numpad_button" id="button_clear"       value="C"></td>
-        </tr>
-        <tr>
-            <td><input type="button" class="numpad_button" id="button_4"           value="4"></td>
-            <td><input type="button" class="numpad_button" id="button_5"           value="5"></td>
-            <td><input type="button" class="numpad_button" id="button_6"           value="6"></td>
-            <td><input type="button" class="numpad_button" id="button_clear_entry" value="CE"></td>
-        </tr>
-        <tr>
-            <td><input type="button" class="numpad_button" id="button_1"           value="1"></td>
-            <td><input type="button" class="numpad_button" id="button_2"           value="2"></td>
-            <td><input type="button" class="numpad_button" id="button_3"           value="3"></td>
-            <td><input type="button" class="numpad_button" id="button_backspace"   value="<-"></td>
-        </tr>
-        <tr>
-            <td><input type="button" class="numpad_button" id="button_0"           value="0"></td>
-            <td><input type="button" class="numpad_button" id="button_decimal"     value="."></td>
-            <td><input type="button" class="numpad_button" id="button_enter"       value="->"></td>
-            <td></td>
-        </tr>
-        <tr>
-            <td><input type="button" class="numpad_button" id="button_plus"        value="+"></td>
-            <td><input type="button" class="numpad_button" id="button_minus"       value="-"></td>
-            <td><input type="button" class="numpad_button" id="button_multiply"    value="x"></td>
-            <td><input type="button" class="numpad_button" id="button_divide"      value="/"></td>
-        </tr>
-        </table>
-        <!-- this empty div is where we will print the stack -->
-        <p>Stack: <div id="stack_output"></div></p>
-
-
-        <h1><a href="https://en.wikipedia.org/wiki/Rose_(mathematics)" title="parametric rose">Parametric Rose</a></h1>
-        <p>
-        Plotted using the HTML5 &lt;canvas&gt; tag and JavaScript <br>
-	        Resolution: 
-	            <input class="res" type="number" onkeyup="if (event.keyCode == 13) plot()" id="res_x" value="500"> x 
-	            <input class="res" type="number" onkeyup="if (event.keyCode == 13) plot()" id="res_y" value="500"> 
-	        <br>
-	        k = 
-	            <input type="number" onkeyup="if (event.keyCode == 13) plot()" id="input_n" value="3"> / 
-	            <input type="number" onkeyup="if (event.keyCode == 13) plot()" id="input_d" value="7">
-	            <input type="button" id="btn_go" value="go" onclick="plot()">
-	        <br>
-	        line width: <input type="number" onkeyup="if (event.keyCode == 13) plot()" id="input_linewidth" value="3">
-	    </p>
-	    <canvas id="main_canvas" width="800" height="800"></canvas>
-<script type="text/javascript">
-function rose(k, t) {
-	/*this is the function that calculates the points on the parametric rose*/
-    return [
-        Math.cos(k * t) * Math.cos(t),
-        Math.cos(k * t) * Math.sin(t)
-    ];
-}
-function plot(){
-	/*this function re-plots the rose when one of the inputs changes*/
-    var canvas = document.getElementById('main_canvas');
-    var width  = document.getElementById('res_x').value;
-    var height = document.getElementById('res_y').value;
-    canvas.width  = width;
-    canvas.height = height;
-    var context = canvas.getContext("2d");
-    var input_n = document.getElementById('input_n').value;
-    var input_d = document.getElementById('input_d').value;
-    var k = input_n / input_d;
-
-    middle = [width/2, height/2];
-    scale = Math.min(width, height) / 2.1;
-    var threshold = 1e-4;   
-    var point;
-    var i = 0.01*Math.PI;
-    context.beginPath();
-    var old_point = [1, 0];
-    context.beginPath();
-    context.moveTo(middle[0] + scale * old_point[0], middle[1] + scale * old_point[1]);
-    context.lineWidth = document.getElementById('input_linewidth').value;
-    do {
-        point = rose(k, i);
-        context.lineTo(middle[0] + scale * point[0], middle[1] + scale * point[1]);
-        old_point = point;
-        i += 0.01*Math.PI;
-    } while ( (Math.abs(point[0] - 1) > threshold) || (Math.abs(point[1]) > threshold));
-    context.stroke();
-};
-plot();
-</script>
-<style type="text/css">
-#main_canvas {
-    padding: 0; margin: 0;
-}
-body { padding: 0; margin: 0; }
-input { width: 30px; }
-input.res { width: 60px; }
-</style>
-
     </section>
     <footer>
         &copy; Josh Wright <br>

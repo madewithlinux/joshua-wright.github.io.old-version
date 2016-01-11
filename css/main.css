@@ -3,7 +3,7 @@
 html {
 	font-family: 'Open Sans', sans-serif;
 	max-width: 1200px;
-	font-style: 16px;
+	font-size: 16px;
 	/*top-bottom, left-right*/
 	margin: 0 auto;
 	position: relative;
@@ -13,7 +13,7 @@ html {
 }
 
 body {
-	font-style: 16px;
+	font-size: 16px;
 	font-weight: 400;
 	color: #444;
 	margin: 0;
@@ -78,10 +78,9 @@ section.main {
 	padding: 0 20px 40px 20px;
 	background-color: #fff;
 }
-footer {
-	padding: 0 20px;
-	background-color: #fff;
-}
+
+h2 {margin-bottom:  4px;}
+h2 + p {margin-top: 4px;}
 
 a.btn {
 	font-size: 1.2em;
@@ -90,7 +89,8 @@ a.btn {
 	border: 1px solid #000;
 	/*padding between text and border*/
 	/*top-bottom left-right*/
-	padding: 4px 15px;
+	padding: 2px 10px;
+	line-height: 2;
 }
 a.btn:hover {
 	background-color: rgba(0,0,0,.3);
@@ -102,7 +102,9 @@ a.btn:hover {
 
 /*footer*/
 footer {
+	padding: 0 20px;
 	padding-bottom: 20px;
+	background-color: #fff;
 }
 
 
@@ -110,10 +112,8 @@ footer {
 /*mobile devices*/
 @media screen and (max-width: 600px) {
 	header {
-		padding-left: 0;
-		padding-right: 0;
-		margin-left: 0;
-		margin-right: 0;
+		padding: 15px 0;
+		margin: 0;
 	}
 	header h1 {
 		padding-top: 0;
@@ -122,13 +122,19 @@ footer {
 		margin-bottom: 0;
 	}
 	header p {
-		/*margin-top: 10px;*/
+		margin-top: 10px;
 		margin-bottom: 0;
-		font-size: 0.9em;
+		font-size: 0.8em;
 	}
 
-	section.nav ul li a {
-		padding-top: 6px;
-		padding-bottom: 6px;
+	section.nav ul {
+		display: flex;
+		justify-content: space-between;
+	}
+	section.nav ul li { margin: 4px; }
+	section.nav ul li a { padding: 6px; }
+
+	section.main {
+		padding: 0 10px; 
 	}
 }
