@@ -1,7 +1,7 @@
 function colormap_basic_hot(input) {
     /* expects 0 <= input <= 1, then translates to 0 <= x <= 255 */
     var x = 255 * input;
-    var pix = "rgb(" ;
+    var pix = "rgb(";
     /* red */
     if (x > 94) {
         pix += '255';
@@ -26,6 +26,23 @@ function colormap_basic_hot(input) {
     } else {
         pix += '0';
     }
+    pix += ')';
+    return pix;
+}
+function colormap_basic_hsv(input) {
+    var x = 360 * input;
+    var pix = "hsl(";
+    pix += x;
+    pix += ',100%,50%)';
+    return pix;
+}
+function colormap_basic_grayscale(input) {
+    /* expects 0 <= input <= 1, then translates to 0 <= x <= 255 */
+    var x = 255 * input;
+    var pix = "rgb(" ;
+    pix += Math.round(x) + ',';
+    pix += Math.round(x) + ',';
+    pix += Math.round(x);
     pix += ')';
     return pix;
 }
@@ -114,7 +131,15 @@ function plot_range(current) {
     }
     for (var i=start; i > 0; i--) {
         /*divide by 'wavyness' or else the value varies much too rapidly*/
-        var color = colormap_basic_hot( (Math.sin(i/$("#input_wavyness")[0].value) + 1) / 2);
+        var color_index = (Math.sin(i/$("#input_wavyness")[0].value) + 1) / 2;
+        var color;
+        if ($("#colormap_gray")[0].checked) {
+            color = colormap_basic_grayscale(color_index);
+        } else if ($("#colormap_hsv")[0].checked) {
+            color = colormap_basic_hsv(color_index);
+        } else if ($("#colormap_hot")[0].checked) {
+            color = colormap_basic_hot(color_index);
+        }
         basic_plot(color, i, false);
         /*update progress on percentages*/
         /*same reason for rounding here as above*/

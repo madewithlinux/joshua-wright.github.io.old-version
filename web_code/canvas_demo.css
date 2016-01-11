@@ -12,8 +12,9 @@ div.config {
     display: inline-block;
     /*increase line height or else number input boxes collide with each other*/
     line-height: 1.5;
-    background: #272822;
     color: #F8F8F2;
+    background: #272822;
+    
     padding: 1em;
 }
 h1 {text-align: center; margin-top: 0;}
@@ -58,6 +59,18 @@ input[type="checkbox"] + label {
 }
 input[type="checkbox"]:checked + label {
 	background: #66D9EF;
+}
+div.center {
+	width: 70px;
+	margin: auto;
+}
+input.centered_go_button {
+	width: 100%;
+	/*width: auto;*/
+	padding: 4px;
+	background: #F8F8F2;
+	border: 3px solid #66D9EF;
+	margin: auto;
 }
 
 
