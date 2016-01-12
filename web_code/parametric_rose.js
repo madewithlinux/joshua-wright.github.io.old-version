@@ -101,7 +101,9 @@ function basic_plot(color, lineWidth, clear) {
     context.moveTo(middle[0] + scale * old_point[0], middle[1] + scale * old_point[1]);
     context.lineWidth = lineWidth;
 
-    var step = 0.03*Math.PI;
+    // var step = 0.03*Math.PI;
+    var step = Number($("#input_step")[0].value)*Math.PI;
+    console.log(step);
     var i = step;
     do {
         point = rose(k, i);
