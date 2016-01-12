@@ -13,17 +13,20 @@
 <body>
     <div class="config">
     <h1>Analog Clock</h1>
-    <p> Canvas Size:
+    <div class="line">
+        Canvas Size:
         <span class="right wide_column">
         <input class="full_wide" type="number" name="clock_size" id="clock_size" value="650">
         </span>
-    </p>
-    <p> Line Width:
+    </div>
+    <div class="line">
+        Line Width:
         <span class="right wide_column">
         <input class="full_wide" type="number" name="line_width" id="line_width" value="2">
         </span>
-        </p>
-    <p> Style:
+    </div>
+    <div class="line">
+        Style:
         <span class="right wide_column">
         <input type="radio" name="clock_style" id="clock_style_classic" value="classic">
         <label for="clock_style_classic">Classic</label>
@@ -31,8 +34,9 @@
         <input type="radio" name="clock_style" id="clock_style_modern"  value="modern" checked="checked">
         <label for="clock_style_modern">Modern</label> <br> 
         </span>
-    </p>
-    <p> Numbers:
+    </div>
+    <div class="line">
+        Numbers:
         <span class="right wide_column">
         <input type="radio" name="clock_number_style" id="clock_number_style_all"   value="all"  checked="checked">
         <label class="full_wide" for="clock_number_style_all"  >All</label> <br>
@@ -41,7 +45,7 @@
         <input type="radio" name="clock_number_style" id="clock_number_style_none"  value="none" >
         <label class="full_wide" for="clock_number_style_none" >None</label> <br>
         </span>
-    </p>
+    </div>
     </div>
     <canvas id="main_canvas" width="800" height="800"></canvas>
 </body>
