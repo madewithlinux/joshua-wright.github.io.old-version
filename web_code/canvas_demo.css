@@ -32,9 +32,14 @@ body {
 }
 p {
 	margin: 15px 0;
-	/*needed so that each paragraph will fill to expand it's children*/
+	/*needed so that it will fill to expand it's children*/
 	position: relative;
 	overflow: auto;
+}
+div.line {
+	position: relative;
+	overflow: auto;
+	margin: 4px 0;
 }
 a:visited {color: #bbb;}
 
