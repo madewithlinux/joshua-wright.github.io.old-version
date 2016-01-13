@@ -2,7 +2,7 @@ $(document).ready(function() {
     var c = $("#main_canvas")[0];
     var ctx = c.getContext('2d');
     var middle = [c.width / 2, c.height / 2];
-    var font = "'PT Sans'";
+    var font = "'Share Tech Mono'";
 
     /*make the canvas device-width if it starts out as wider*/
     (function(){
@@ -120,7 +120,7 @@ $(document).ready(function() {
         var spacing = 10;
         var colors = [ "#AE81FF", "#A6E22E", "#66D9EF"];
         var maximums = [60, 60, 12];
-        var max_width = middle[0] - (3 * thickness + 3 * spacing);
+        var max_width = middle[0] - 0.9*(3 * thickness + 2 * spacing);
         var offset = 0.5 * max_width;
         var num_size = 0.4 * max_width;
         
@@ -155,23 +155,23 @@ $(document).ready(function() {
                 /*pad with zeros using string concatenation and slicing*/
                 var pad = "00"
                 ctx.fillText(
-                    (pad + Math.round(maximums[i]*v)).slice(-2),
+                    (pad + Math.floor(maximums[i]*v)).slice(-2),
                     middle[0] + (1-i)*offset, middle[1]
                 );
                 ctx.stroke();
             }
         });
         /*draw the colon between hours and minutes, and make it blink*/
-        if (use_numbers != "none" && use_numbers != null && Math.round(seconds*60) % 2 == 0) {
+        if (use_numbers != "none" && use_numbers != null && Math.floor(seconds*60) % 2 == 0) {
             /*render only every other second*/
             ctx.beginPath();
             ctx.font = num_size + "px " + font;
             ctx.textAlign = "center";
             ctx.textBaseline = "middle";
-            ctx.fillStyle = "#fff";
+            ctx.fillStyle = "#FFFFFF";
             ctx.fillText(
                 ":",
-                middle[0] - 0.5 * offset, middle[1]
+                middle[0] - 0.5 * offset, 0.985*middle[1]
             );
             ctx.stroke();
         }
