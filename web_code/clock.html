@@ -10,7 +10,7 @@
     <script src="clock.js"></script>
 </head>
 <body>
-    <div class="config">
+<div class="config">
     <h1>Analog Clock</h1>
     <div class="line">
         Canvas Size:
@@ -30,22 +30,25 @@
         <input type="radio" name="clock_style" id="clock_style_classic" value="classic">
         <label for="clock_style_classic">Classic</label>
         <br>
-        <input type="radio" name="clock_style" id="clock_style_modern"  value="modern" checked="checked">
+        <input type="radio" name="clock_style" id="clock_style_modern" value="modern" checked="checked">
         <label for="clock_style_modern">Modern</label> <br> 
         </span>
     </div>
     <div class="line">
         Numbers:
         <span class="right wide_column">
-        <input type="radio" name="clock_number_style" id="clock_number_style_all"   value="all"  checked="checked">
-        <label class="full_wide" for="clock_number_style_all"  >All</label> <br>
+        <input type="radio" name="clock_number_style" id="clock_number_style_all" value="all" checked="checked">
+        <label class="full_wide" for="clock_number_style_all">All</label> <br>
         <input type="radio" name="clock_number_style" id="clock_number_style_major" value="major">
         <label class="full_wide" for="clock_number_style_major">Major</label> <br>
-        <input type="radio" name="clock_number_style" id="clock_number_style_none"  value="none" >
-        <label class="full_wide" for="clock_number_style_none" >None</label> <br>
+        <input type="radio" name="clock_number_style" id="clock_number_style_none" value="none">
+        <label class="full_wide" for="clock_number_style_none">None</label> <br>
         </span>
     </div>
+    <div class="center">
+        <input type="button" id="fullscreen_button" value="fullscreen" class="centered_go_button">
     </div>
-    <canvas id="main_canvas" width="800" height="800"></canvas>
+</div>
+<canvas id="main_canvas" width="800" height="800"></canvas>
 </body>
 </html>
