@@ -177,7 +177,7 @@ $(document).ready(function () {
                 ctx.textBaseline = "middle";
                 ctx.fillStyle = colors[i];
                 /*pad with zeros using string concatenation and slicing*/
-                var pad = "00"
+                var pad = "00";
                 ctx.fillText(
                     (pad + Math.floor(maximums[i] * v)).slice(-2),
                     middle[0] + (1 - i) * offset, middle[1]
