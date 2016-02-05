@@ -7,7 +7,7 @@ html {
 	/*top-bottom, left-right*/
 	margin: 0 auto;
 	position: relative;
-	background-color: #eee;
+	background-color: #E3E3E3;
 	height: 100%;
 	padding: 0;
 }
@@ -24,7 +24,7 @@ body {
 
 
 header {
-	background-color: #800;
+	background-color: #500000;
 	color: #fff;
 	padding: 20px;
 	margin: 0;
@@ -41,7 +41,7 @@ section.nav {
 	/*left: 0px;*/
 	padding: 0 0 0 0;
 	width: 100%;
-	background-color: #aaa;
+	background-color: #8F8F8C;
 }
 
 section.nav::after {
