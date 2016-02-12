@@ -110,7 +110,7 @@ $(document).ready(function () {
             }
             ctx.stroke();
         }
-    }
+    };
 
     /**
      * renders basic clock hands
@@ -134,7 +134,7 @@ $(document).ready(function () {
             );
             ctx.stroke();
         });
-    }
+    };
 
 
     render_clock_arc = function (hours, minutes, seconds, use_numbers) {
@@ -150,9 +150,14 @@ $(document).ready(function () {
 
         ctx.beginPath();
         /*draw outer circle*/
-        ctx.fillStyle = "#272822"
+        ctx.fillStyle = "#272822";
         ctx.arc(middle[0], middle[1], middle[0], 0, 2 * Math.PI, true);
         ctx.fill();
+
+        /*hours is mod 12, so we need to check for 0*/
+        //if (hours < 1) { hours += 1; }
+        //console.log(hours);
+
         /*draw circular progress bars*/
         $.each([seconds, minutes, hours], function (i, v) {
             var line_padding = (thickness + spacing) * i;
@@ -178,10 +183,17 @@ $(document).ready(function () {
                 ctx.fillStyle = colors[i];
                 /*pad with zeros using string concatenation and slicing*/
                 var pad = "00";
-                ctx.fillText(
-                    (pad + Math.floor(maximums[i] * v)).slice(-2),
-                    middle[0] + (1 - i) * offset, middle[1]
-                );
+                if (i == 2 && v < 1 / 12) {
+                    ctx.fillText(
+                        (pad + Math.floor(maximums[i] * v + 12)).slice(-2),
+                        middle[0] + (1 - i) * offset, middle[1]
+                    );
+                } else {
+                    ctx.fillText(
+                        (pad + Math.floor(maximums[i] * v)).slice(-2),
+                        middle[0] + (1 - i) * offset, middle[1]
+                    );
+                }
                 ctx.stroke();
             }
         });
@@ -200,7 +212,7 @@ $(document).ready(function () {
             ctx.stroke();
         }
 
-    }
+    };
 
     /**
      * updates the clock to the current time
