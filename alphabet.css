@@ -5,11 +5,22 @@ html {
     font-size: 1.5em;
 }
 
-div.container {
+div.container_main {
     text-align: center;
-    margin: auto;
+    /*margin: auto;*/
+    margin: 0;
     height: 100%;
-    width: 100%;
+    width: 70%;
+    display: inline-block;
+    float: left;
+}
+div.container_side {
+    display: inline-block;
+    float: left;
+    text-align: left;
+    margin: 0;
+    height: 100%;
+    width: 30%;
 }
 
 table {
@@ -40,12 +51,13 @@ tr:nth-child(even) {
     background-color: #f2f2f2
 }
 
-input.go_button {
-    /*width: 100%;*/
+input#phrase_input {
+    width: 100%;
     /*width: auto;*/
     padding: 2px;
-    background: #F8F8F2;
-    border: 3px solid #333;
+    background: #ffffff;
+    border: 1px solid #333;
+    border-bottom: 3px solid #333;
     margin: auto;
 }
 
