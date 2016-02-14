@@ -84,7 +84,7 @@ div.center {
     margin: auto;
 }
 
-input.centered_go_button {
+input.go_button {
     width: 100%;
     /*width: auto;*/
     padding: 4px;

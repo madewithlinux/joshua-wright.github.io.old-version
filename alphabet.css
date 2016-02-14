@@ -40,6 +40,15 @@ tr:nth-child(even) {
     background-color: #f2f2f2
 }
 
+input.go_button {
+    /*width: 100%;*/
+    /*width: auto;*/
+    padding: 2px;
+    background: #F8F8F2;
+    border: 3px solid #333;
+    margin: auto;
+}
+
 @media (max-width: 600px) {
     h1 {
         font-size: 1.75em;
