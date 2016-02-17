@@ -1,0 +1,45 @@
+@import url(https://fonts.googleapis.com/css?family=Open+Sans:400,700);
+
+html {
+    font-family: 'Open Sans', sans-serif;
+    font-size: 1.5em;
+}
+
+h1 {
+    font-size: 2em;
+    /*remove annoying extra padding on headers*/
+    margin: 0 10px 0 10px;
+}
+body { padding: 10px; }
+
+input {
+    font-size: 1.5em;
+    margin-bottom: 10px;
+}
+
+td {
+    padding: 10px;
+    /*shadow so that text is readable on any color*/
+    text-shadow:
+            -1px -1px 0 #000,
+            1px -1px 0 #000,
+            -1px 1px 0 #000,
+            1px 1px 0 #000;
+    color: #fff;
+    background-color: #8F8F8C;
+}
+
+
+input[type=number]::-webkit-inner-spin-button,
+input[type=number]::-webkit-outer-spin-button {
+    /*hides the up-down arrows*/
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+@media screen and (max-width: 600px) {
+    /*make stuff smaller for mobile*/
+    html {font-size: 1.25em; }
+    h1 {font-size: 1.75em;}
+    body {padding: 0;}
+}
