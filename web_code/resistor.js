@@ -18,21 +18,47 @@ var colors = {
 
 $("document").ready(function () {
 
-    /*jqueries for caching*/
+    /*jQueries defined outside functions for caching*/
     var output_table = $("#output")[0];
     var input = $("#value");
     /*default values for when the page loads*/
-    var values = [10, 100, 1000, 2000, 3300, 5100, 10000];
+    /*store these in an object for automatic duplicate resolution and sorting*/
+    var values = {
+        1: {},
+        5: {},
+        10: {},
+        100: {},
+        1000: {},
+        2000: {},
+        3300: {},
+        5100: {},
+        10000: {}
+    };
 
     function write_value(value) {
-        //weird math to get resistor color codes.
-        /*TODO: fix math for resistors less than 10 ohms*/
-        var third = Math.floor(Math.log10(value)) - 1;
-        var first = Math.floor(value / Math.pow(10, third + 1));
-        var second = Math.round(value / Math.pow(10, third)) % 10;
-        //simply append a row to the table
+        /*preserve the original value for printing later*/
+        var original_value = value;
+        /*weird math to get resistor color codes*/
+        var third = 0;
+        /*find the multiplier*/
+        while (value >= 10) {
+            value /= 10;
+            third++;
+        }
+        if (third == 0) {
+            /*case where multiplier is 0, therefore value is direct*/
+            var first = 0;
+            var second = Math.round(value);
+        } else {
+            /*case where multiplier is non-zero, therefore first and second make a decimal*/
+            third--;
+            var first = Math.floor(value);
+            var second = Math.round((10 * value) % 10);
+        }
+        /*simply append a row to the table*/
         output_table.innerHTML += "<tr>" +
-            "<td>" + value.toString() + "&#8486" + "</td>" +
+                /*locale string adds fancy locale-appropriate commas to the number*/
+            "<td>" + Number(original_value).toLocaleString() + "&#8486" + "</td>" +
             "<td style='background: " + colors[first] + ";'>" + colors[first] + "</td>" +
             "<td style='background: " + colors[second] + ";'>" + colors[second] + "</td>" +
             "<td style='background: " + colors[third] + ";'>" + colors[third] + "</td>" +
@@ -40,27 +66,31 @@ $("document").ready(function () {
     }
 
     function write_values() {
-        //clear existingrows from the table
         output_table.innerHTML = "";
-        /*write each value back to the table*/
-        values.forEach(function (v, i) {
+        $.each(values, function (v, i) {
             write_value(v);
         });
     }
 
+    function write_new() {
+        /*re-generate the whole table*/
+        values[Number(input.val())] = {};
+        write_values();
+    }
+
     input.keyup(function (event) {
         if (event.keyCode == 13) {
-            /*add the new value*/
-            values.push(Number(input.val()));
-            /*re-sort the array to put it in it's place*/
-            values.sort(function(a,b) {return a > b;});
-            /*re-generate the whole table*/
-            write_values();
+            write_new();
         }
+    });
+
+    $("#go_btn").click(function () {
+        write_new();
     });
 
     /*generate initial values for when the page loads*/
     write_values();
 
 
-});
+})
+;

@@ -13,7 +13,7 @@ h1 {
 body { padding: 10px; }
 
 input {
-    font-size: 1.5em;
+    font-size: 1.1em;
     margin-bottom: 10px;
 }
 
@@ -27,12 +27,18 @@ td {
             1px 1px 0 #000;
     color: #fff;
     background-color: #8F8F8C;
+    /*center the color labels for readability*/
+    text-align: center;
 }
 
+tr td:nth-child(1) {
+    /*right align the numbers*/
+    text-align: right;
+}
 
 input[type=number]::-webkit-inner-spin-button,
 input[type=number]::-webkit-outer-spin-button {
-    /*hides the up-down arrows*/
+    /*hides the up-down arrows in the input box*/
     -webkit-appearance: none;
     margin: 0;
 }
