@@ -55,9 +55,13 @@ function spell_input() {
     }
 }
 $(document).ready(function () {
-    $("#phrase_input").keyup(function () {
+    var input = $("#phrase_input");
+    input.keyup(function () {
         /*re-run whenever input changes*/
         spell_input();
     });
+
+    /*always be focused*/
+    setInterval(function(){input.focus()}, 100);
 
 });
