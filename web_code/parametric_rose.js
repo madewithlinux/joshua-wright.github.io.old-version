@@ -65,6 +65,37 @@ function rose(k, t) {
     ];
 }
 
+function generate_points(n, d, _step, canvas_width) {
+
+    var middle = [canvas_width / 2, canvas_width / 2];
+    var scale = canvas_width / 2.1;
+    /*start at the starting point of (1,0) */
+    var out_x = [middle[0] + scale];
+    var out_y = [middle[1]];
+    /*step in terms of PI so it will add up evenly*/
+    var step = _step * Math.PI;
+    /*use a threshold to determine when we've gone all the way around*/
+    var threshold = 1e-5;
+    var k = n / d;
+    var i = step;
+    var new_point;
+    do {
+        /*ge the next point*/
+        new_point = rose(k, i);
+        /*scale the point and add it to the arrays*/
+        out_x.push(middle[0] + scale * new_point[0]);
+        out_y.push(middle[1] + scale * new_point[1]);
+        /*step to the next point*/
+        i += step;
+        /*while we are not approximately back at our starting point*/
+    } while ((Math.abs(new_point[0] - 1) > threshold) || (Math.abs(new_point[1]) > threshold));
+    /*return the values in a Float64Array for speed*/
+    return {
+        "x": new Float64Array(out_x),
+        "y": new Float64Array(out_y)
+    };
+}
+
 $(document).ready(function () {
 
     /*jQuery selectors
@@ -89,40 +120,25 @@ $(document).ready(function () {
     var do_waves_0 = $("#waves")[0];
 
 
-    function basic_plot(color, lineWidth) {
+    function basic_plot(color, lineWidth, points) {
         /*this function re-plots the rose when one of the inputs changes*/
 
         var context = main_canvas_0.getContext("2d");
-        /*get n and d for using in our equation*/
-        var input_n = input_n_0.value;
-        var input_d = input_d_0.value;
-        var k = input_n / input_d;
-
-        var middle = [main_canvas_0.width / 2, main_canvas_0.height / 2];
-        var scale = Math.min(main_canvas_0.width, main_canvas_0.height) / 2.1;
-
-        /*use a threshold to determine when we've gone all the way around*/
-        var threshold = 1e-4;
-        var old_point = [1, 0];
-
         context.beginPath();
         context.strokeStyle = color;
-        context.moveTo(middle[0] + scale * old_point[0], middle[1] + scale * old_point[1]);
         context.lineWidth = lineWidth;
 
-        var step = Number(input_step_0.value) * Math.PI;
-        var i = step;
-        var new_point;
-        do {
-            new_point = rose(k, i);
-            context.lineTo(middle[0] + scale * new_point[0], middle[1] + scale * new_point[1]);
-            old_point = new_point;
-            i += step;
-            /*while we are not approximately back at our starting point*/
-        } while ((Math.abs(new_point[0] - 1) > threshold) || (Math.abs(new_point[1]) > threshold));
+        /*move to first point*/
+        context.moveTo(points.x[0], points.y[0]);
+        for (var i = 1; i < points.x.length - 1; i++) {
+            /*draw all the lines in the middle*/
+            context.lineTo(points.x[i], points.y[i]);
+        }
+        /*draw the last line*/
+        context.lineTo(points.x[0], points.y[0]);
+
         context.stroke();
     }
-
 
     if (window.innerWidth < main_canvas_0.width) {
         res_x_0.value = window.innerWidth;
@@ -133,16 +149,11 @@ $(document).ready(function () {
         main_canvas_0.height = window.innerWidth;
     }
 
-    function plot_range(current) {
+    function plot_range(points, current) {
         /*we need to round this because if it's a fraction the modulo will never ==0*/
         var max_len = Math.round(1.2 * Math.max(res_x_0.value, res_y_0.value) / 2);
         var start;
         if (current == null) {
-            /*we were run without a starting parameter, so start at the beginning*/
-            var canvas = main_canvas[0];
-            var context = canvas.getContext("2d");
-            /*clear the canvas because we're going to ask plot() not to clear it*/
-            context.clearRect(0, 0, canvas.width, canvas.height);
             /*determine how far we need to draw stuff out*/
             start = max_len;
             if (hide_while_rendering[0].checked) {
@@ -172,7 +183,7 @@ $(document).ready(function () {
             } else if (colormap_hot_0.checked) {
                 color = colormap_basic_hot(color_index);
             }
-            basic_plot(color, i);
+            basic_plot(color, i, points);
             /*update progress on percentages*/
             /*same reason for rounding here as above*/
             if (i % Math.round(max_len / 10) == 0) {
@@ -182,7 +193,7 @@ $(document).ready(function () {
                 /*In order to let the UI update, we must run the rest of the math later*/
                 /*0ms delay means it will just be in line to be processed by the javascript thread*/
                 setTimeout(function () {
-                    plot_range(i - 1);
+                    plot_range(points, i - 1);
                 }, 0);
                 return;
             }
@@ -208,12 +219,17 @@ $(document).ready(function () {
         var context = main_canvas_0.getContext("2d");
         context.clearRect(0, 0, main_canvas_0.width, main_canvas_0.height);
 
+        /*pre-generate the points needed*/
+        var input_n = input_n_0.value;
+        var input_d = input_d_0.value;
+        var step = Number(input_step_0.value);
+        var points = generate_points(input_n, input_d, step, main_canvas_0.width);
 
         /*decide if it's a regular plot or wavy filled in one*/
         if (do_waves_0.checked) {
-            plot_range();
+            plot_range(points);
         } else {
-            basic_plot("rgb(0,0,0)", input_linewidth_0.value);
+            basic_plot("rgb(0,0,0)", input_linewidth_0.value, points);
         }
     }
 
