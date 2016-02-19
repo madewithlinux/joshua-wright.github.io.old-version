@@ -18,49 +18,50 @@
     <div class="line">
         Canvas Resolution:
             <span class="right">
-            <input class="wide_num" type="number" onkeyup="if (event.keyCode == 13) plot()" id="res_x" value="500"> x 
-            <input class="wide_num" type="number" onkeyup="if (event.keyCode == 13) plot()" id="res_y" value="500"> 
+            <input class="wide_num" type="number" id="res_x" value="500"> x
+            <input class="wide_num" type="number" id="res_y" value="500">
             </span>
     </div>
     <div class="line">
         Step:
             <span class="right">
-            <input class="wide_num" type="number" onkeyup="if (event.keyCode == 13) plot()" id="input_step"
+            <input class="wide_num" type="number" id="input_step"
                    value="0.05">
             </span>
     </div>
     <div class="line">
         k =
             <span class="right">
-            <input type="number" onkeyup="if (event.keyCode == 13) plot()" id="input_n" value="3"> / 
-            <input type="number" onkeyup="if (event.keyCode == 13) plot()" id="input_d" value="7">
+            <input type="number" id="input_n" value="3"> /
+            <input type="number" id="input_d" value="7">
             </span>
     </div>
     <div class="line">
         Line Width:
             <span class="right">
-            <input type="number" onkeyup="if (event.keyCode == 13) plot()" id="input_linewidth" value="3">
+            <input type="number" id="input_linewidth" value="3">
             </span>
     </div>
     <div class="line">
         Wavy?
             <span class="right">
                 <input type="checkbox" id="waves">
-                <label for="waves">
+                <label for="waves"></label>
             </span>
     </div>
     <div class="line">
         Wave Size:
             <span class="right">
-                <input class="wide_num" type="number" onkeyup="if (event.keyCode == 13) plot()" id="input_wavyness"
+                <input class="wide_num" type="number" id="input_wavyness"
                        value="8">
             </span>
     </div>
     <div class="line">
         Hide while rendering?:
             <span class="right">
-                <input type="checkbox" id="hide_while_rendering" checked="true">
-                <label for="hide_while_rendering"></span>
+                <input type="checkbox" id="hide_while_rendering" checked>
+                <label for="hide_while_rendering"></label>
+            </span>
     </div>
     <div class="line">
         Color:
@@ -89,7 +90,7 @@
     </div>
     <div class="line">
         <div class="center">
-            <input class="go_button" type="button" id="btn_render" value="Render" onclick="plot()">
+            <input class="go_button" type="button" id="btn_render" value="Render">
         </div>
     </div>
 </div>

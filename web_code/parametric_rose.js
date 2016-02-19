@@ -65,146 +65,166 @@ function rose(k, t) {
     ];
 }
 
-function basic_plot(color, lineWidth, clear) {
-    if (color == null) {
-        /*if unspecified, draw in black*/
-        color = "rgb(0,0,0)";
-    }
-    if (clear == null) {
-        clear = true;
-    }
-    if (lineWidth == null) {
-        lineWidth = $('#input_linewidth')[0].value;
-    }
-    /*this function re-plots the rose when one of the inputs changes*/
-    var canvas = $('#main_canvas')[0];
-    var width = $('#res_x')[0].value;
-    var height = $('#res_y')[0].value;
-
-    /*don't reset the canvas height if we don't need to*/
-    if (canvas.width != width) {
-        canvas.width = width;
-    }
-    if (canvas.height != height) {
-        canvas.height = height;
-    }
-    var context = canvas.getContext("2d");
-    /*get n and d for using in our equation*/
-    var input_n = document.getElementById('input_n').value;
-    var input_d = document.getElementById('input_d').value;
-    var k = input_n / input_d;
-
-    if (clear) {
-        context.clearRect(0, 0, canvas.width, canvas.height);
-    }
-
-    middle = [width / 2, height / 2];
-    scale = Math.min(width, height) / 2.1;
-    /*use a threshold to determine when we've gone all the way around*/
-    var threshold = 1e-4;
-    var point;
-    context.beginPath();
-    var old_point = [1, 0];
-
-    context.beginPath();
-    context.strokeStyle = color;
-    context.moveTo(middle[0] + scale * old_point[0], middle[1] + scale * old_point[1]);
-    context.lineWidth = lineWidth;
-
-    // var step = 0.03*Math.PI;
-    var step = Number($("#input_step")[0].value) * Math.PI;
-    //console.log(step);
-    var i = step;
-    do {
-        point = rose(k, i);
-        context.lineTo(middle[0] + scale * point[0], middle[1] + scale * point[1]);
-        old_point = point;
-        i += step;
-    } while ((Math.abs(point[0] - 1) > threshold) || (Math.abs(point[1]) > threshold));
-    context.stroke();
-}
-
-function plot_range(current) {
-    /*we need to round this because if it's a fraction the modulo will never ==0*/
-    var max_len = Math.round(1.2 * Math.max($('#res_x')[0].value, $('#res_y')[0].value) / 2);
-    var start;
-    if (current == null) {
-        var canvas = $('#main_canvas')[0];
-        var context = canvas.getContext("2d");
-        /*clear the canvas because we're going to ask plot() not to clear it*/
-        context.clearRect(0, 0, canvas.width, canvas.height);
-        /*determine how far we need to draw stuff out*/
-        start = max_len;
-        if ($('#hide_while_rendering')[0].checked) {
-            /*hide the canvas while we render onto it, because the bright flashes can hurt your eyes*/
-            $('#main_canvas').hide();
-        }
-    } else {
-        start = current;
-    }
-    for (var i = start; i > 0; i--) {
-        /*divide by 'wavyness' or else the value varies much too rapidly*/
-        //var color_index = (Math.sin(i / $("#input_wavyness")[0].value) + 1) / 2;
-        var color_index;
-        switch ($("input[name=wave_type]:checked").val()) {
-            default:
-            case "wave_type_sine":
-                color_index = wave_sine(i, $("#input_wavyness").val());
-                break;
-            case "wave_type_sawtooth":
-                color_index = wave_sawtooth(i, $("#input_wavyness").val());
-                break;
-            case "wave_type_triangle":
-                color_index = wave_triangle(i, $("#input_wavyness").val());
-                break;
-        }
-        var color;
-        if ($("#colormap_gray")[0].checked) {
-            color = colormap_basic_grayscale(color_index);
-        } else if ($("#colormap_hsv")[0].checked) {
-            color = colormap_basic_hsv(color_index);
-        } else if ($("#colormap_hot")[0].checked) {
-            color = colormap_basic_hot(color_index);
-        }
-        basic_plot(color, i, false);
-        /*update progress on percentages*/
-        /*same reason for rounding here as above*/
-        if (i % Math.round(max_len / 100) == 0) {
-            $("#progress").html("Progress: " + Math.round(100 - 100 * i / max_len) + "%");
-            /*100 - because we start at the far end*/
-            /*In order to let the UI update, we must run the rest of the math later*/
-            setTimeout(function () {
-                plot_range(i - 1);
-            }, 0);
-            //console.log(100 - 100 * i / max_len);
-            return;
-        }
-    }
-    /*this will only run when we are completely done, since we return in the if-block above*/
-    $("#progress").html("");
-    $('#main_canvas').show();
-}
-
-function plot() {
-    /*decide if it's a regular plot or wavy filled in one*/
-    if ($("#waves")[0].checked) {
-        plot_range();
-    } else {
-        basic_plot();
-    }
-}
-
-
 $(document).ready(function () {
-    (function () {
-        var canvas = $('#main_canvas')[0];
-        // var context = canvas.getContext("2d");
-        if (window.innerWidth < canvas.width) {
-            $('#res_x')[0].value = window.innerWidth;
-            $('#res_y')[0].value = window.innerWidth;
-            canvas.width = window.innerWidth;
-            canvas.height = window.innerWidth;
+
+    /*jQuery selectors
+     * cache these outside worker functions so that worker functions are really fast*/
+    var main_canvas = $('#main_canvas');
+    var main_canvas_0 = main_canvas[0];
+    var res_x_0 = $('#res_x')[0];
+    var res_y_0 = $('#res_y')[0];
+    var hide_while_rendering = $('#hide_while_rendering');
+    var input_wavyness = $("#input_wavyness");
+    var colormap_gray_0 = $("#colormap_gray")[0];
+    var colormap_hsv_0 = $("#colormap_hsv")[0];
+    var colormap_hot_0 = $("#colormap_hot")[0];
+    var wave_type_sine_0 = $("#wave_type_sine")[0];
+    var wave_type_sawtooth_0 = $("#wave_type_sawtooth")[0];
+    var wave_type_triangle_0 = $("#wave_type_triangle")[0];
+    var progress_0 = $("#progress")[0];
+    var input_linewidth_0 = $('#input_linewidth')[0];
+    var input_step_0 = $("#input_step")[0];
+    var input_n_0 = $("#input_n")[0];
+    var input_d_0 = $("#input_d")[0];
+    var do_waves_0 = $("#waves")[0];
+
+
+    function basic_plot(color, lineWidth) {
+        /*this function re-plots the rose when one of the inputs changes*/
+
+        var context = main_canvas_0.getContext("2d");
+        /*get n and d for using in our equation*/
+        var input_n = input_n_0.value;
+        var input_d = input_d_0.value;
+        var k = input_n / input_d;
+
+        var middle = [main_canvas_0.width / 2, main_canvas_0.height / 2];
+        var scale = Math.min(main_canvas_0.width, main_canvas_0.height) / 2.1;
+
+        /*use a threshold to determine when we've gone all the way around*/
+        var threshold = 1e-4;
+        var old_point = [1, 0];
+
+        context.beginPath();
+        context.strokeStyle = color;
+        context.moveTo(middle[0] + scale * old_point[0], middle[1] + scale * old_point[1]);
+        context.lineWidth = lineWidth;
+
+        var step = Number(input_step_0.value) * Math.PI;
+        var i = step;
+        var new_point;
+        do {
+            new_point = rose(k, i);
+            context.lineTo(middle[0] + scale * new_point[0], middle[1] + scale * new_point[1]);
+            old_point = new_point;
+            i += step;
+            /*while we are not approximately back at our starting point*/
+        } while ((Math.abs(new_point[0] - 1) > threshold) || (Math.abs(new_point[1]) > threshold));
+        context.stroke();
+    }
+
+
+    if (window.innerWidth < main_canvas_0.width) {
+        res_x_0.value = window.innerWidth;
+        res_y_0.value = window.innerWidth;
+        main_canvas_0.width = window.innerWidth;
+        /*want it to be square, so assign width to height*/
+        //noinspection JSSuspiciousNameCombination
+        main_canvas_0.height = window.innerWidth;
+    }
+
+    function plot_range(current) {
+        /*we need to round this because if it's a fraction the modulo will never ==0*/
+        var max_len = Math.round(1.2 * Math.max(res_x_0.value, res_y_0.value) / 2);
+        var start;
+        if (current == null) {
+            /*we were run without a starting parameter, so start at the beginning*/
+            var canvas = main_canvas[0];
+            var context = canvas.getContext("2d");
+            /*clear the canvas because we're going to ask plot() not to clear it*/
+            context.clearRect(0, 0, canvas.width, canvas.height);
+            /*determine how far we need to draw stuff out*/
+            start = max_len;
+            if (hide_while_rendering[0].checked) {
+                /*hide the canvas while we render onto it, because the bright flashes can hurt your eyes*/
+                main_canvas.hide();
+            }
+        } else {
+            start = current;
         }
-    })();
+        for (var i = start; i > 0; i--) {
+
+            /*find which radio button is selected without using expensive jQuery*/
+            var color_index;
+            if (wave_type_sine_0.checked) {
+                color_index = wave_sine(i, input_wavyness.val());
+            } else if (wave_type_triangle_0.checked) {
+                color_index = wave_triangle(i, input_wavyness.val());
+            } else if (wave_type_sawtooth_0.checked) {
+                color_index = wave_sawtooth(i, input_wavyness.val());
+            }
+
+            var color;
+            if (colormap_gray_0.checked) {
+                color = colormap_basic_grayscale(color_index);
+            } else if (colormap_hsv_0.checked) {
+                color = colormap_basic_hsv(color_index);
+            } else if (colormap_hot_0.checked) {
+                color = colormap_basic_hot(color_index);
+            }
+            basic_plot(color, i);
+            /*update progress on percentages*/
+            /*same reason for rounding here as above*/
+            if (i % Math.round(max_len / 10) == 0) {
+                //progress.html("Progress: " + Math.round(100 - 100 * i / max_len) + "%");
+                progress_0.innerHTML = "Progress: " + Math.round(100 - 100 * i / max_len) + "%";
+                /*100 - because we start at the far end*/
+                /*In order to let the UI update, we must run the rest of the math later*/
+                /*0ms delay means it will just be in line to be processed by the javascript thread*/
+                setTimeout(function () {
+                    plot_range(i - 1);
+                }, 0);
+                return;
+            }
+        }
+        /*this will only run when we are completely done, since we return in the if-block above*/
+        /*clear the progress field*/
+        progress_0.innerHTML = "";
+        /*show the canvas, since we're now done rendering on it*/
+        main_canvas.show();
+    }
+
+    function plot() {
+
+        /*don't reset the canvas height if we don't need to, because resetting the size of the canvas clears it*/
+        if (main_canvas_0.width != res_x_0.value) {
+            main_canvas_0.width = res_x_0.value;
+        }
+        if (main_canvas_0.height != res_y_0.value) {
+            main_canvas_0.height = res_y_0.value;
+        }
+
+        /*clear the canvas for the next operation*/
+        var context = main_canvas_0.getContext("2d");
+        context.clearRect(0, 0, main_canvas_0.width, main_canvas_0.height);
+
+
+        /*decide if it's a regular plot or wavy filled in one*/
+        if (do_waves_0.checked) {
+            plot_range();
+        } else {
+            basic_plot("rgb(0,0,0)", input_linewidth_0.value);
+        }
+    }
+
+    /*event handler for render button*/
+    $("#btn_render").click(plot);
+    /*event handler for enter key for all input fields*/
+    $("input").keyup(function (e) {
+        if (e.keyCode == 13/*enter key*/) {
+            plot();
+        }
+    });
+
     plot();
 });
