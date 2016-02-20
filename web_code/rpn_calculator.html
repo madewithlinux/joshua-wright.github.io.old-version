@@ -1,67 +1,91 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title>RPN Calculator</title>
+    <title>RPN Calculator</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <!--make the chrome nav bar aggie maroon-->
     <meta name="theme-color" content="#500000">
     <link rel="icon" href="/favicon.png">
-	<link rel="stylesheet" type="text/css" media="screen" href="rpn_calculator.css">
-	<link rel="stylesheet" type="text/css" media="screen" href="../css/main.css">
-	<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
-	<script src="rpn_calculator.js"></script>
+    <link rel="stylesheet" type="text/css" media="screen"
+          href="rpn_calculator.css">
+    <link rel="stylesheet" type="text/css" media="screen"
+          href="../css/main.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+    <script src="rpn_calculator.js"></script>
 </head>
 <body>
-	<header>
-        <h1>RPN Calculator</h1>
-    </header>
-	<section class="nav">
-        <ul>
-            <li><a href="../index.html" title="Home">Home</a></li>
-            <li><a href="https://github.com/madewithlinux/" title="GitHub">GitHub</a></li>
-            <li><a href="../Josh_Wright_Resume.pdf" title="Resume">R&eacute;sum&eacute;</a></li>
-            <li><a href="https://www.linkedin.com/in/madewithlinux/" title="LinkedIn Profile">LinkedIn</a></li>
-        </ul>
-    </section>
-	<section class="main">
-        <h2>RPN Calculator:</h2>
-        <!-- arrange the buttons in a table -->
-        <table id="numpad">
+<header>
+    <h1>RPN Calculator</h1>
+</header>
+<section class="nav">
+    <ul>
+        <li><a href="../index.html" title="Home">Home</a></li>
+        <li><a href="https://github.com/Joshua-Wright/"
+               title="GitHub">GitHub</a></li>
+        <li><a href="../Josh_Wright_Resume.pdf"
+               title="Resume">R&eacute;sum&eacute;</a></li>
+        <li><a href="https://www.linkedin.com/in/madewithlinux/"
+               title="LinkedIn Profile">LinkedIn</a></li>
+    </ul>
+</section>
+<section class="main">
+    <h2>RPN Calculator:</h2>
+    <!-- arrange the buttons in a table -->
+    <table id="numpad">
         <tr>
             <!-- give each button a class and an ID so we can refer to just 
             one or all of them easily using jQuery -->
-            <td><input type="button" class="numpad_button" id="button_7"           value="7"></td>
-            <td><input type="button" class="numpad_button" id="button_8"           value="8"></td>
-            <td><input type="button" class="numpad_button" id="button_9"           value="9"></td>
-            <td><input type="button" class="numpad_button" id="button_clear"       value="C"></td>
+            <td><input type="button" class="numpad_button" id="button_7"
+                       value="7"></td>
+            <td><input type="button" class="numpad_button" id="button_8"
+                       value="8"></td>
+            <td><input type="button" class="numpad_button" id="button_9"
+                       value="9"></td>
+            <td><input type="button" class="numpad_button" id="button_clear"
+                       value="C"></td>
         </tr>
         <tr>
-            <td><input type="button" class="numpad_button" id="button_4"           value="4"></td>
-            <td><input type="button" class="numpad_button" id="button_5"           value="5"></td>
-            <td><input type="button" class="numpad_button" id="button_6"           value="6"></td>
-            <td><input type="button" class="numpad_button" id="button_clear_entry" value="CE"></td>
+            <td><input type="button" class="numpad_button" id="button_4"
+                       value="4"></td>
+            <td><input type="button" class="numpad_button" id="button_5"
+                       value="5"></td>
+            <td><input type="button" class="numpad_button" id="button_6"
+                       value="6"></td>
+            <td><input type="button" class="numpad_button"
+                       id="button_clear_entry" value="CE"></td>
         </tr>
         <tr>
-            <td><input type="button" class="numpad_button" id="button_1"           value="1"></td>
-            <td><input type="button" class="numpad_button" id="button_2"           value="2"></td>
-            <td><input type="button" class="numpad_button" id="button_3"           value="3"></td>
-            <td><input type="button" class="numpad_button" id="button_backspace"   value="<-"></td>
+            <td><input type="button" class="numpad_button" id="button_1"
+                       value="1"></td>
+            <td><input type="button" class="numpad_button" id="button_2"
+                       value="2"></td>
+            <td><input type="button" class="numpad_button" id="button_3"
+                       value="3"></td>
+            <td><input type="button" class="numpad_button" id="button_backspace"
+                       value="<-"></td>
         </tr>
         <tr>
-            <td><input type="button" class="numpad_button" id="button_0"           value="0"></td>
-            <td><input type="button" class="numpad_button" id="button_decimal"     value="."></td>
-            <td><input type="button" class="numpad_button" id="button_enter"       value="->"></td>
+            <td><input type="button" class="numpad_button" id="button_0"
+                       value="0"></td>
+            <td><input type="button" class="numpad_button" id="button_decimal"
+                       value="."></td>
+            <td><input type="button" class="numpad_button" id="button_enter"
+                       value="->"></td>
             <td></td>
         </tr>
         <tr>
-            <td><input type="button" class="numpad_button" id="button_plus"        value="+"></td>
-            <td><input type="button" class="numpad_button" id="button_minus"       value="-"></td>
-            <td><input type="button" class="numpad_button" id="button_multiply"    value="x"></td>
-            <td><input type="button" class="numpad_button" id="button_divide"      value="/"></td>
+            <td><input type="button" class="numpad_button" id="button_plus"
+                       value="+"></td>
+            <td><input type="button" class="numpad_button" id="button_minus"
+                       value="-"></td>
+            <td><input type="button" class="numpad_button" id="button_multiply"
+                       value="x"></td>
+            <td><input type="button" class="numpad_button" id="button_divide"
+                       value="/"></td>
         </tr>
-        </table>
-        <!-- this empty div is where we will print the stack -->
-        <p class="stack">Stack: <br> <span id="stack_output"></span></p>
-    </section>
+    </table>
+    <!-- this empty div is where we will print the stack -->
+    <p class="stack">Stack: <br> <span id="stack_output"></span></p>
+</section>
 </body>
 </html>
