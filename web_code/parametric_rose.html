@@ -4,8 +4,13 @@
     <title>Parametric Rose</title>
     <!-- this meta viewport tag makes stuff work on mobile devices -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'>
-    <link rel="stylesheet" type="text/css" media="screen" href="canvas_demo.css">
+    <!--make the chrome nav bar match the background-->
+    <meta name="theme-color" content="#272822">
+    <link rel="icon" href="/favicon.png">
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans'
+          rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" media="screen"
+          href="canvas_demo.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
     <script src="parametric_rose.js"></script>
 </head>
@@ -13,7 +18,8 @@
 <div class="config">
     <h1>Parametric Rose</h1>
     <p>Plotted using the HTML5 &lt;canvas&gt; tag and JavaScript. <a
-            href="https://en.wikipedia.org/wiki/Rose_(mathematics)" title="parametric rose">Here</a> is an explanation
+            href="https://en.wikipedia.org/wiki/Rose_(mathematics)"
+            title="parametric rose">Here</a> is an explanation
         of the math behind the graph.</p>
     <div class="line">
         Canvas Resolution:
@@ -25,8 +31,7 @@
     <div class="line">
         Step:
             <span class="right">
-            <input class="wide_num" type="number" id="input_step"
-                   value="0.03">
+            <input class="wide_num" type="number" id="input_step" value="0.03">
             </span>
     </div>
     <div class="line">
@@ -66,23 +71,32 @@
     <div class="line">
         Color:
             <span class="right wide_column">
-                <input type="radio" name="colormap" id="colormap_gray" value="colormap_gray">
-                <label class="full_wide" for="colormap_gray">Grayscale</label> <br>
-                <input type="radio" name="colormap" id="colormap_hsv" value="colormap_hsv">
+                <input type="radio" name="colormap" id="colormap_gray"
+                       value="colormap_gray">
+                <label class="full_wide"
+                       for="colormap_gray">Grayscale</label> <br>
+                <input type="radio" name="colormap" id="colormap_hsv"
+                       value="colormap_hsv">
                 <label class="full_wide" for="colormap_hsv">HSV</label> <br>
-                <input type="radio" name="colormap" id="colormap_hot" value="colormap_hot" checked="checked">
+                <input type="radio" name="colormap" id="colormap_hot"
+                       value="colormap_hot" checked="checked">
                 <label class="full_wide" for="colormap_hot">Fire</label> <br>
             </span>
     </div>
     <div class="line">
         Wave Type:
             <span class="right wide_column">
-                <input type="radio" name="wave_type" id="wave_type_sine" value="wave_type_sine" checked="checked">
+                <input type="radio" name="wave_type" id="wave_type_sine"
+                       value="wave_type_sine" checked="checked">
                 <label class="full_wide" for="wave_type_sine">sine</label> <br>
-                <input type="radio" name="wave_type" id="wave_type_sawtooth" value="wave_type_sawtooth">
-                <label class="full_wide" for="wave_type_sawtooth">sawtooth</label> <br>
-                <input type="radio" name="wave_type" id="wave_type_triangle" value="wave_type_triangle">
-                <label class="full_wide" for="wave_type_triangle">triangle</label> <br>
+                <input type="radio" name="wave_type" id="wave_type_sawtooth"
+                       value="wave_type_sawtooth">
+                <label class="full_wide"
+                       for="wave_type_sawtooth">sawtooth</label> <br>
+                <input type="radio" name="wave_type" id="wave_type_triangle"
+                       value="wave_type_triangle">
+                <label class="full_wide"
+                       for="wave_type_triangle">triangle</label> <br>
             </span>
     </div>
     <div class="line">
@@ -90,7 +104,8 @@
     </div>
     <div class="line">
         <div class="center">
-            <input class="go_button" type="button" id="btn_render" value="Render">
+            <input class="go_button" type="button" id="btn_render"
+                   value="Render">
         </div>
     </div>
 </div>
