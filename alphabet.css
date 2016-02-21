@@ -5,6 +5,11 @@ html {
     font-size: 1.5em;
 }
 
+/*hide the single-wide table on desktop*/
+table.single_wide {
+    display: none;
+}
+
 div.container_main {
     text-align: center;
     /*margin: auto;*/
@@ -68,5 +73,23 @@ input#phrase_input {
     }
     td:nth-child(4) {
         padding-left: 0;
+    }
+
+    /*make the containers one-after-another*/
+    div.container_main {
+        width: 100%;
+        float: left;
+    }
+    div.container_side {
+        width: 100%;
+        float: right;
+    }
+
+    /*hide double wide, show single wide table*/
+    table.double_wide {
+        display: none;
+    }
+    table.single_wide {
+        display: inline-block;
     }
 }
