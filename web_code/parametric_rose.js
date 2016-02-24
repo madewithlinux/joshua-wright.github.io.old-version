@@ -113,6 +113,8 @@ $(document).ready(function () {
     var wave_type_sawtooth_0 = $("#wave_type_sawtooth")[0];
     var wave_type_triangle_0 = $("#wave_type_triangle")[0];
     var progress_0 = $("#progress")[0];
+    var progress_bar_0 = $("div#progress_bar")[0];
+    var progress_bar_container_0 = $("div#progress_bar_container")[0];
     var input_linewidth_0 = $('#input_linewidth')[0];
     var input_step_0 = $("#input_step")[0];
     var input_n_0 = $("#input_n")[0];
@@ -155,6 +157,7 @@ $(document).ready(function () {
         var start;
         if (current == null) {
             /*determine how far we need to draw stuff out*/
+            progress_bar_container_0.style.display = "inline-block";
             start = max_len;
             if (hide_while_rendering[0].checked) {
                 /*hide the canvas while we render onto it, because the bright flashes can hurt your eyes*/
@@ -186,9 +189,10 @@ $(document).ready(function () {
             basic_plot(color, i, points);
             /*update progress on percentages*/
             /*same reason for rounding here as above*/
-            if (i % Math.round(max_len / 10) == 0) {
+            if (i % Math.round(max_len / 25) == 0) {
                 //progress.html("Progress: " + Math.round(100 - 100 * i / max_len) + "%");
                 progress_0.innerHTML = "Progress: " + Math.round(100 - 100 * i / max_len) + "%";
+                progress_bar_0.style.width = (100 - 100 * i / max_len) + "%";
                 /*100 - because we start at the far end*/
                 /*In order to let the UI update, we must run the rest of the math later*/
                 /*0ms delay means it will just be in line to be processed by the javascript thread*/
@@ -201,6 +205,7 @@ $(document).ready(function () {
         /*this will only run when we are completely done, since we return in the if-block above*/
         /*clear the progress field*/
         progress_0.innerHTML = "";
+        progress_bar_container_0.style.display = "none";
         /*show the canvas, since we're now done rendering on it*/
         main_canvas.show();
     }

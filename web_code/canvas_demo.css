@@ -49,6 +49,30 @@ div.line {
     margin: 4px 0;
 }
 
+div#progress {
+    text-align: center;
+    width: 100%;
+}
+
+div#progress_bar_container {
+    width: 100%;
+    height: 2em;
+    /*default to don't display, and we'll manually display it later in the
+    * javascript*/
+    display: none;
+    margin: 0 0 10px 0;
+    background-color: #F8F8F2;
+}
+
+div#progress_bar {
+    /*height: 2em;*/
+    height: 100%;
+    display: inline-block;
+    /*width: 100%;*/
+    width: 70%;
+    background-color: #66D9EF;
+}
+
 a:visited {
     color: #bbb;
 }
@@ -82,6 +106,7 @@ input[type="checkbox"]:checked + label {
 div.center {
     width: 70px;
     margin: auto;
+    padding: 3px;
 }
 
 input.go_button {
