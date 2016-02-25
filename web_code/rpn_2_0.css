@@ -1,0 +1,89 @@
+@import url(https://fonts.googleapis.com/css?family=Open+Sans:400,700);
+
+html {
+    font-family: 'Open Sans', sans-serif;
+    /*transition: background-color .1s;*/
+}
+
+h1 {
+    margin: 0;
+    text-align: center;
+    font-size: 45px;
+}
+
+input {
+    font-size: 35px;
+}
+
+div#output {
+    font-size: 35px;
+    text-align: right;
+}
+
+div.tree {
+    width: 100%;
+    background: #bbbbbb;
+}
+
+input {
+    width: 100%;
+    border: 2px solid #000;
+}
+
+div.box {
+    overflow: auto;
+    text-align: center;
+}
+
+div.container {
+    overflow: auto;
+    font-size: 0;
+}
+
+div.numberContainer {
+    /*width: 100%;*/
+    font-size: 40px;
+    padding: 5px;
+    background-color: #66D9EF;
+}
+div.number {
+    display: block;
+    float: right;
+    text-align: right;
+}
+
+div.operands {
+    display: inline-block;
+    float: left;
+}
+
+
+div.operatorContainer {
+    position: relative;
+    font-size: 40px;
+    top: 50%;
+    /*margin-top: 100%;*/
+    transform: translateY(-50%);
+}
+div.operator {
+    /*padding-left: 0.25em;*/
+    /*font-size: 40px;*/
+    display: inline-block;
+    float: left;
+    height: 100%;
+    text-align: center;
+    width: 50px;
+    background-color: #aaaaaa;
+    /*CSS arrow (kind of)*/
+    border-left: 10px solid #000;
+    border-top: 10px solid transparent;
+    border-bottom: 10px solid transparent;
+}
+
+@media screen and (max-width: 600px) {
+    h1 {font-size: 30px;}
+    input {font-size: 30px;}
+    div#output {font-size: 30px;}
+    div.numberContainer  {font-size: 30px;}
+    div.operatorContainer {font-size: 30px;}
+}
