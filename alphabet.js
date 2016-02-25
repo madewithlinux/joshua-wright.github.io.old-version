@@ -78,8 +78,13 @@ $(document).ready(function () {
         }
     }
 
-    input.keyup(function () {
+    input.keyup(function (e) {
         /*re-run whenever input changes*/
+        var KEYCODE_ESCAPE = 27;
+        if (e.keyCode == KEYCODE_ESCAPE) {
+            /*clear the input field when we hit escape*/
+            input.val('');
+        }
         spell_input();
     });
 
