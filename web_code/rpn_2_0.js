@@ -5,6 +5,9 @@
 
 var tree_root = document.getElementById("main_tree");
 var output_div = document.getElementById("output");
+var output_hidden = document.getElementById("output_hidden");
+var main_input_box = document.getElementById('input');
+var copy_button = document.getElementById("copy_button");
 
 var class_container = "container";
 var class_operands = "operands";
@@ -12,7 +15,7 @@ var class_operator = "operator";
 var class_number = "number";
 var class_numberContainer = 'numberContainer';
 
-var operators = ['+', '-', '*', '/', '%', '^'];
+var operators = ['+', '-', '×', '÷', '%', '^'];
 var operator_colors = [
     "#aaa",
     "#ccc",
@@ -51,6 +54,9 @@ Node.type_operator = 1;
 
 
 function evaluate_expression(node) {
+    if (node == undefined) {
+        return 0;
+    }
     if (node.type == Node.type_number) {
         return node.value;
     }
@@ -161,6 +167,10 @@ function center_operators() {
     }
 }
 function display_expression(node) {
+    //console.log(node);
+    //if (node == undefined) {
+    //    return;
+    //}
     /*clear the expression already there*/
     var nodes = [];
     if (node instanceof Node) {
@@ -172,31 +182,80 @@ function display_expression(node) {
             nodes.push(render_expression(v));
         })
     }
-    if (nodes.length > 1) {
+    if (nodes.length > 0) {
         tree_root.innerHTML = "";
         nodes.forEach(function (v, i) {
             tree_root.appendChild(v);
         });
-    } else {
-        tree_root.innerHTML = "";
-        tree_root.appendChild(nodes[0]);
     }
     /*use a timeout to give the browser time to see the new HTML nodes*/
     //setTimeout(center_operators, 10);
     center_operators();
 }
 
-var main_input_box = document.getElementById('input');
-main_input_box.onkeyup = function () {
-    /*parse the rpn expression into an expression tree*/
-    var tree = parse_expression(main_input_box.value);
-    /*display the tree*/
-    display_expression(tree);
-    /*evaluate the tree for a numberical value*/
-    output_div.textContent = evaluate_expression(tree[0]).toLocaleString();
+function trim_last_char() {
+    main_input_box.value = main_input_box.value.slice(0, -1);
+}
+main_input_box.onkeyup = function (e) {
+    var KEYCODE_SLASH_QUESTION_MARK = 191;
+    var KEYCODE_EIGHT_MULTIPLY = 56;
+    var KEYCODE_C = 67;
+    if (e.keyCode == KEYCODE_SLASH_QUESTION_MARK && e.shiftKey) {
+        /*question mark*/
+        /*TODO: show help*/
+        console.log("TODO: show help");
+        trim_last_char();
+    } else if (e.keyCode == KEYCODE_C && e.ctrlKey) {
+        e.preventDefault();
+        /*TODO: copy output*/
+        //console.log("TODO: copy output");
+        /*make a selection range*/
+        var range = document.createRange();
+        /*make the hidden output visible for copying*/
+        output_hidden.style.display = "block";
+        /*add the hidden output to the selection range*/
+        range.selectNode(output_hidden);
+        console.log(range.toString());
+        d = window.getSelection();
+        /*remove whatever was selected before, because the selection must be contiguous*/
+        d.removeAllRanges();
+        /*select the selection object*/
+        d.addRange(range);
+        /*ask the web browser to copy that selection*/
+        console.log("copy enabled: " + document.queryCommandEnabled("copy"));
+        var result = document.execCommand("copy");
+        console.log(result);
+        /*clean up: set no selection*/
+        d.removeAllRanges();
+        /*hide the hidden output box again*/
+        output_hidden.style.display = "none";
+        /*focus the input box in case it lost focus*/
+        main_input_box.focus();
+    } else {
+        if (e.keyCode == KEYCODE_SLASH_QUESTION_MARK) {
+            trim_last_char();
+            main_input_box.value += "÷";
+        } else if (e.keyCode == KEYCODE_EIGHT_MULTIPLY && e.shiftKey) {
+            trim_last_char();
+            main_input_box.value += "×";
+        }
+        console.log("e.keyCode: " + e.keyCode);
+        /*parse the rpn expression into an expression tree*/
+        var tree = parse_expression(main_input_box.value);
+        /*display the tree*/
+        display_expression(tree);
+        /*evaluate the tree for a numberical value*/
+        var output = evaluate_expression(tree[0]);
+        output_div.textContent = output.toLocaleString();
+        output_hidden.textContent = output.toString();
+    }
 };
+main_input_box.onkeyup({});
 /*make sure the output is always focused*/
-setInterval(function () {
+console.log(setInterval(function () {
     main_input_box.focus()
-}, 100);
+}, 100));
+
+/*instanciate the clipboard object*/
+//var clipboard = new Clipboard('.btn');
 
