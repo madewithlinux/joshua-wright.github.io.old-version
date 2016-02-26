@@ -3,12 +3,18 @@
 html {
     font-family: 'Open Sans', sans-serif;
     /*transition: background-color .1s;*/
+    transition: opacity 0.25s ease-in-out;
 }
 
 h1 {
     margin: 0;
     text-align: center;
     font-size: 45px;
+}
+
+h3 {
+    opacity: 1;
+    transition: opacity 0.25s ease-in-out;
 }
 
 input {
@@ -47,6 +53,7 @@ div.numberContainer {
     padding: 10px;
     background-color: #66D9EF;
 }
+
 div.number {
     display: block;
     float: right;
@@ -60,7 +67,6 @@ div.operands {
     /*border-bottom: 2px solid #000;*/
 }
 
-
 div.operatorContainer {
     padding: 0 10px;
     position: relative;
@@ -69,6 +75,7 @@ div.operatorContainer {
     /*margin-top: 100%;*/
     transform: translateY(-50%);
 }
+
 div.operator {
     display: inline-block;
     float: left;
@@ -83,10 +90,62 @@ div.operator {
     border-bottom: 10px solid transparent;
 }
 
+div#help_screen_container {
+    position: absolute;
+    font-size: 25px;
+    top: 50%;
+    left: 50%;
+    transform: translateY(-50%) translateX(-50%);
+    border: 3px solid #000000;
+    padding: 10px;
+    box-shadow: 10px 10px 20px #888888;
+    background: #ffffff;
+    opacity: 0;
+    /*opacity: 1;*/
+    transition: opacity 0.25s ease-in-out;
+}
+
+div.operator_table_container {
+    -webkit-column-count: 3; /* Chrome, Safari, Opera */
+    -moz-column-count: 3; /* Firefox */
+    /*-moz-column-fill: balance;*/
+    /*-moz-column-fill: auto;*/
+    column-count: 3;
+    column-width: auto;
+}
+
+div.operator_table_container ul {
+    /*remove margin because it messes with multi-column-ness*/
+    /*overflow-style: auto;*/
+    white-space: nowrap;
+    margin: 0;
+}
+
+div.operator_table_container tbody {
+    /*-webkit-column-span: all; !* Chrome, Safari, Opera *!*/
+    /*-webkit-column-span: default; !* Chrome, Safari, Opera *!*/
+    column-span: all;
+    white-space: nowrap;
+}
+
 @media screen and (max-width: 600px) {
-    h1 {font-size: 30px;}
-    input {font-size: 30px;}
-    div#output {font-size: 30px;}
-    div.numberContainer  {font-size: 30px;}
-    div.operatorContainer {font-size: 30px;}
+    h1 {
+        font-size: 30px;
+    }
+
+    input {
+        font-size: 30px;
+    }
+
+    div#output {
+        font-size: 30px;
+    }
+
+    div.numberContainer {
+        font-size: 30px;
+    }
+
+    div.operatorContainer {
+        font-size: 30px;
+    }
 }

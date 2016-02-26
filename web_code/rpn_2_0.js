@@ -8,6 +8,8 @@ var output_div = document.getElementById("output");
 var output_hidden = document.getElementById("output_hidden");
 var main_input_box = document.getElementById('input');
 var copy_button = document.getElementById("copy_button");
+var help_screen = document.getElementById("help_screen_container");
+var help_screen_tip = document.getElementById("help_popup");
 
 var class_container = "container";
 var class_operands = "operands";
@@ -17,8 +19,8 @@ var class_numberContainer = 'numberContainer';
 
 
 /*
-gigantic expression to make a nice grid for color testing:
-1 sin 2 cos + 3 tan 4 asin  − × 7 acos 8 atan ÷ 3 abs 8 ln \ ⬆ % ! 7 log 8 exp C 2 10⬆ 6 2⬆ P atan2 √
+ gigantic expression to make a nice grid for color testing:
+ 1 sin 2 cos + 3 tan 4 asin  − × 7 acos 8 atan ÷ 3 abs 8 ln \ ⬆ % ! 7 log 8 exp C 2 10⬆ 6 2⬆ P atan2 √
  */
 var constants = {
     'π': Math.PI,
@@ -330,6 +332,26 @@ function display_expression(node) {
     center_operators();
 }
 
+function toggle_help_visibility() {
+    if (help_screen.style.opacity == 0) {
+        /*show the help screen*/
+        help_screen.style.display = "block";
+        //document.body.style.zIndex = 1;
+        //help_screen.style.opacity = "1";
+        /*use a 0-delay timeout so that it has a chance to update the partial css*/
+        setTimeout(function () {
+            help_screen.style.opacity = 1;
+        }, 1);
+    } else {
+        //help_screen.style.display = "none";
+        help_screen.style.opacity = 0;
+        setTimeout(function () {
+            /*use a delay such that it will not really hide until it is fully
+            * transparent*/
+            help_screen.style.display = "none";
+        }, 1000/4);
+    }
+}
 function trim_last_char() {
     /*trim the character right behind the cursor*/
     var cursor_idx = main_input_box.selectionStart;
@@ -385,6 +407,11 @@ main_input_box.onkeyup = function (e) {
         /*TODO: show help*/
         console.log("TODO: show help");
         trim_last_char();
+        toggle_help_visibility();
+        help_screen_tip.style.opacity = 0;
+        setTimeout(function () {
+            help_screen_tip.style.display = "none";
+        }, 300);
     } else if (e.keyCode == KEYCODE_R && e.shiftKey) {
         trim_last_char();
         /*we need to de-focus the input box, so we need to bakckup the cursor index*/
