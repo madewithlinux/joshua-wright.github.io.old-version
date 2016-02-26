@@ -62,6 +62,7 @@ div.operands {
 
 
 div.operatorContainer {
+    padding: 0 10px;
     position: relative;
     font-size: 40px;
     top: 50%;

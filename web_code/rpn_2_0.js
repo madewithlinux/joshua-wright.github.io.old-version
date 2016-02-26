@@ -15,6 +15,11 @@ var class_operator = "operator";
 var class_number = "number";
 var class_numberContainer = 'numberContainer';
 
+
+/*
+gigantic expression to make a nice grid for color testing:
+1 sin 2 cos + 3 tan 4 asin  − × 7 acos 8 atan ÷ 3 abs 8 ln \ ⬆ % ! 7 log 8 exp C 2 10⬆ 6 2⬆ P atan2 √
+ */
 var constants = {
     'π': Math.PI,
     'ℯ': Math.E,
@@ -24,23 +29,24 @@ var replacements = {
     '*': '×',
     "-": '−',
     '/': '÷',
-    '^': '↑',
+    '^': '⬆',
     'pi': 'π',
     'e': 'ℯ',
     'inf': '∞',
-    '10^': '10↑',
-    '2^': '2↑'
+    '10^': '10⬆',
+    '2^': '2⬆',
+    'sqrt': '√'
 };
-var operators = ['+', '−', '×', '÷', '%', '↑', '\\',
+var operators = ['+', '−', '×', '÷', '%', '⬆', '\\',
     'sin', 'cos', 'tan', 'asin', 'acos', 'atan',
-    'abs', 'ln', 'log', 'lg', 'exp', '10↑', '2↑'];
+    'abs', 'ln', 'log', 'lg', 'exp', '10⬆', '2⬆', '!', 'C', 'P', 'atan2', '√'];
 var op_param_counts = {
     '+': 2,
     '−': 2,
     '×': 2,
     '÷': 2,
     '%': 2,
-    '↑': 2,
+    '⬆': 2,
     '\\': 2,
     'sin': 1,
     'cos': 1,
@@ -53,8 +59,13 @@ var op_param_counts = {
     'log': 1,
     'lg': 1,
     'exp': 1,
-    '10↑': 1,
-    '2↑': 1
+    '10⬆': 1,
+    '2⬆': 1,
+    '!': 1,
+    'C': 2,
+    'P': 2,
+    'atan2': 2,
+    '√': 1
 };
 var op_indexes = {
     '+': 0,
@@ -62,7 +73,7 @@ var op_indexes = {
     '×': 2,
     '÷': 3,
     '%': 4,
-    '↑': 5,
+    '⬆': 5,
     '\\': 6,
     'sin': 7,
     'cos': 8,
@@ -75,28 +86,53 @@ var op_indexes = {
     'log': 15,
     'lg': 16,
     'exp': 17,
-    '10↑': 18,
-    '2↑': 19
+    '10⬆': 18,
+    '2⬆': 19,
+    '!': 20,
+    'C': 21,
+    'P': 22,
+    'atan2': 23,
+    '√': 24
 };
 var op_colors = [
-    "#ff0000",
-    "#3399ff",
-    "#33cc33",
-    "#6600ff",
-    "#9900cc",
-    "#ff9900",
-    "#ffff00",
-    "#cc3300",
-    "#cc66ff",
-    "#00ff00",
-    "#0066ff",
-    "#ffcc66",
-    "#cc3399",
-    "#fff",
-    "#fff",
-    "#fff",
-    "#fff",
-    "#fff"
+    "#ddecb1",
+    "#98d3ed",
+    "#7ee324",
+    "#4bd2fa",
+    "#af2846",
+    "#b852d5",
+    "#fcf844",
+    "#90973e",
+    "#c658d6",
+    "#689fde",
+    "#a2cab0",
+    "#4bc379",
+    "#f462c6",
+    "#d1f446",
+    "#804a82",
+    "#e2f0af",
+    "#b076e9",
+    "#eef399",
+    "#c27bfc",
+    "#4a58ce",
+    "#af9f73",
+    "#5154e7",
+    "#3040ac",
+    "#3ba859",
+    "#b2b4b3",
+    "#6e8c8d",
+    "#fdde69",
+    "#8d66d1",
+    "#b0d6e4",
+    "#e4e7f5",
+    "#d09228",
+    "#414c96",
+    "#7d8adb",
+    "#856fef",
+    "#d8ea2b",
+    "#53b051",
+    "#b0562f",
+    "#d4b78f"
 ];
 
 
@@ -108,7 +144,6 @@ function Node(value, children) {
     } else if (typeof value == "string") {
         this.type = 1;
         this.value = undefined;
-        //this.operation = operators.indexOf(value);
         this.operation = op_indexes[value];
     }
     if (children != undefined) {
@@ -132,78 +167,74 @@ function eval_tree(n) {
     switch (n.operation) {
         case op_indexes['+']: /*addition*/
             val = 0;
+            /*use a for loop. will be useful if we want multi-input operators*/
             n.children.forEach(function (v, i) {
                 val += eval_tree(v);
             });
-            break;
+            return val;
         case op_indexes['×']: /*multiplication*/
             val = 1;
             n.children.forEach(function (v, i) {
                 val *= eval_tree(v);
             });
-            break;
+            return val;
         case op_indexes['−']: /*subtraction*/
-            val = eval_tree(n.children[0]) - eval_tree(n.children[1]);
-            break;
+            return eval_tree(n.children[0]) - eval_tree(n.children[1]);
         case op_indexes['÷']: /*division*/
-            val = eval_tree(n.children[0]) / eval_tree(n.children[1]);
-            break;
+            return eval_tree(n.children[0]) / eval_tree(n.children[1]);
         case op_indexes['']: /*modulo*/
-            val = eval_tree(n.children[0]) % eval_tree(n.children[1]);
-            break;
-        case op_indexes['↑']: /*exponent*/
-            val = Math.pow(eval_tree(n.children[0]), eval_tree(n.children[1]));
-            break;
+            return eval_tree(n.children[0]) % eval_tree(n.children[1]);
+        case op_indexes['⬆']: /*exponent*/
+            return Math.pow(eval_tree(n.children[0]), eval_tree(n.children[1]));
         case op_indexes['\\']: /*backward division*/
-            val = eval_tree(n.children[1]) / eval_tree(n.children[0]);
-            break;
+            return eval_tree(n.children[1]) / eval_tree(n.children[0]);
         case op_indexes['sin']:
-            val = Math.sin(eval_tree(n.children[0]));
-            break;
+            return Math.sin(eval_tree(n.children[0]));
         case op_indexes['cos']:
-            val = Math.cos(eval_tree(n.children[0]));
-            break;
+            return Math.cos(eval_tree(n.children[0]));
         case op_indexes['tan']:
-            val = Math.tan(eval_tree(n.children[0]));
-            break;
+            return Math.tan(eval_tree(n.children[0]));
         case op_indexes['asin']:
-            val = Math.asin(eval_tree(n.children[0]));
-            break;
+            return Math.asin(eval_tree(n.children[0]));
         case op_indexes['acos']:
-            val = Math.acos(eval_tree(n.children[0]));
-            break;
+            return Math.acos(eval_tree(n.children[0]));
         case op_indexes['atan']:
-            val = Math.atan(eval_tree(n.children[0]));
-            break;
+            return Math.atan(eval_tree(n.children[0]));
         case op_indexes['abs']:
-            val = Math.abs(eval_tree(n.children[0]));
-            break;
+            return Math.abs(eval_tree(n.children[0]));
         case op_indexes['ln']:
-            val = Math.log(eval_tree(n.children[0]));
-            break;
+            return Math.log(eval_tree(n.children[0]));
         case op_indexes['log']:
-            val = Math.log10(eval_tree(n.children[0]));
-            break;
+            return Math.log10(eval_tree(n.children[0]));
         case op_indexes['lg']:
-            val = Math.log2(eval_tree(n.children[0]));
-            break;
+            return Math.log2(eval_tree(n.children[0]));
         case op_indexes['exp']:
-            val = Math.exp(eval_tree(n.children[0]));
-            break;
-        case op_indexes['10↑']:
-            val = Math.pow(10, eval_tree(n.children[0]));
-            break;
-        case op_indexes['2↑']:
-            val = Math.pow(2, eval_tree(n.children[0]));
-            break;
+            return Math.exp(eval_tree(n.children[0]));
+        case op_indexes['10⬆']:
+            return Math.pow(10, eval_tree(n.children[0]));
+        case op_indexes['2⬆']:
+            return Math.pow(2, eval_tree(n.children[0]));
+        case op_indexes['!']:
+            return math.factorial(eval_tree(n.children[0]));
+        case op_indexes['C']:
+            return math.combinations(eval_tree(n.children[0]), eval_tree(n.children[1]));
+        case op_indexes['P']:
+            return math.permutations(eval_tree(n.children[0]), eval_tree(n.children[1]));
+        case op_indexes['atan2']:
+            return Math.atan2(eval_tree(n.children[1]), eval_tree(n.children[0]));
+        case op_indexes['√']:
+            return Math.sqrt(eval_tree(n.children[0]));
+        default:
+            console.log("Bad Node!");
+            console.log(n);
     }
-    return val;
 }
 function parse_expression(expr) {
     var stack = [];
     var stream = expr.split(' ');
     stream.forEach(function (v, i) {
         if (v == "") {
+            /*double spaces cause empty strings after splitting*/
             return;
         }
         var op = operators.indexOf(v);
@@ -214,7 +245,7 @@ function parse_expression(expr) {
             stack.push(new Node(Number(v)));
         } else {
             /*this is an operator*/
-            /*TODO: will need to change this for non-binary operators*/
+            /*slice off the top of the stack and give it to this operator*/
             var tmp_stack = stack.slice(-op_param_counts[v], stack.length);
             stack = stack.slice(0, -op_param_counts[v]);
             var new_node = new Node(v, tmp_stack);
@@ -272,17 +303,12 @@ function center_operators() {
     var elements = document.getElementsByClassName(class_operator);
     for (var i = 0; i < elements.length; i++) {
         var height = elements[i].previousSibling.getBoundingClientRect().height;
-        //if (elements[i].getBoundingClientRect().height < height) {
-        //    elements[i].position = "relative";
-        //    elements[i].style.height = (height - 20) + 'px';
-        //}
         elements[i].position = "relative";
         elements[i].style.height = (height - 20) + 'px';
     }
 }
 function display_expression(node) {
     /*clear the expression already there*/
-    console.log(node);
     var nodes = [];
     if (node instanceof Node) {
         /*assume it's a single node*/
@@ -303,20 +329,18 @@ function display_expression(node) {
 }
 
 function trim_last_char() {
+    /*trim the character right behind the cursor*/
     var cursor_idx = main_input_box.selectionStart;
     var old_val = main_input_box.value;
-    //console.log(old_val.slice(0, cursor_idx));
-    //main_input_box.value = old_val.slice(0, cursor_idx - 1);
     main_input_box.value = old_val.slice(0, cursor_idx - 1) + old_val.slice(cursor_idx, old_val.length);
-    console.log("old value: " + old_val + ", new value: " + main_input_box.value);
+    //console.log("old value: " + old_val + ", new value: " + main_input_box.value);
     main_input_box.setSelectionRange(cursor_idx - 1, cursor_idx - 1);
     console.log(cursor_idx - 1);
 }
 function do_replacements() {
-    //console.log(main_input_box.selectionStart);
+    /*backup the selection indexes*/
     var old_start = main_input_box.selectionStart;
     var old_end = main_input_box.selectionEnd;
-    //console.log("start: " + old_start + ", end: " + old_end);
     var expr = main_input_box.value;
     var stream = expr.split(' ');
     var tokens = [];
@@ -339,7 +363,9 @@ function do_replacements() {
             tokens.push(v);
         }
     });
+    /*put the edited value back in the text box*/
     main_input_box.value = tokens.join(' ');
+    /*put the cursor where it belongs*/
     old_end += balance_end;
     old_start += balance_start;
     main_input_box.setSelectionRange(old_start, old_end);
@@ -389,7 +415,7 @@ main_input_box.onkeyup = function (e) {
         main_input_box.setSelectionRange(old_start, old_end);
     } else {
         do_replacements();
-        console.log("e.keyCode: " + e.keyCode);
+        //console.log("e.keyCode: " + e.keyCode);
         /*parse the rpn expression into an expression tree*/
         var tree = parse_expression(main_input_box.value);
         /*display the tree*/
@@ -400,6 +426,7 @@ main_input_box.onkeyup = function (e) {
         output_hidden.textContent = output.toString();
     }
 };
+/*call the event handler on page load*/
 main_input_box.onkeyup({});
 /*make sure the output is always focused*/
 console.log(setInterval(function () {
