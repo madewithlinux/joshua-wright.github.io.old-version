@@ -37,10 +37,13 @@ var replacements = {
     'inf': '∞',
     '10^': '10⬆',
     '2^': '2⬆',
-    'sqrt': '√'
+    'sqrt': '√',
+    'asin': 'sin⁻¹',
+    'acos': 'cos⁻¹',
+    'atan': 'tan⁻¹'
 };
 var operators = ['+', '−', '×', '÷', '%', '⬆', '\\',
-    'sin', 'cos', 'tan', 'asin', 'acos', 'atan',
+    'sin', 'cos', 'tan', 'sin⁻¹', 'cos⁻¹', 'tan⁻¹',
     'abs', 'ln', 'log', 'lg', 'exp', '10⬆', '2⬆', '!', 'C', 'P', 'atan2', '√'];
 var op_param_counts = {
     '+': 2,
@@ -53,9 +56,9 @@ var op_param_counts = {
     'sin': 1,
     'cos': 1,
     'tan': 1,
-    'asin': 1,
-    'acos': 1,
-    'atan': 1,
+    'sin⁻¹': 1,
+    'cos⁻¹': 1,
+    'tan⁻¹': 1,
     'abs': 1,
     'ln': 1,
     'log': 1,
@@ -80,9 +83,9 @@ var op_indexes = {
     'sin': 7,
     'cos': 8,
     'tan': 9,
-    'asin': 10,
-    'acos': 11,
-    'atan': 12,
+    'sin⁻¹': 10,
+    'cos⁻¹': 11,
+    'tan⁻¹': 12,
     'abs': 13,
     'ln': 14,
     'log': 15,
@@ -196,11 +199,11 @@ function eval_tree(n) {
             return Math.cos(eval_tree(n.children[0]));
         case op_indexes['tan']:
             return Math.tan(eval_tree(n.children[0]));
-        case op_indexes['asin']:
+        case op_indexes['sin⁻¹']:
             return Math.asin(eval_tree(n.children[0]));
-        case op_indexes['acos']:
+        case op_indexes['cos⁻¹']:
             return Math.acos(eval_tree(n.children[0]));
-        case op_indexes['atan']:
+        case op_indexes['tan⁻¹']:
             return Math.atan(eval_tree(n.children[0]));
         case op_indexes['abs']:
             return Math.abs(eval_tree(n.children[0]));
