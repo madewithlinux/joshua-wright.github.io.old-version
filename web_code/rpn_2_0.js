@@ -16,20 +16,69 @@ var class_number = "number";
 var class_numberContainer = 'numberContainer';
 
 var constants = {
-    'π': 3.141592653589793,
-    'ℯ': 2.718281828459045,
+    'π': Math.PI,
+    'ℯ': Math.E,
     '∞': Infinity
 };
 var replacements = {
     '*': '×',
     "-": '−',
     '/': '÷',
+    '^': '↑',
     'pi': 'π',
     'e': 'ℯ',
-    'inf': '∞'
+    'inf': '∞',
+    '10^': '10↑',
+    '2^': '2↑'
 };
-var operators = ['+', '−', '×', '÷', '%', '^', '\\'];
-var operator_colors = [
+var operators = ['+', '−', '×', '÷', '%', '↑', '\\',
+    'sin', 'cos', 'tan', 'asin', 'acos', 'atan',
+    'abs', 'ln', 'log', 'lg', 'exp', '10↑', '2↑'];
+var op_param_counts = {
+    '+': 2,
+    '−': 2,
+    '×': 2,
+    '÷': 2,
+    '%': 2,
+    '↑': 2,
+    '\\': 2,
+    'sin': 1,
+    'cos': 1,
+    'tan': 1,
+    'asin': 1,
+    'acos': 1,
+    'atan': 1,
+    'abs': 1,
+    'ln': 1,
+    'log': 1,
+    'lg': 1,
+    'exp': 1,
+    '10↑': 1,
+    '2↑': 1
+};
+var op_indexes = {
+    '+': 0,
+    '−': 1,
+    '×': 2,
+    '÷': 3,
+    '%': 4,
+    '↑': 5,
+    '\\': 6,
+    'sin': 7,
+    'cos': 8,
+    'tan': 9,
+    'asin': 10,
+    'acos': 11,
+    'atan': 12,
+    'abs': 13,
+    'ln': 14,
+    'log': 15,
+    'lg': 16,
+    'exp': 17,
+    '10↑': 18,
+    '2↑': 19
+};
+var op_colors = [
     "#ff0000",
     "#3399ff",
     "#33cc33",
@@ -37,7 +86,12 @@ var operator_colors = [
     "#9900cc",
     "#ff9900",
     "#ffff00",
-    "#fff",
+    "#cc3300",
+    "#cc66ff",
+    "#00ff00",
+    "#0066ff",
+    "#ffcc66",
+    "#cc3399",
     "#fff",
     "#fff",
     "#fff",
@@ -54,7 +108,8 @@ function Node(value, children) {
     } else if (typeof value == "string") {
         this.type = 1;
         this.value = undefined;
-        this.operation = operators.indexOf(value);
+        //this.operation = operators.indexOf(value);
+        this.operation = op_indexes[value];
     }
     if (children != undefined) {
         this.children = children;
@@ -66,41 +121,81 @@ Node.type_number = 0;
 Node.type_operator = 1;
 
 
-function evaluate_expression(node) {
-    if (node == undefined) {
+function eval_tree(n) {
+    if (n == undefined) {
         return 0;
     }
-    if (node.type == Node.type_number) {
-        return node.value;
+    if (n.type == Node.type_number) {
+        return n.value;
     }
     var val;
-    switch (node.operation) {
-        case 0: /*addition*/
+    switch (n.operation) {
+        case op_indexes['+']: /*addition*/
             val = 0;
-            node.children.forEach(function (v, i) {
-                val += evaluate_expression(v);
+            n.children.forEach(function (v, i) {
+                val += eval_tree(v);
             });
             break;
-        case 2: /*multiplication*/
+        case op_indexes['×']: /*multiplication*/
             val = 1;
-            node.children.forEach(function (v, i) {
-                val *= evaluate_expression(v);
+            n.children.forEach(function (v, i) {
+                val *= eval_tree(v);
             });
             break;
-        case 1: /*subtraction*/
-            val = evaluate_expression(node.children[0]) - evaluate_expression(node.children[1]);
+        case op_indexes['−']: /*subtraction*/
+            val = eval_tree(n.children[0]) - eval_tree(n.children[1]);
             break;
-        case 3: /*division*/
-            val = evaluate_expression(node.children[0]) / evaluate_expression(node.children[1]);
+        case op_indexes['÷']: /*division*/
+            val = eval_tree(n.children[0]) / eval_tree(n.children[1]);
             break;
-        case 4: /*modulo*/
-            val = evaluate_expression(node.children[0]) % evaluate_expression(node.children[1]);
+        case op_indexes['']: /*modulo*/
+            val = eval_tree(n.children[0]) % eval_tree(n.children[1]);
             break;
-        case 5: /*exponent*/
-            val = Math.pow(evaluate_expression(node.children[0]), evaluate_expression(node.children[1]));
+        case op_indexes['↑']: /*exponent*/
+            val = Math.pow(eval_tree(n.children[0]), eval_tree(n.children[1]));
             break;
-        case 6: /*backward division*/
-            val = evaluate_expression(node.children[1]) / evaluate_expression(node.children[0]);
+        case op_indexes['\\']: /*backward division*/
+            val = eval_tree(n.children[1]) / eval_tree(n.children[0]);
+            break;
+        case op_indexes['sin']:
+            val = Math.sin(eval_tree(n.children[0]));
+            break;
+        case op_indexes['cos']:
+            val = Math.cos(eval_tree(n.children[0]));
+            break;
+        case op_indexes['tan']:
+            val = Math.tan(eval_tree(n.children[0]));
+            break;
+        case op_indexes['asin']:
+            val = Math.asin(eval_tree(n.children[0]));
+            break;
+        case op_indexes['acos']:
+            val = Math.acos(eval_tree(n.children[0]));
+            break;
+        case op_indexes['atan']:
+            val = Math.atan(eval_tree(n.children[0]));
+            break;
+        case op_indexes['abs']:
+            val = Math.abs(eval_tree(n.children[0]));
+            break;
+        case op_indexes['ln']:
+            val = Math.log(eval_tree(n.children[0]));
+            break;
+        case op_indexes['log']:
+            val = Math.log10(eval_tree(n.children[0]));
+            break;
+        case op_indexes['lg']:
+            val = Math.log2(eval_tree(n.children[0]));
+            break;
+        case op_indexes['exp']:
+            val = Math.exp(eval_tree(n.children[0]));
+            break;
+        case op_indexes['10↑']:
+            val = Math.pow(10, eval_tree(n.children[0]));
+            break;
+        case op_indexes['2↑']:
+            val = Math.pow(2, eval_tree(n.children[0]));
+            break;
     }
     return val;
 }
@@ -120,9 +215,9 @@ function parse_expression(expr) {
         } else {
             /*this is an operator*/
             /*TODO: will need to change this for non-binary operators*/
-            var i2 = stack.pop();
-            var i1 = stack.pop();
-            var new_node = new Node(v, [i1, i2]);
+            var tmp_stack = stack.slice(-op_param_counts[v], stack.length);
+            stack = stack.slice(0, -op_param_counts[v]);
+            var new_node = new Node(v, tmp_stack);
             stack.push(new_node);
         }
     });
@@ -146,7 +241,7 @@ function render_expression(node) {
         var container = document.createElement('div');
         container.classList.add("box");
         container.classList.add(class_container);
-        container.style.backgroundColor = operator_colors[node.operation];
+        container.style.backgroundColor = op_colors[node.operation];
 
         var operands = document.createElement('div');
         operands.classList.add("box");
@@ -163,7 +258,7 @@ function render_expression(node) {
         op_parent.classList.add("box");
         op_parent.classList.add(class_operator);
         //op_parent.textContent = operators[node.operation];
-        op_parent.style.backgroundColor = operator_colors[node.operation];
+        op_parent.style.backgroundColor = op_colors[node.operation];
         var op_txt = document.createElement('div');
         op_txt.classList.add("operatorContainer");
         op_txt.textContent = operators[node.operation];
@@ -176,15 +271,18 @@ function render_expression(node) {
 function center_operators() {
     var elements = document.getElementsByClassName(class_operator);
     for (var i = 0; i < elements.length; i++) {
-        //var height = elements[i].parentElement.clientHeight;
-        //var height = elements[i].parentElement.getBoundingClientRect().height;
         var height = elements[i].previousSibling.getBoundingClientRect().height;
+        //if (elements[i].getBoundingClientRect().height < height) {
+        //    elements[i].position = "relative";
+        //    elements[i].style.height = (height - 20) + 'px';
+        //}
         elements[i].position = "relative";
         elements[i].style.height = (height - 20) + 'px';
     }
 }
 function display_expression(node) {
     /*clear the expression already there*/
+    console.log(node);
     var nodes = [];
     if (node instanceof Node) {
         /*assume it's a single node*/
@@ -297,7 +395,7 @@ main_input_box.onkeyup = function (e) {
         /*display the tree*/
         display_expression(tree);
         /*evaluate the tree for a numberical value*/
-        var output = evaluate_expression(tree[0]);
+        var output = eval_tree(tree[0]);
         output_div.textContent = output.toLocaleString();
         output_hidden.textContent = output.toString();
     }
