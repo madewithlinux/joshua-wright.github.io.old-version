@@ -15,15 +15,28 @@ var class_operator = "operator";
 var class_number = "number";
 var class_numberContainer = 'numberContainer';
 
-var operators = ['+', '-', '×', '÷', '%', '^'];
+var constants = {
+    'π': 3.141592653589793,
+    'ℯ': 2.718281828459045,
+    '∞': Infinity
+};
+var replacements = {
+    '*': '×',
+    "-": '−',
+    '/': '÷',
+    'pi': 'π',
+    'e': 'ℯ',
+    'inf': '∞'
+};
+var operators = ['+', '−', '×', '÷', '%', '^', '\\'];
 var operator_colors = [
-    "#aaa",
-    "#ccc",
-    "#eee",
-    "#fff",
-    "#fff",
-    "#fff",
-    "#fff",
+    "#ff0000",
+    "#3399ff",
+    "#33cc33",
+    "#6600ff",
+    "#9900cc",
+    "#ff9900",
+    "#ffff00",
     "#fff",
     "#fff",
     "#fff",
@@ -86,6 +99,8 @@ function evaluate_expression(node) {
         case 5: /*exponent*/
             val = Math.pow(evaluate_expression(node.children[0]), evaluate_expression(node.children[1]));
             break;
+        case 6: /*backward division*/
+            val = evaluate_expression(node.children[1]) / evaluate_expression(node.children[0]);
     }
     return val;
 }
@@ -97,7 +112,9 @@ function parse_expression(expr) {
             return;
         }
         var op = operators.indexOf(v);
-        if (op == -1) {
+        if (v.toLowerCase() in constants) {
+            stack.push(new Node(constants[v.toLowerCase()]));
+        } else if (op == -1) {
             /*this is a number, because it isn't an operator*/
             stack.push(new Node(Number(v)));
         } else {
@@ -167,10 +184,6 @@ function center_operators() {
     }
 }
 function display_expression(node) {
-    //console.log(node);
-    //if (node == undefined) {
-    //    return;
-    //}
     /*clear the expression already there*/
     var nodes = [];
     if (node instanceof Node) {
@@ -188,34 +201,78 @@ function display_expression(node) {
             tree_root.appendChild(v);
         });
     }
-    /*use a timeout to give the browser time to see the new HTML nodes*/
-    //setTimeout(center_operators, 10);
     center_operators();
 }
 
 function trim_last_char() {
-    main_input_box.value = main_input_box.value.slice(0, -1);
+    var cursor_idx = main_input_box.selectionStart;
+    var old_val = main_input_box.value;
+    //console.log(old_val.slice(0, cursor_idx));
+    //main_input_box.value = old_val.slice(0, cursor_idx - 1);
+    main_input_box.value = old_val.slice(0, cursor_idx - 1) + old_val.slice(cursor_idx, old_val.length);
+    console.log("old value: " + old_val + ", new value: " + main_input_box.value);
+    main_input_box.setSelectionRange(cursor_idx - 1, cursor_idx - 1);
+    console.log(cursor_idx - 1);
+}
+function do_replacements() {
+    //console.log(main_input_box.selectionStart);
+    var old_start = main_input_box.selectionStart;
+    var old_end = main_input_box.selectionEnd;
+    //console.log("start: " + old_start + ", end: " + old_end);
+    var expr = main_input_box.value;
+    var stream = expr.split(' ');
+    var tokens = [];
+    var index_old_str = 0;
+    var balance_start = 0;
+    var balance_end = 0;
+    stream.forEach(function (v, i) {
+        /*+1 for the space*/
+        index_old_str += v.length + 1;
+        if (v.toLowerCase() in replacements) {
+            tokens.push(replacements[v.toLowerCase()]);
+            /*keep track of how much we're changing the cursor index*/
+            if (old_end < index_old_str) {
+                balance_end += replacements[v.toLowerCase()].length - v.length;
+            }
+            if (old_start < index_old_str) {
+                balance_start += replacements[v.toLowerCase()].length - v.length;
+            }
+        } else {
+            tokens.push(v);
+        }
+    });
+    main_input_box.value = tokens.join(' ');
+    old_end += balance_end;
+    old_start += balance_start;
+    main_input_box.setSelectionRange(old_start, old_end);
 }
 main_input_box.onkeyup = function (e) {
     var KEYCODE_SLASH_QUESTION_MARK = 191;
     var KEYCODE_EIGHT_MULTIPLY = 56;
     var KEYCODE_C = 67;
-    if (e.keyCode == KEYCODE_SLASH_QUESTION_MARK && e.shiftKey) {
+    var KEYCODE_R = 82;
+    var KEYCODE_ARROW_KEYS = {37: 0, 38: 0, 39: 0, 40: 0};
+    if (e.keyCode in KEYCODE_ARROW_KEYS) {
+        /*do nothing for arrow keys*/
+    } else if (e.keyCode == KEYCODE_SLASH_QUESTION_MARK && e.shiftKey) {
         /*question mark*/
         /*TODO: show help*/
         console.log("TODO: show help");
         trim_last_char();
-    } else if (e.keyCode == KEYCODE_C && e.ctrlKey) {
-        e.preventDefault();
-        /*TODO: copy output*/
-        //console.log("TODO: copy output");
+    } else if (e.keyCode == KEYCODE_R && e.shiftKey) {
+        trim_last_char();
+        /*we need to de-focus the input box, so we need to bakckup the cursor index*/
+        var old_start = main_input_box.selectionStart;
+        var old_end = main_input_box.selectionEnd;
+        //e.preventDefault();
+        /*TODO: make this work in firefox*/
         /*make a selection range*/
         var range = document.createRange();
         /*make the hidden output visible for copying*/
         output_hidden.style.display = "block";
         /*add the hidden output to the selection range*/
         range.selectNode(output_hidden);
-        console.log(range.toString());
+        //console.log(range.toString());
         d = window.getSelection();
         /*remove whatever was selected before, because the selection must be contiguous*/
         d.removeAllRanges();
@@ -231,14 +288,9 @@ main_input_box.onkeyup = function (e) {
         output_hidden.style.display = "none";
         /*focus the input box in case it lost focus*/
         main_input_box.focus();
+        main_input_box.setSelectionRange(old_start, old_end);
     } else {
-        if (e.keyCode == KEYCODE_SLASH_QUESTION_MARK) {
-            trim_last_char();
-            main_input_box.value += "÷";
-        } else if (e.keyCode == KEYCODE_EIGHT_MULTIPLY && e.shiftKey) {
-            trim_last_char();
-            main_input_box.value += "×";
-        }
+        do_replacements();
         console.log("e.keyCode: " + e.keyCode);
         /*parse the rpn expression into an expression tree*/
         var tree = parse_expression(main_input_box.value);
