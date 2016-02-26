@@ -217,9 +217,11 @@ function eval_tree(n) {
         case op_indexes['!']:
             return math.factorial(eval_tree(n.children[0]));
         case op_indexes['C']:
-            return math.combinations(eval_tree(n.children[0]), eval_tree(n.children[1]));
+            return math.combinations(Math.floor(eval_tree(n.children[0])),
+                Math.floor(eval_tree(n.children[1])));
         case op_indexes['P']:
-            return math.permutations(eval_tree(n.children[0]), eval_tree(n.children[1]));
+            return math.permutations(Math.floor(eval_tree(n.children[0])),
+                Math.floor(eval_tree(n.children[1])));
         case op_indexes['atan2']:
             return Math.atan2(eval_tree(n.children[1]), eval_tree(n.children[0]));
         case op_indexes['√']:
