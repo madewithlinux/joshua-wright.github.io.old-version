@@ -389,7 +389,7 @@ main_input_box.onkeyup = function (e) {
         var out_raw = output.toString();
         for (var i=1; i<tree.length; i++) {
             /*process the next, adding line breaks only as needed*/
-            output = eval_tree([i]);
+            output = eval_tree(tree[i]);
             out_locale += '<br>' + output.toLocaleString();
             out_raw += '<br>' + output.toString();
         }
