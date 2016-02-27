@@ -22,124 +22,103 @@ var class_numberContainer = 'numberContainer';
  gigantic expression to make a nice grid for color testing:
  1 sin 2 cos + 3 tan 4 asin  − × 7 acos 8 atan ÷ 3 abs 8 ln \ ⬆ % ! 7 log 8 exp C 2 10⬆ 6 2⬆ P atan2 √
  */
+var material_colors = [
+    "rgb(244, 67, 54)",
+    "rgb(233, 30, 99)",
+    "rgb(156, 39, 176)",
+    "rgb(103, 58, 183)",
+    "rgb(63, 81, 181)",
+    "rgb(33, 150, 243)",
+    "rgb(3, 169, 244)",
+    "rgb(0, 188, 212)",
+    "rgb(0, 150, 136)",
+    "rgb(76, 175, 80)",
+    "rgb(139, 195, 74)",
+    "rgb(205, 220, 57)",
+    "rgb(255, 235, 59)",
+    "rgb(255, 193, 7)",
+    "rgb(255, 152, 0)",
+    "rgb(255, 87, 34)",
+    "rgb(121, 85, 72)",
+    "rgb(158, 158, 158)",
+    "rgb(96, 125, 139)"
+];
+/*Unicode operator, ASCII operator, number of operands, color, function(evaluator, stack) */
+// @formatter:off
+var bare_ops_table = [
+['+',               '+',     2, material_colors[ 0], function(e,s){return e(s[0])+e(s[1]);}],
+['−',               '-',     2, material_colors[ 1], function(e,s){return e(s[0])-e(s[1]);}],
+['×',               '*',     2, material_colors[ 2], function(e,s){return e(s[0])*e(s[1]);}],
+['÷',               '/',     2, material_colors[ 3], function(e,s){return e(s[0])/e(s[1]);}],
+['%',               '%',     2, material_colors[ 4], function(e,s){return e(s[0])%e(s[1]);}],
+['^',               '^',     2, material_colors[ 5], function(e,s){return Math.pow(e(s[0]),e(s[1]));}],
+['\\',              '\\',    2, material_colors[ 6], function(e,s){return e(s[1])/e(s[0]);}],
+['\u221A',          'sqrt',  1, material_colors[ 7], function(e,s){return Math.sqrt(e(s[0]));}],
+['sin',             'sin',   1, material_colors[ 8], function(e,s){return Math.sin(e(s[0]));}],
+['cos',             'cos',   1, material_colors[ 9], function(e,s){return Math.cos(e(s[0]));}],
+['tan',             'tan',   1, material_colors[10], function(e,s){return Math.tan(e(s[0]));}],
+['sin\u207b\u00b9', 'asin',  1, material_colors[11], function(e,s){return Math.asin(e(s[0]));}],
+['cos\u207b\u00b9', 'acos',  1, material_colors[12], function(e,s){return Math.acos(e(s[0]));}],
+['tan\u207b\u00b9', 'atan',  1, material_colors[13], function(e,s){return Math.atan(e(s[0]));}],
+['atan2',           'atan2', 2, material_colors[14], function(e,s){return Math.atan2(e(s[0]),e(s[1]));}],
+['ln',              'ln',    1, material_colors[ 0], function(e,s){return Math.log(e(s[0]));}],
+['log',             'log',   1, material_colors[ 1], function(e,s){return Math.log10(e(s[0]));}],
+['lg',              'lg',    1, material_colors[ 2], function(e,s){return Math.log2(e(s[0]));}],
+['ℯ^',             'exp',   1, material_colors[ 3], function(e,s){return Math.exp(e(s[0]));}],
+['10^',             '10^',   1, material_colors[ 4], function(e,s){return Math.pow(10,e(s[0]));}],
+['2^',              '2^',    1, material_colors[ 5], function(e,s){return Math.pow(2,e(s[1]));}],
+['!',               '!',     1, material_colors[14], function(e,s){return math.factorial(e(s[0]));}],
+['C',               'C',     2, material_colors[15], function(e,s){return math.combinations(e(s[0]),e(s[1]));}],
+['P',               'P',     2, material_colors[16], function(e,s){return math.permutations(e(s[0]),e(s[1]));}],
+['abs',             'abs',   1, material_colors[17], function(e,s){return Math.abs(e(s[0]));}],
+//['π',               'pi',    0, material_colors[18], function(e,s){return Math.PI}],
+//['ℯ',               'e',     0, material_colors[19], function(e,s){return Math.E}],
+];
+// @formatter:on
 var constants = {
     'π': Math.PI,
     'ℯ': Math.E,
-    '∞': Infinity
+    '∞': Infinity,
+    '-∞': -Infinity,
 };
-var replacements = {
-    '*': '×',
-    "-": '−',
-    '/': '÷',
-    '^': '⬆',
-    'pi': 'π',
-    'e': 'ℯ',
-    'inf': '∞',
-    '10^': '10⬆',
-    '2^': '2⬆',
-    'sqrt': '√',
-    'asin': 'sin⁻¹',
-    'acos': 'cos⁻¹',
-    'atan': 'tan⁻¹'
-};
-var operators = ['+', '−', '×', '÷', '%', '⬆', '\\',
-    'sin', 'cos', 'tan', 'sin⁻¹', 'cos⁻¹', 'tan⁻¹',
-    'abs', 'ln', 'log', 'lg', 'exp', '10⬆', '2⬆', '!', 'C', 'P', 'atan2', '√'];
-var op_param_counts = {
-    '+': 2,
-    '−': 2,
-    '×': 2,
-    '÷': 2,
-    '%': 2,
-    '⬆': 2,
-    '\\': 2,
-    'sin': 1,
-    'cos': 1,
-    'tan': 1,
-    'sin⁻¹': 1,
-    'cos⁻¹': 1,
-    'tan⁻¹': 1,
-    'abs': 1,
-    'ln': 1,
-    'log': 1,
-    'lg': 1,
-    'exp': 1,
-    '10⬆': 1,
-    '2⬆': 1,
-    '!': 1,
-    'C': 2,
-    'P': 2,
-    'atan2': 2,
-    '√': 1
-};
-var op_indexes = {
-    '+': 0,
-    '−': 1,
-    '×': 2,
-    '÷': 3,
-    '%': 4,
-    '⬆': 5,
-    '\\': 6,
-    'sin': 7,
-    'cos': 8,
-    'tan': 9,
-    'sin⁻¹': 10,
-    'cos⁻¹': 11,
-    'tan⁻¹': 12,
-    'abs': 13,
-    'ln': 14,
-    'log': 15,
-    'lg': 16,
-    'exp': 17,
-    '10⬆': 18,
-    '2⬆': 19,
-    '!': 20,
-    'C': 21,
-    'P': 22,
-    'atan2': 23,
-    '√': 24
-};
-var op_colors = [
-    "#ddecb1",
-    "#98d3ed",
-    "#7ee324",
-    "#4bd2fa",
-    "#af2846",
-    "#b852d5",
-    "#fcf844",
-    "#90973e",
-    "#c658d6",
-    "#689fde",
-    "#a2cab0",
-    "#4bc379",
-    "#f462c6",
-    "#d1f446",
-    "#804a82",
-    "#e2f0af",
-    "#b076e9",
-    "#eef399",
-    "#c27bfc",
-    "#4a58ce",
-    "#af9f73",
-    "#5154e7",
-    "#3040ac",
-    "#3ba859",
-    "#b2b4b3",
-    "#6e8c8d",
-    "#fdde69",
-    "#8d66d1",
-    "#b0d6e4",
-    "#e4e7f5",
-    "#d09228",
-    "#414c96",
-    "#7d8adb",
-    "#856fef",
-    "#d8ea2b",
-    "#53b051",
-    "#b0562f",
-    "#d4b78f"
+var constant_replacements = [
+    ['pi', 'π'],
+    ['e', 'ℯ'],
+    ['ℯxp', 'ℯ^'],
+    ['inf', '∞'],
+    ['-inf', '-∞'],
 ];
+function Operator(row, index) {
+    this.index = index;
+    this.unicode = row[0];
+    this.ASCII = row[1];
+    this.needs_replacement = (this.unicode != this.ASCII);
+    this.param_count = row[2];
+    this.color = row[3];
+    this.apply = row[4];
+}
+function Ops(op_table) {
+    var replacements = new Map();
+    var ops = [];
+    var by_label = new Map();
+    op_table.forEach(function (v, i) {
+        var op = new Operator(v, i);
+        ops.push(op);
+        by_label.set(op.ASCII, op);
+        by_label.set(op.unicode, op);
+        if (op.needs_replacement) {
+            replacements.set(op.ASCII, op.unicode);
+        }
+    });
+    constant_replacements.forEach(function(v,i){
+        replacements.set(v[0],v[1]);
+    });
+    this.replacements = replacements;
+    this.ops = ops;
+    this.by_label = by_label;
+}
 
+var operators = new Ops(bare_ops_table);
 
 function Node(value, children) {
     if (typeof value == "number") {
@@ -149,7 +128,7 @@ function Node(value, children) {
     } else if (typeof value == "string") {
         this.type = 1;
         this.value = undefined;
-        this.operation = op_indexes[value];
+        this.op = operators.by_label.get(value);
     }
     if (children != undefined) {
         this.children = children;
@@ -169,72 +148,7 @@ function eval_tree(n) {
         return n.value;
     }
     var val;
-    switch (n.operation) {
-        case op_indexes['+']: /*addition*/
-            val = 0;
-            /*use a for loop. will be useful if we want multi-input operators*/
-            n.children.forEach(function (v, i) {
-                val += eval_tree(v);
-            });
-            return val;
-        case op_indexes['×']: /*multiplication*/
-            val = 1;
-            n.children.forEach(function (v, i) {
-                val *= eval_tree(v);
-            });
-            return val;
-        case op_indexes['−']: /*subtraction*/
-            return eval_tree(n.children[0]) - eval_tree(n.children[1]);
-        case op_indexes['÷']: /*division*/
-            return eval_tree(n.children[0]) / eval_tree(n.children[1]);
-        case op_indexes['']: /*modulo*/
-            return eval_tree(n.children[0]) % eval_tree(n.children[1]);
-        case op_indexes['⬆']: /*exponent*/
-            return Math.pow(eval_tree(n.children[0]), eval_tree(n.children[1]));
-        case op_indexes['\\']: /*backward division*/
-            return eval_tree(n.children[1]) / eval_tree(n.children[0]);
-        case op_indexes['sin']:
-            return Math.sin(eval_tree(n.children[0]));
-        case op_indexes['cos']:
-            return Math.cos(eval_tree(n.children[0]));
-        case op_indexes['tan']:
-            return Math.tan(eval_tree(n.children[0]));
-        case op_indexes['sin⁻¹']:
-            return Math.asin(eval_tree(n.children[0]));
-        case op_indexes['cos⁻¹']:
-            return Math.acos(eval_tree(n.children[0]));
-        case op_indexes['tan⁻¹']:
-            return Math.atan(eval_tree(n.children[0]));
-        case op_indexes['abs']:
-            return Math.abs(eval_tree(n.children[0]));
-        case op_indexes['ln']:
-            return Math.log(eval_tree(n.children[0]));
-        case op_indexes['log']:
-            return Math.log10(eval_tree(n.children[0]));
-        case op_indexes['lg']:
-            return Math.log2(eval_tree(n.children[0]));
-        case op_indexes['exp']:
-            return Math.exp(eval_tree(n.children[0]));
-        case op_indexes['10⬆']:
-            return Math.pow(10, eval_tree(n.children[0]));
-        case op_indexes['2⬆']:
-            return Math.pow(2, eval_tree(n.children[0]));
-        case op_indexes['!']:
-            return math.factorial(eval_tree(n.children[0]));
-        case op_indexes['C']:
-            return math.combinations(Math.floor(eval_tree(n.children[0])),
-                Math.floor(eval_tree(n.children[1])));
-        case op_indexes['P']:
-            return math.permutations(Math.floor(eval_tree(n.children[0])),
-                Math.floor(eval_tree(n.children[1])));
-        case op_indexes['atan2']:
-            return Math.atan2(eval_tree(n.children[1]), eval_tree(n.children[0]));
-        case op_indexes['√']:
-            return Math.sqrt(eval_tree(n.children[0]));
-        default:
-            console.log("Bad Node!");
-            console.log(n);
-    }
+    return n.op.apply(eval_tree, n.children);
 }
 function parse_expression(expr) {
     var stack = [];
@@ -244,19 +158,20 @@ function parse_expression(expr) {
             /*double spaces cause empty strings after splitting*/
             return;
         }
-        var op = operators.indexOf(v);
+        //var op = operators.indexOf(v);
         if (v.toLowerCase() in constants) {
             stack.push(new Node(constants[v.toLowerCase()]));
-        } else if (op == -1) {
-            /*this is a number, because it isn't an operator*/
-            stack.push(new Node(Number(v)));
-        } else {
+            //} else if (op == -1) {
+        } else if (operators.by_label.has(v)) {
             /*this is an operator*/
             /*slice off the top of the stack and give it to this operator*/
-            var tmp_stack = stack.slice(-op_param_counts[v], stack.length);
-            stack = stack.slice(0, -op_param_counts[v]);
+            var tmp_stack = stack.slice(-operators.by_label.get(v).param_count, stack.length);
+            stack = stack.slice(0, -operators.by_label.get(v).param_count);
             var new_node = new Node(v, tmp_stack);
             stack.push(new_node);
+        } else {
+            /*this is a number, because it isn't an operator*/
+            stack.push(new Node(Number(v)));
         }
     });
     return stack;
@@ -279,7 +194,7 @@ function render_expression(node) {
         var container = document.createElement('div');
         container.classList.add("box");
         container.classList.add(class_container);
-        container.style.backgroundColor = op_colors[node.operation];
+        container.style.backgroundColor = node.op.color;
 
         var operands = document.createElement('div');
         operands.classList.add("box");
@@ -295,11 +210,11 @@ function render_expression(node) {
         var op_parent = document.createElement('div');
         op_parent.classList.add("box");
         op_parent.classList.add(class_operator);
-        //op_parent.textContent = operators[node.operation];
-        op_parent.style.backgroundColor = op_colors[node.operation];
+        op_parent.style.backgroundColor = container.style.backgroundColor;
         var op_txt = document.createElement('div');
         op_txt.classList.add("operatorContainer");
-        op_txt.textContent = operators[node.operation];
+        //op_txt.textContent = operators[node.operation];
+        op_txt.textContent = node.op.unicode;
         op_parent.appendChild(op_txt);
         container.appendChild(op_parent);
 
@@ -350,9 +265,9 @@ function toggle_help_visibility() {
         help_screen.style.opacity = 0;
         setTimeout(function () {
             /*use a delay such that it will not really hide until it is fully
-            * transparent*/
+             * transparent*/
             help_screen.style.display = "none";
-        }, 1000/4);
+        }, 1000 / 4);
     }
 }
 function trim_last_char() {
@@ -377,14 +292,16 @@ function do_replacements() {
     stream.forEach(function (v, i) {
         /*+1 for the space*/
         index_old_str += v.length + 1;
-        if (v.toLowerCase() in replacements) {
-            tokens.push(replacements[v.toLowerCase()]);
+        if (operators.replacements.has(v.toLowerCase())) {
+            tokens.push(operators.replacements.get(v.toLowerCase()));
             /*keep track of how much we're changing the cursor index*/
             if (old_end < index_old_str) {
-                balance_end += replacements[v.toLowerCase()].length - v.length;
+                //balance_end += replacements[v.toLowerCase()].length - v.length;
+                balance_end += operators.replacements.get(v.toLowerCase()).length - v.length;
             }
             if (old_start < index_old_str) {
-                balance_start += replacements[v.toLowerCase()].length - v.length;
+                //balance_start += replacements[v.toLowerCase()].length - v.length;
+                balance_start += operators.replacements.get(v.toLowerCase()).length - v.length;
             }
         } else {
             tokens.push(v);
@@ -465,6 +382,4 @@ console.log(setInterval(function () {
     main_input_box.focus()
 }, 100));
 
-/*instanciate the clipboard object*/
-//var clipboard = new Clipboard('.btn');
 
