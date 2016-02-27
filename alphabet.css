@@ -5,6 +5,30 @@ html {
     font-size: 1.5em;
 }
 
+input[type="checkbox"] {
+    opacity: 0;
+    width: 0;
+    height: 0;
+    margin: 0;
+}
+input[type="checkbox"] + label {
+    overflow: auto;
+}
+input[type="checkbox"] + label .checkbox {
+    display: inline-block;
+    margin-top: 0.1em;
+    margin-right: 0.3em;
+    margin-bottom: 0.1em;
+    width: 0.6em;
+    height: 0.6em;
+    /*float: left;*/
+    border: solid 2px #000000;
+    /*padding-left: 0.9em;*/
+}
+input[type="checkbox"]:checked + label .checkbox {
+    background: #66D9EF;
+}
+
 /*hide the single-wide table on desktop*/
 table.single_wide {
     display: none;

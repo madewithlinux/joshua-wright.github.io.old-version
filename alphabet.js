@@ -61,12 +61,17 @@ var chars = {
 $(document).ready(function () {
     var input = $("#phrase_input");
     var output = $("#output_table")[0];
+    var spaces_checkbox = $("#remove_spaces");
+    var spaces_checkbox_0 = spaces_checkbox[0];
 
     function spell_input() {
         output.innerHTML = "";
         var phrase = input.val();
         for (var i = 0; i < phrase.length; i++) {
             if (chars.hasOwnProperty(phrase[i].toUpperCase())) {
+                if (spaces_checkbox_0.checked && phrase[i] == " ") {
+                    continue;
+                }
                 /*print the stuff if we have a word for this character*/
                 output_table.innerHTML += "<tr><td>" + chars[phrase[i].toUpperCase()][0] +
                     "</td><td>" + chars[phrase[i].toUpperCase()][1] +
@@ -87,6 +92,8 @@ $(document).ready(function () {
         }
         spell_input();
     });
+
+    spaces_checkbox.click(spell_input);
 
     /*always be focused*/
     setInterval(function () {
