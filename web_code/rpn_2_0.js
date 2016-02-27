@@ -71,8 +71,6 @@ var bare_ops_table = [
 ['C',               'C',     2, material_colors[15], function(e,s){return math.combinations(e(s[0]),e(s[1]));}],
 ['P',               'P',     2, material_colors[16], function(e,s){return math.permutations(e(s[0]),e(s[1]));}],
 ['abs',             'abs',   1, material_colors[17], function(e,s){return Math.abs(e(s[0]));}],
-//['π',               'pi',    0, material_colors[18], function(e,s){return Math.PI}],
-//['ℯ',               'e',     0, material_colors[19], function(e,s){return Math.E}],
 ];
 // @formatter:on
 var constants = {
