@@ -108,8 +108,8 @@ function Ops(op_table) {
             replacements.set(op.ASCII, op.unicode);
         }
     });
-    constant_replacements.forEach(function(v,i){
-        replacements.set(v[0],v[1]);
+    constant_replacements.forEach(function (v, i) {
+        replacements.set(v[0], v[1]);
     });
     this.replacements = replacements;
     this.ops = ops;
@@ -368,9 +368,18 @@ main_input_box.onkeyup = function (e) {
         /*display the tree*/
         display_expression(tree);
         /*evaluate the tree for a numberical value*/
-        var output = eval_tree(tree[0]);
-        output_div.textContent = output.toLocaleString();
-        output_hidden.textContent = output.toString();
+        //var output = eval_tree(tree[0]);
+        output_div.innerHTML = "";
+        output_hidden.innerHTML = "";
+        tree.forEach(function (v, i) {
+            var output = eval_tree(v);
+            //console.log(output);
+            output_div.innerHTML += output.toLocaleString() + '<br>';
+            output_hidden.innerHTML += output.toString() + '<br>';
+        });
+        /*trim the last line break*/
+        output_div.innerHTML = output_div.innerHTML.slice(0, -'<br>'.length);
+        output_hidden.innerHTML = output_div.innerHTML.slice(0, -'<br>'.length)
     }
 };
 /*call the event handler on page load*/
