@@ -301,6 +301,9 @@ function do_replacements() {
                 //balance_start += replacements[v.toLowerCase()].length - v.length;
                 balance_start += operators.replacements.get(v.toLowerCase()).length - v.length;
             }
+        } else if (v.length > 1 && v.startsWith('−')) {
+            /*fix the unicode minus sign for numbers*/
+            tokens.push('-' + v.slice(1, v.length));
         } else {
             tokens.push(v);
         }
@@ -322,8 +325,6 @@ main_input_box.onkeyup = function (e) {
         /*do nothing for arrow keys*/
     } else if (e.keyCode == KEYCODE_SLASH_QUESTION_MARK && e.shiftKey) {
         /*question mark*/
-        /*TODO: show help*/
-        console.log("TODO: show help");
         trim_last_char();
         toggle_help_visibility();
         help_screen_tip.style.opacity = 0;
