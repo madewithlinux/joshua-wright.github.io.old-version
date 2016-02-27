@@ -291,6 +291,7 @@ function trim_last_char() {
     main_input_box.setSelectionRange(cursor_idx - 1, cursor_idx - 1);
 }
 function do_replacements() {
+    /*TODO: add a config option to not do the unicode replacements*/
     /*backup the selection indexes*/
     var old_start = main_input_box.selectionStart;
     var old_end = main_input_box.selectionEnd;
@@ -374,24 +375,27 @@ main_input_box.onkeyup = function (e) {
         main_input_box.focus();
         main_input_box.setSelectionRange(old_start, old_end);
     } else {
+        /*handle constants and unicode and such*/
         do_replacements();
         //console.log("e.keyCode: " + e.keyCode);
         /*parse the rpn expression into an expression tree*/
         var tree = parse_expression(main_input_box.value);
         /*display the tree*/
         display_expression(tree);
-        /*evaluate the tree for a numberical value*/
-        //var output = eval_tree(tree[0]);
-        output_div.innerHTML = "";
-        output_hidden.innerHTML = "";
-        tree.forEach(function (v, i) {
-            var output = eval_tree(v);
-            output_div.innerHTML += output.toLocaleString() + '<br>';
-            output_hidden.innerHTML += output.toString() + '<br>';
-        });
-        /*trim the last line break*/
-        output_div.innerHTML = output_div.innerHTML.slice(0, -'<br>'.length);
-        output_hidden.innerHTML = output_div.innerHTML.slice(0, -'<br>'.length)
+        /*evaluate the tree for a numerical value*/
+        var output = eval_tree(tree[0]);
+        /*process the first separately*/
+        var out_locale = output.toLocaleString();
+        var out_raw = output.toString();
+        for (var i=1; i<tree.length; i++) {
+            /*process the next, adding line breaks only as needed*/
+            output = eval_tree([i]);
+            out_locale += '<br>' + output.toLocaleString();
+            out_raw += '<br>' + output.toString();
+        }
+        /*set the HTML content*/
+        output_div.innerHTML = out_locale;
+        output_hidden.innerHTML = out_raw;
     }
 };
 /*call the event handler on page load*/
