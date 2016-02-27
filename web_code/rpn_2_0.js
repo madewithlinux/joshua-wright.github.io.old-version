@@ -118,7 +118,7 @@ function Ops(op_table) {
 
 var operators = new Ops(bare_ops_table);
 
-function Node(value, children) {
+function Node(value, children, idx_left, idx_right) {
     if (typeof value == "number") {
         this.type = 0;
         this.value = value;
@@ -133,6 +133,8 @@ function Node(value, children) {
     } else {
         this.children = [];
     }
+    this.idx_left = idx_left;
+    this.idx_right = idx_right;
 }
 Node.type_number = 0;
 Node.type_operator = 1;
@@ -150,28 +152,34 @@ function eval_tree(n) {
 }
 function parse_expression(expr) {
     var stack = [];
-    var stream = expr.split(' ');
-    stream.forEach(function (v, i) {
-        if (v == "") {
-            /*double spaces cause empty strings after splitting*/
-            return;
+    var idx_left = 0;
+    var idx_right;
+    while (idx_left < expr.length) {
+        idx_right = idx_left;
+        while (expr[idx_right] != ' ' && idx_right < expr.length) {
+            /*search for the next space*/
+            idx_right++;
         }
-        //var op = operators.indexOf(v);
+        var v = expr.slice(idx_left, idx_right);
+        //console.log(idx_left + " " + idx_right + " " + v);
         if (v.toLowerCase() in constants) {
-            stack.push(new Node(constants[v.toLowerCase()]));
-            //} else if (op == -1) {
+            stack.push(new Node(constants[v.toLowerCase()], [], idx_left, idx_right));
         } else if (operators.by_label.has(v)) {
             /*this is an operator*/
             /*slice off the top of the stack and give it to this operator*/
             var tmp_stack = stack.slice(-operators.by_label.get(v).param_count, stack.length);
             stack = stack.slice(0, -operators.by_label.get(v).param_count);
-            var new_node = new Node(v, tmp_stack);
+            var new_node = new Node(v, tmp_stack, idx_left, idx_right);
             stack.push(new_node);
         } else {
             /*this is a number, because it isn't an operator*/
-            stack.push(new Node(Number(v)));
+            stack.push(new Node(Number(v), [], idx_left, idx_right));
         }
-    });
+        idx_left = idx_right;
+        while (expr[idx_left] == ' ' && idx_left < expr.length) {
+            idx_left++;
+        }
+    }
     return stack;
 }
 
@@ -184,6 +192,10 @@ function render_expression(node) {
         number_node.textContent = node.value.toLocaleString();
         var parent = document.createElement('div');
         parent.classList.add(class_numberContainer);
+        parent.onclick = function () {
+            main_input_box.setSelectionRange(node.idx_left, node.idx_right);
+            //console.log(node.idx_left, node.idx_right);
+        };
         /*need a line break after numbers*/
         parent.appendChild(number_node);
         parent.appendChild(document.createElement('br'));
@@ -209,6 +221,9 @@ function render_expression(node) {
         op_parent.classList.add("box");
         op_parent.classList.add(class_operator);
         op_parent.style.backgroundColor = container.style.backgroundColor;
+        op_parent.onclick = function () {
+            main_input_box.setSelectionRange(node.idx_left, node.idx_right);
+        };
         var op_txt = document.createElement('div');
         op_txt.classList.add("operatorContainer");
         //op_txt.textContent = operators[node.operation];
@@ -273,9 +288,7 @@ function trim_last_char() {
     var cursor_idx = main_input_box.selectionStart;
     var old_val = main_input_box.value;
     main_input_box.value = old_val.slice(0, cursor_idx - 1) + old_val.slice(cursor_idx, old_val.length);
-    //console.log("old value: " + old_val + ", new value: " + main_input_box.value);
     main_input_box.setSelectionRange(cursor_idx - 1, cursor_idx - 1);
-    console.log(cursor_idx - 1);
 }
 function do_replacements() {
     /*backup the selection indexes*/
@@ -344,7 +357,6 @@ main_input_box.onkeyup = function (e) {
         output_hidden.style.display = "block";
         /*add the hidden output to the selection range*/
         range.selectNode(output_hidden);
-        //console.log(range.toString());
         d = window.getSelection();
         /*remove whatever was selected before, because the selection must be contiguous*/
         d.removeAllRanges();
@@ -374,7 +386,6 @@ main_input_box.onkeyup = function (e) {
         output_hidden.innerHTML = "";
         tree.forEach(function (v, i) {
             var output = eval_tree(v);
-            //console.log(output);
             output_div.innerHTML += output.toLocaleString() + '<br>';
             output_hidden.innerHTML += output.toString() + '<br>';
         });

@@ -109,6 +109,7 @@ div.operator {
 }
 
 div#help_screen_container {
+    display: none; /*override this in JavaScript later*/
     position: absolute;
     font-size: 25px;
     top: 50%;
