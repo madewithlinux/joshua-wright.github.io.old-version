@@ -32,8 +32,21 @@ td {
 }
 
 tr td:nth-child(1) {
+    text-shadow: none;
+    background-color: #ccc;
+    color: #000000;
     /*right align the numbers*/
     text-align: right;
+}
+td.remove_btn {
+    text-shadow: none;
+    background-color: #ccc;
+    color: #000000;
+}
+td.remove_btn a {
+    /*color: #000000;*/
+    color: inherit;
+    text-decoration: none;
 }
 
 input[type=number]::-webkit-inner-spin-button,
