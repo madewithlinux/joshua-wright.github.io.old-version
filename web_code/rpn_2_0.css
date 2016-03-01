@@ -108,6 +108,11 @@ div.operator {
     border-bottom: 10px solid transparent;
 }
 
+
+table.output {
+    margin-left: auto;
+}
+
 div#help_screen_container {
     display: none; /*override this in JavaScript later*/
     position: absolute;

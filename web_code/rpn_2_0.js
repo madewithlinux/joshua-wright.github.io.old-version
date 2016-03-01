@@ -46,36 +46,36 @@ var material_colors = [
 /*Unicode operator, ASCII operator, number of operands, color, function(evaluator, stack) */
 // @formatter:off
 var bare_ops_table = [
-['+',               '+',     2, material_colors[ 0], function(e,s){return e(s[0])+e(s[1]);}],
-['−',               '-',     2, material_colors[ 1], function(e,s){return e(s[0])-e(s[1]);}],
-['×',               '*',     2, material_colors[ 2], function(e,s){return e(s[0])*e(s[1]);}],
-['÷',               '/',     2, material_colors[ 3], function(e,s){return e(s[0])/e(s[1]);}],
-['%',               '%',     2, material_colors[ 4], function(e,s){return e(s[0])%e(s[1]);}],
-['^',               '^',     2, material_colors[ 5], function(e,s){return Math.pow(e(s[0]),e(s[1]));}],
-['\\',              '\\',    2, material_colors[ 6], function(e,s){return e(s[1])/e(s[0]);}],
-['\u221A',          'sqrt',  1, material_colors[ 7], function(e,s){return Math.sqrt(e(s[0]));}],
-['sin',             'sin',   1, material_colors[ 8], function(e,s){return Math.sin(e(s[0]));}],
-['cos',             'cos',   1, material_colors[ 9], function(e,s){return Math.cos(e(s[0]));}],
-['tan',             'tan',   1, material_colors[10], function(e,s){return Math.tan(e(s[0]));}],
-['sin\u207b\u00b9', 'asin',  1, material_colors[11], function(e,s){return Math.asin(e(s[0]));}],
-['cos\u207b\u00b9', 'acos',  1, material_colors[12], function(e,s){return Math.acos(e(s[0]));}],
-['tan\u207b\u00b9', 'atan',  1, material_colors[13], function(e,s){return Math.atan(e(s[0]));}],
-['atan2',           'atan2', 2, material_colors[14], function(e,s){return Math.atan2(e(s[0]),e(s[1]));}],
-['ln',              'ln',    1, material_colors[ 0], function(e,s){return Math.log(e(s[0]));}],
-['log',             'log',   1, material_colors[ 1], function(e,s){return Math.log10(e(s[0]));}],
-['lg',              'lg',    1, material_colors[ 2], function(e,s){return Math.log2(e(s[0]));}],
-['ℯ^',             'exp',   1, material_colors[ 3], function(e,s){return Math.exp(e(s[0]));}],
-['10^',             '10^',   1, material_colors[ 4], function(e,s){return Math.pow(10,e(s[0]));}],
-['2^',              '2^',    1, material_colors[ 5], function(e,s){return Math.pow(2,e(s[1]));}],
-['!',               '!',     1, material_colors[14], function(e,s){return math.factorial(e(s[0]));}],
-['C',               'C',     2, material_colors[15], function(e,s){return math.combinations(e(s[0]),e(s[1]));}],
-['P',               'P',     2, material_colors[16], function(e,s){return math.permutations(e(s[0]),e(s[1]));}],
-['abs',             'abs',   1, material_colors[17], function(e,s){return Math.abs(e(s[0]));}],
+['+',               '+',     2, material_colors[ 0], ['(', '+', ')'],      function(e,s){return e(s[0])+e(s[1]);}],
+['−',               '-',     2, material_colors[ 1], ['(', '−', ')'],      function(e,s){return e(s[0])-e(s[1]);}],
+['×',               '*',     2, material_colors[ 2], ['(', '×', ')'],      function(e,s){return e(s[0])*e(s[1]);}],
+['÷',               '/',     2, material_colors[ 3], ['(', '÷', ')'],      function(e,s){return e(s[0])/e(s[1]);}],
+['%',               '%',     2, material_colors[ 4], ['(', '%', ')'],      function(e,s){return e(s[0])%e(s[1]);}],
+['^',               '^',     2, material_colors[ 5], ['(', '^', ')'],      function(e,s){return Math.pow(e(s[0]),e(s[1]));}],
+['\\',              '\\',    2, material_colors[ 6], ['(', '\\', ')'],     function(e,s){return e(s[1])/e(s[0]);}],
+['\u221A',          'sqrt',  1, material_colors[ 7], ['sqrt(', ')'],       function(e,s){return Math.sqrt(e(s[0]));}],
+['sin',             'sin',   1, material_colors[ 8], ['sin(',  ')'],       function(e,s){return Math.sin(e(s[0]));}],
+['cos',             'cos',   1, material_colors[ 9], ['cos(',  ')'],       function(e,s){return Math.cos(e(s[0]));}],
+['tan',             'tan',   1, material_colors[10], ['tan(',  ')'],       function(e,s){return Math.tan(e(s[0]));}],
+['sin\u207b\u00b9', 'asin',  1, material_colors[11], ['asin(', ')'],       function(e,s){return Math.asin(e(s[0]));}],
+['cos\u207b\u00b9', 'acos',  1, material_colors[12], ['acos(', ')'],       function(e,s){return Math.acos(e(s[0]));}],
+['tan\u207b\u00b9', 'atan',  1, material_colors[13], ['atan(', ')'],       function(e,s){return Math.atan(e(s[0]));}],
+['atan2',           'atan2', 2, material_colors[14], ['atan2(', ',', ')'], function(e,s){return Math.atan2(e(s[0]),e(s[1]));}],
+['ln',              'ln',    1, material_colors[ 0], ['ln(',  ')'],        function(e,s){return Math.log(e(s[0]));}],
+['log',             'log',   1, material_colors[ 1], ['log(', ')'],        function(e,s){return Math.log10(e(s[0]));}],
+['lg',              'lg',    1, material_colors[ 2], ['lg(',  ')'],        function(e,s){return Math.log2(e(s[0]));}],
+['\u212f^',         'exp',   1, material_colors[ 3], ['exp(', ')'],        function(e,s){return Math.exp(e(s[0]));}],
+['10^',             '10^',   1, material_colors[ 4], ['10^(', ')'],        function(e,s){return Math.pow(10,e(s[0]));}],
+['2^',              '2^',    1, material_colors[ 5], ['2^(',  ')'],        function(e,s){return Math.pow(2,e(s[1]));}],
+['!',               '!',     1, material_colors[14], ['(',   ')!'],        function(e,s){return math.factorial(e(s[0]));}],
+['C',               'C',     2, material_colors[15], ['C(', ',', ')'],     function(e,s){return math.combinations(e(s[0]),e(s[1]));}],
+['P',               'P',     2, material_colors[16], ['P(', ',', ')'],     function(e,s){return math.permutations(e(s[0]),e(s[1]));}],
+['abs',             'abs',   1, material_colors[17], ['abs(', ')'],        function(e,s){return Math.abs(e(s[0]));}],
 ];
 // @formatter:on
 var constants = {
     'π': Math.PI,
-    'ℯ': Math.E,
+    '\u212f': Math.E,
     '∞': Infinity,
     '-∞': -Infinity,
 };
@@ -93,7 +93,8 @@ function Operator(row, index) {
     this.needs_replacement = (this.unicode != this.ASCII);
     this.param_count = row[2];
     this.color = row[3];
-    this.apply = row[4];
+    this.apply = row[5];
+    this.prints = row[4];
 }
 function Ops(op_table) {
     var replacements = new Map();
@@ -149,6 +150,20 @@ function eval_tree(n) {
     }
     var val;
     return n.op.apply(eval_tree, n.children);
+}
+function print_as_infix(n) {
+    if (n.type == Node.type_number) {
+        return n.value.toLocaleString();
+    }
+    var ret = n.op.prints[0];
+    for (var i = 0; i < n.children.length; i++) {
+        ret += print_as_infix(n.children[i]);
+        if (n.op.prints.length > 2 && i < (n.children.length - 1)) {
+            ret += n.op.prints[1];
+        }
+    }
+    ret += n.op.prints[n.op.prints.length - 1];
+    return ret;
 }
 function parse_expression(expr) {
     var stack = [];
@@ -385,17 +400,29 @@ main_input_box.onkeyup = function (e) {
         /*evaluate the tree for a numerical value*/
         var output = eval_tree(tree[0]);
         /*process the first separately*/
-        var out_locale = output.toLocaleString();
+        var out_locale = '<table class="output"> <tbody class="output">';
+        out_locale += '<tr><td>';
+        out_locale += output.toLocaleString();
+        out_locale += '</td><td>=</td><td>';
+        out_locale += print_as_infix(tree[0]);
+        out_locale += '</td></tr>';
         var out_raw = output.toString();
-        for (var i=1; i<tree.length; i++) {
+        for (var i = 1; i < tree.length; i++) {
             /*process the next, adding line breaks only as needed*/
             output = eval_tree(tree[i]);
-            out_locale += '<br>' + output.toLocaleString();
+            out_locale += '<tr><td>';
+            //out_locale += '<br>';
+            out_locale += output.toLocaleString();
+            out_locale += '</td><td>=</td><td>';
+            out_locale += print_as_infix(tree[i]);
+            out_locale += '</td></tr>';
             out_raw += '<br>' + output.toString();
         }
         /*set the HTML content*/
+        out_locale += '</tbody></table>';
         output_div.innerHTML = out_locale;
         output_hidden.innerHTML = out_raw;
+        console.log(print_as_infix(tree[0]));
     }
 };
 /*call the event handler on page load*/
