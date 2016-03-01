@@ -7,7 +7,6 @@
     <title>RPN 2.0</title>
     <link rel="icon" href="/favicon.png">
     <link rel="stylesheet" href="../css/rpn_2_0.css">
-    <!--<script type="text/javascript" src="/lib/math.min.js"></script>-->
 </head>
 <body>
 <h1>RPN Calculator</h1>
@@ -139,7 +138,7 @@
                 </table>
             </div>
             <br>
-            <div class="two_column">
+            <div class="block">
 
                 Keyboard Shortcuts:
                 <!--<div class="operator_table_container">-->
@@ -156,10 +155,12 @@
                     </tbody>
                 </table>
                 <!--</div>-->
-                <br>
+                <!--<br>-->
+            </div>
+            <div class="block">
                 Constants:
                 <!--<div class="operator_table_container">-->
-                <table cellspacing="0">
+                <table cellspacing="0" class="constants_table">
                     <tbody>
                     <tr>
                         <td><strong>pi </strong></td>
@@ -186,6 +187,10 @@
                     </tbody>
                 </table>
                 <!--</div>-->
+            </div>
+            <div class="block">
+                <input type="checkbox" id="do_unicode_replacement" checked>
+                <label for="do_unicode_replacement"><div class="checkbox"></div>Unicode Symbols?</label>
             </div>
 
         </div>

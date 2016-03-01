@@ -10,6 +10,7 @@ var main_input_box = document.getElementById('input');
 var copy_button = document.getElementById("copy_button");
 var help_screen = document.getElementById("help_screen_container");
 var help_screen_tip = document.getElementById("help_popup");
+var do_unicode_replacement = document.getElementById("do_unicode_replacement");
 
 var class_container = "container";
 var class_operands = "operands";
@@ -17,9 +18,9 @@ var class_operator = "operator";
 var class_number = "number";
 var class_numberContainer = 'numberContainer';
 
-var do_symbol_replacement = true;
+var is_mobile = true;
 if( /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ) {
-    do_symbol_replacement = false;
+    is_mobile = false;
 }
 
 
@@ -320,7 +321,8 @@ function trim_last_char() {
 function do_replacements() {
     /*TODO: add a config option to not do the unicode replacements*/
     /*backup the selection indexes*/
-    if (!do_symbol_replacement) {
+    if (!is_mobile || !do_unicode_replacement.checked) {
+        /*don't replace the symbols if either we are mobile or the user doesn't want to*/
         return;
     }
     var old_start = main_input_box.selectionStart;

@@ -120,6 +120,9 @@ div#help_screen_container {
 }
 
 
+
+
+
 div.operator_table_container {
     -webkit-column-count: 3; /* Chrome, Safari, Opera */
     -moz-column-count: 3; /* Firefox */
@@ -156,6 +159,41 @@ tr:nth-child(odd) {
 td + td {
     padding-left: 15px;
 }
+
+table.constants_table tbody tr td {
+    text-align: right;
+}
+
+div.block {
+    display: inline-block;
+}
+
+
+/*fancy checkboxes*/
+input[type="checkbox"] {
+    opacity: 0;
+    width: 0;
+    height: 0;
+    margin: 0;
+}
+input[type="checkbox"] + label {
+    overflow: auto;
+}
+input[type="checkbox"] + label .checkbox {
+    display: inline-block;
+    margin-top: 0.1em;
+    margin-right: 0.3em;
+    margin-bottom: 0.1em;
+    width: 0.6em;
+    height: 0.6em;
+    /*float: left;*/
+    border: solid 2px #000000;
+    /*padding-left: 0.9em;*/
+}
+input[type="checkbox"]:checked + label .checkbox {
+    background: #66D9EF;
+}
+
 
 @media screen and (max-width: 600px) {
     h1 {
