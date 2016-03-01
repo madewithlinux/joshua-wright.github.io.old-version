@@ -393,7 +393,7 @@ main_input_box.onkeyup = function (e) {
         main_input_box.focus();
         main_input_box.setSelectionRange(old_start, old_end);
     } else {
-        if (main_input_box.value == "") {
+        if (!/\S/.test(main_input_box.value)) {
             /*if the input box is empty*/
             output_div.innerHTML = "";
             output_hidden.innerHTML = "";
