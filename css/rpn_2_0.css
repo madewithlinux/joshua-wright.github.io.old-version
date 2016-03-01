@@ -1,21 +1,9 @@
-/*@import url(https://fonts.googleapis.com/css?family=Open+Sans:400,700);*/
-/*@import url(https://fonts.googleapis.com/css?family=Ubuntu+Mono);*/
-/*@import url(https://fonts.googleapis.com/css?family=Ubuntu+Mono&subset=latin,greek,greek-ext,cyrillic-ext,latin-ext,cyrillic);*/
-/*@import url(https://fonts.googleapis.com/css?family=Cousine);*/
-/*@import url(https://fonts.googleapis.com/css?family=Cousine&subset=latin,greek,cyrillic,hebrew,greek-ext,vietnamese,cyrillic-ext,latin-ext);*/
-/*@import url(https://fonts.googleapis.com/css?family=Anonymous+Pro);*/
-/*@import url(https://fonts.googleapis.com/css?family=Anonymous+Pro:400,700);*/
 @import url(https://fonts.googleapis.com/css?family=Inconsolata);
 
 
 
 html {
     font-family: 'Inconsolata', sans-serif;
-    /*font-family: 'Open Sans', sans-serif;*/
-    /*font-family: 'Ubuntu Mono', sans-serif;*/
-    /*font-family: 'Cousine', sans-serif;*/
-    /*font-family: 'Anonymous Pro', sans-serif;*/
-    /*font-weight: 700;*/
     transition: opacity 0.25s ease-in-out;
 }
 

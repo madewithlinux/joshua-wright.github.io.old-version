@@ -17,6 +17,11 @@ var class_operator = "operator";
 var class_number = "number";
 var class_numberContainer = 'numberContainer';
 
+var do_symbol_replacement = true;
+if( /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ) {
+    do_symbol_replacement = false;
+}
+
 
 /*
  gigantic expression to make a nice grid for color testing:
@@ -78,6 +83,10 @@ var constants = {
     '\u212f': Math.E,
     '∞': Infinity,
     '-∞': -Infinity,
+    'pi': Math.PI,
+    'e': Math.E,
+    'inf': Infinity,
+    '-inf': -Infinity,
 };
 var constant_replacements = [
     ['pi', 'π'],
@@ -311,6 +320,9 @@ function trim_last_char() {
 function do_replacements() {
     /*TODO: add a config option to not do the unicode replacements*/
     /*backup the selection indexes*/
+    if (!do_symbol_replacement) {
+        return;
+    }
     var old_start = main_input_box.selectionStart;
     var old_end = main_input_box.selectionEnd;
     var expr = main_input_box.value;
