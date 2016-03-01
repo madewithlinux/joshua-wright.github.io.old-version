@@ -176,19 +176,22 @@ function parse_expression(expr) {
             idx_right++;
         }
         var v = expr.slice(idx_left, idx_right);
-        //console.log(idx_left + " " + idx_right + " " + v);
-        if (v.toLowerCase() in constants) {
-            stack.push(new Node(constants[v.toLowerCase()], [], idx_left, idx_right));
-        } else if (operators.by_label.has(v)) {
-            /*this is an operator*/
-            /*slice off the top of the stack and give it to this operator*/
-            var tmp_stack = stack.slice(-operators.by_label.get(v).param_count, stack.length);
-            stack = stack.slice(0, -operators.by_label.get(v).param_count);
-            var new_node = new Node(v, tmp_stack, idx_left, idx_right);
-            stack.push(new_node);
-        } else {
-            /*this is a number, because it isn't an operator*/
-            stack.push(new Node(Number(v), [], idx_left, idx_right));
+        //console.log(idx_left, idx_right, v);
+        /*above algorithm doesn't reliably stop spaces at the start of the string*/
+        if (v != "") {
+            if (v.toLowerCase() in constants) {
+                stack.push(new Node(constants[v.toLowerCase()], [], idx_left, idx_right));
+            } else if (operators.by_label.has(v)) {
+                /*this is an operator*/
+                /*slice off the top of the stack and give it to this operator*/
+                var tmp_stack = stack.slice(-operators.by_label.get(v).param_count, stack.length);
+                stack = stack.slice(0, -operators.by_label.get(v).param_count);
+                var new_node = new Node(v, tmp_stack, idx_left, idx_right);
+                stack.push(new_node);
+            } else {
+                /*this is a number, because it isn't an operator*/
+                stack.push(new Node(Number(v), [], idx_left, idx_right));
+            }
         }
         idx_left = idx_right;
         while (expr[idx_left] == ' ' && idx_left < expr.length) {
@@ -390,39 +393,46 @@ main_input_box.onkeyup = function (e) {
         main_input_box.focus();
         main_input_box.setSelectionRange(old_start, old_end);
     } else {
-        /*handle constants and unicode and such*/
-        do_replacements();
-        //console.log("e.keyCode: " + e.keyCode);
-        /*parse the rpn expression into an expression tree*/
-        var tree = parse_expression(main_input_box.value);
-        /*display the tree*/
-        display_expression(tree);
-        /*evaluate the tree for a numerical value*/
-        var output = eval_tree(tree[0]);
-        /*process the first separately*/
-        var out_locale = '<table class="output"> <tbody class="output">';
-        out_locale += '<tr><td>';
-        out_locale += output.toLocaleString();
-        out_locale += '</td><td>=</td><td>';
-        out_locale += print_as_infix(tree[0]);
-        out_locale += '</td></tr>';
-        var out_raw = output.toString();
-        for (var i = 1; i < tree.length; i++) {
-            /*process the next, adding line breaks only as needed*/
-            output = eval_tree(tree[i]);
+        if (main_input_box.value == "") {
+            /*if the input box is empty*/
+            output_div.innerHTML = "";
+            output_hidden.innerHTML = "";
+            tree_root.innerHTML = "";
+        } else {
+            /*handle constants and unicode and such*/
+            do_replacements();
+            //console.log("e.keyCode: " + e.keyCode);
+            /*parse the rpn expression into an expression tree*/
+            var tree = parse_expression(main_input_box.value);
+            /*display the tree*/
+            display_expression(tree);
+            /*evaluate the tree for a numerical value*/
+            var output = eval_tree(tree[0]);
+            /*process the first separately*/
+            var out_locale = '<table class="output"> <tbody class="output">';
             out_locale += '<tr><td>';
-            //out_locale += '<br>';
             out_locale += output.toLocaleString();
             out_locale += '</td><td>=</td><td>';
-            out_locale += print_as_infix(tree[i]);
+            out_locale += print_as_infix(tree[0]);
             out_locale += '</td></tr>';
-            out_raw += '<br>' + output.toString();
+            var out_raw = output.toString();
+            for (var i = 1; i < tree.length; i++) {
+                /*process the next, adding line breaks only as needed*/
+                output = eval_tree(tree[i]);
+                out_locale += '<tr><td>';
+                //out_locale += '<br>';
+                out_locale += output.toLocaleString();
+                out_locale += '</td><td>=</td><td>';
+                out_locale += print_as_infix(tree[i]);
+                out_locale += '</td></tr>';
+                out_raw += '<br>' + output.toString();
+            }
+            /*set the HTML content*/
+            out_locale += '</tbody></table>';
+            output_div.innerHTML = out_locale;
+            output_hidden.innerHTML = out_raw;
+            //console.log(print_as_infix(tree[0]));
         }
-        /*set the HTML content*/
-        out_locale += '</tbody></table>';
-        output_div.innerHTML = out_locale;
-        output_hidden.innerHTML = out_raw;
-        console.log(print_as_infix(tree[0]));
     }
 };
 /*call the event handler on page load*/

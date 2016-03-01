@@ -112,7 +112,9 @@ div.operator {
 table.output {
     margin-left: auto;
 }
-
+table.output tr, table.output tr td {
+    background-color: inherit;
+}
 div#help_screen_container {
     display: none; /*override this in JavaScript later*/
     position: absolute;
