@@ -3,6 +3,16 @@ $(document).ready(function () {
     var ctx = c.getContext('2d');
     var middle = [c.width / 2, c.height / 2];
     var font = "'Share Tech Mono'";
+    var input_linewidth = $('input[name=line_width]')[0];
+    var input_clock_size = $("#clock_size")[0];
+    /*clock styles*/
+    var radio_style_classic = document.getElementById('clock_style_classic');
+    var radio_style_modern = document.getElementById("clock_style_modern");
+    /*clock number styles*/
+    var radio_number_style_all = document.getElementById('clock_number_style_all');
+    var radio_number_style_major = document.getElementById('clock_number_style_major');
+    var radio_number_style_none = document.getElementById('clock_number_style_none');
+    
 
     /*make the canvas device-width if it starts out as wider*/
     (function () {
@@ -15,15 +25,18 @@ $(document).ready(function () {
     })();
 
     /*hides the config and sets the canvas size to fit the window, and centers it*/
-    $('#fullscreen_button').click(function () {
+    function set_fullscreen() {
         $("div.config").hide();
         var size = Math.min(window.innerWidth, window.innerHeight);
         $('#clock_size')[0].value = size;
         c.width = size;
         c.height = size;
         $("#main_canvas").css({"margin": "auto", "float": "none"});
-        //$("#main_canvas").focus();
-    });
+    }
+    $('#fullscreen_button').click(set_fullscreen);
+    if (window.location.toString().endsWith("#fullscreen")) {
+        set_fullscreen();
+    }
 
     /*unhide the config*/
     var KEYCODE_ESC = 27;
@@ -40,9 +53,9 @@ $(document).ready(function () {
      * @param  {number} theta angle in radians
      * @return {number}       x coordinate of point
      */
-    circle_x = function (r, theta) {
+    function circle_x(r, theta) {
         return r * Math.cos(theta);
-    };
+    }
 
     /**
      * compute y-coordinate of a circle
@@ -50,20 +63,20 @@ $(document).ready(function () {
      * @param  {number} theta angle in radians
      * @return {number}       y coordinate of point
      */
-    circle_y = function (r, theta) {
+    function circle_y(r, theta) {
         return r * Math.sin(theta);
-    };
+    }
 
     /**
      * draws the outer circle of the clock and the lines representing numbers
      * @param {bool} use_numbers  (optional) whether to use numbers. Legal values are false, "major", "all"
      * @return {none} none
      */
-    draw_clock_circle = function (use_numbers) {
+    function draw_clock_circle(use_numbers) {
 
         function is_major_num(num) {
             return [0, 3, 6, 9].indexOf(Math.round(num / (2 * Math.PI) * 12)) > -1;
-        };
+        }
         /*default argument*/
         if (use_numbers == null) {
             use_numbers = false;
@@ -73,7 +86,7 @@ $(document).ready(function () {
         ctx.beginPath();
         /*reset the color because if we switched from the modern clock face, the last color was blue*/
         ctx.strokeStyle = "#000";
-        ctx.lineWidth = Number($('input[name=line_width]').val());
+        ctx.lineWidth = Number(input_linewidth.value);
         ctx.lineCap = "round";
         ctx.arc(middle[0], middle[1], 0.99 * middle[0], 0, 2 * Math.PI, true);
         ctx.stroke();
@@ -119,14 +132,14 @@ $(document).ready(function () {
      * @param  {number} seconds
      * @return {none} none
      */
-    render_clock_normal = function (hours, minutes, seconds, use_numbers) {
+    function render_clock_normal(hours, minutes, seconds, use_numbers) {
         draw_clock_circle(use_numbers);
         $.each([seconds, minutes, hours], function (i, v) {
             // v *= -1;
             v -= 0.25;
             var line_padding = 60 * i;
             ctx.beginPath();
-            ctx.lineWidth = Number($('input[name=line_width]').val());
+            ctx.lineWidth = Number(input_linewidth.value);
             ctx.moveTo(middle[0], middle[1]);
             ctx.lineTo(
                 middle[0] + circle_x(0.75 * middle[0] - line_padding, v * 2 * Math.PI),
@@ -137,7 +150,7 @@ $(document).ready(function () {
     };
 
 
-    render_clock_arc = function (hours, minutes, seconds, use_numbers) {
+    function render_clock_arc(hours, minutes, seconds, use_numbers) {
         /*constants*/
         var thickness = c.width / 12;
         // var thickness = 100;
@@ -153,10 +166,6 @@ $(document).ready(function () {
         ctx.fillStyle = "#272822";
         ctx.arc(middle[0], middle[1], middle[0], 0, 2 * Math.PI, true);
         ctx.fill();
-
-        /*hours is mod 12, so we need to check for 0*/
-        //if (hours < 1) { hours += 1; }
-        //console.log(hours);
 
         /*draw circular progress bars*/
         $.each([seconds, minutes, hours], function (i, v) {
@@ -213,14 +222,26 @@ $(document).ready(function () {
         }
 
     };
+    
+    function get_number_style() {
+        if (radio_number_style_all.checked) {
+            return "all";
+        } else if (radio_number_style_major.checked) {
+            return "major";
+        } else if (radio_number_style_none.checked) {
+            return "none";
+        } else {
+            return undefined;
+        }
+    }
 
     /**
      * updates the clock to the current time
      * @return {none} none
      */
-    updateTime = function () {
+    function updateTime() {
         /*clear the canvas*/
-        var size = Number($("#clock_size").val());
+        var size = input_clock_size.value;
         c.width = size;
         middle = [c.width / 2, c.height / 2];
         c.height = size;
@@ -230,17 +251,12 @@ $(document).ready(function () {
         var seconds = (now.getSeconds() + ms / 1000) / 60;
         var minutes = (now.getMinutes() + seconds) / 60;
         var hours = ((now.getHours() % 12) + minutes) / 12;
-        // var p = 10; /*precision*/
-        // console.log("H: " + hours.toFixed(p) + "M: " + minutes.toFixed(p) + "S: " + seconds.toFixed(p));
-        switch ($('input[name=clock_style]:checked').val()) {
-            case "classic":
-                render_clock_normal(hours, minutes, seconds, $('input[name=clock_number_style]:checked').val());
-                break;
-            case "modern":
-                render_clock_arc(hours, minutes, seconds, $('input[name=clock_number_style]:checked').val());
+        if (radio_style_classic.checked) {
+            render_clock_normal(hours, minutes, seconds, get_number_style());
+        } else if (radio_style_modern.checked) {
+            render_clock_arc(hours, minutes, seconds, get_number_style());
         }
-        /*60 fps*/
-        setTimeout(updateTime, 1000 / 60);
     };
-    updateTime();
+    /*60 fps*/
+    setInterval(updateTime, 1000/60);
 });
