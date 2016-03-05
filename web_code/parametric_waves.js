@@ -5,7 +5,8 @@ function colormap_basic_hot(input) {
     /* red */
     if (x > 94) {
         pix += '255';
-    } else {
+    }
+    else {
         pix += Math.round(51.0 * x / 19.0);
     }
     pix += ',';
@@ -13,9 +14,11 @@ function colormap_basic_hot(input) {
     /* green */
     if (x > 190) {
         pix += '255';
-    } else if (x > 95) {
+    }
+    else if (x > 95) {
         pix += Math.round(85.0 * x / 32.0 - 8075.0 / 32.0);
-    } else {
+    }
+    else {
         pix += '0';
     }
     pix += ',';
@@ -23,12 +26,14 @@ function colormap_basic_hot(input) {
     /* blue */
     if (x > 191) {
         pix += Math.round(255.0 * x / 64.0 - 48705.0 / 64.0);
-    } else {
+    }
+    else {
         pix += '0';
     }
     pix += ')';
     return pix;
 }
+
 function colormap_basic_hsv(input) {
     var x = 360 * input;
     var pix = "hsl(";
@@ -36,6 +41,7 @@ function colormap_basic_hsv(input) {
     pix += ',100%,50%)';
     return pix;
 }
+
 function colormap_basic_grayscale(input) {
     /* expects 0 <= input <= 1, then translates to 0 <= x <= 255 */
     var x = 255 * input;
@@ -50,9 +56,11 @@ function colormap_basic_grayscale(input) {
 function wave_sine(x, wave_size) {
     return (Math.sin(x / wave_size) + 1) / 2;
 }
+
 function wave_sawtooth(x, wave_size) {
     return (x / (wave_size * 6)) % 1;
 }
+
 function wave_triangle(x, wave_size) {
     return Math.abs(((x / (wave_size * 4)) % 2) - 1);
 }
@@ -63,6 +71,40 @@ function rose(k, t) {
         Math.cos(k * t) * Math.cos(t),
         Math.cos(k * t) * Math.sin(t)
     ];
+}
+
+function lissajous_curve(a, b, t) {
+    return [
+        Math.sin(a * t),
+        Math.cos(b * t)
+    ];
+}
+
+function generate_lissajous(a,b,_step, canvas_width) {
+    var middle = [canvas_width / 2, canvas_width / 2];
+    var scale = canvas_width / 2.1;
+    var out_x = [];
+    var out_y = [];
+    // /*start at the starting point of (1,0) */
+    /*step in terms of PI so it will add up evenly*/
+    var step = _step * Math.PI;
+    /*use a threshold to determine when we've gone all the way around*/
+    var threshold = 1e-5;
+    // var i = step;
+    var new_point;
+    for (var i=0; i<2*Math.PI; i+=step) {
+        /*get the next point*/
+        new_point = lissajous_curve(a,b,i);
+        /*scale the point and add it to the arrays*/
+        out_x.push(middle[0] + scale * new_point[0]);
+        out_y.push(middle[1] + scale * new_point[1]);
+        /*step to the next point*/
+    }
+    /*return the values in a Float64Array for speed*/
+    return {
+        "x": new Float64Array(out_x),
+        "y": new Float64Array(out_y)
+    };
 }
 
 function generate_points(n, d, _step, canvas_width) {
@@ -96,7 +138,7 @@ function generate_points(n, d, _step, canvas_width) {
     };
 }
 
-$(document).ready(function () {
+$(document).ready(function() {
 
     /*jQuery selectors
      * cache these outside worker functions so that worker functions are really fast*/
@@ -120,6 +162,8 @@ $(document).ready(function () {
     var input_n_0 = $("#input_n")[0];
     var input_d_0 = $("#input_d")[0];
     var do_waves_0 = $("#waves")[0];
+    var radio_curve_rose = $("#curve_type_rose")[0];
+    var radio_curve_lissajous = $("#curve_type_lissajous")[0];
 
 
     function basic_plot(color, lineWidth, points) {
@@ -163,7 +207,8 @@ $(document).ready(function () {
                 /*hide the canvas while we render onto it, because the bright flashes can hurt your eyes*/
                 main_canvas.hide();
             }
-        } else {
+        }
+        else {
             start = current;
         }
         for (var i = start; i > 0; i--) {
@@ -172,18 +217,22 @@ $(document).ready(function () {
             var color_index;
             if (wave_type_sine_0.checked) {
                 color_index = wave_sine(i, input_wavyness.val());
-            } else if (wave_type_triangle_0.checked) {
+            }
+            else if (wave_type_triangle_0.checked) {
                 color_index = wave_triangle(i, input_wavyness.val());
-            } else if (wave_type_sawtooth_0.checked) {
+            }
+            else if (wave_type_sawtooth_0.checked) {
                 color_index = wave_sawtooth(i, input_wavyness.val());
             }
 
             var color;
             if (colormap_gray_0.checked) {
                 color = colormap_basic_grayscale(color_index);
-            } else if (colormap_hsv_0.checked) {
+            }
+            else if (colormap_hsv_0.checked) {
                 color = colormap_basic_hsv(color_index);
-            } else if (colormap_hot_0.checked) {
+            }
+            else if (colormap_hot_0.checked) {
                 color = colormap_basic_hot(color_index);
             }
             basic_plot(color, i, points);
@@ -196,7 +245,7 @@ $(document).ready(function () {
                 /*100 - because we start at the far end*/
                 /*In order to let the UI update, we must run the rest of the math later*/
                 /*0ms delay means it will just be in line to be processed by the javascript thread*/
-                setTimeout(function () {
+                setTimeout(function() {
                     plot_range(points, i - 1);
                 }, 0);
                 return;
@@ -228,12 +277,21 @@ $(document).ready(function () {
         var input_n = input_n_0.value;
         var input_d = input_d_0.value;
         var step = Number(input_step_0.value);
-        var points = generate_points(input_n, input_d, step, main_canvas_0.width);
+        if (step < 0) {
+            return;
+        }
+        if (radio_curve_rose.checked) {
+            var points = generate_points(input_n, input_d, step, main_canvas_0.width);   
+        } else if (radio_curve_lissajous.checked) {
+            var points = generate_lissajous(input_n, input_d, step/6, main_canvas_0.width);    
+        }
+
 
         /*decide if it's a regular plot or wavy filled in one*/
         if (do_waves_0.checked) {
             plot_range(points);
-        } else {
+        }
+        else {
             basic_plot("rgb(0,0,0)", input_linewidth_0.value, points);
         }
     }
@@ -241,8 +299,8 @@ $(document).ready(function () {
     /*event handler for render button*/
     $("#btn_render").click(plot);
     /*event handler for enter key for all input fields*/
-    $("input").keyup(function (e) {
-        if (e.keyCode == 13/*enter key*/) {
+    $("input").keyup(function(e) {
+        if (e.keyCode == 13 /*enter key*/ ) {
             plot();
         }
     });
