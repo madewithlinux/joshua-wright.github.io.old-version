@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Lissajous Curve</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!--make the chrome nav bar match the background-->
+    <meta name="theme-color" content="#272822">
+    <link rel="icon" href="/favicon.png">
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans'
+          rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" media="screen"
+          href="../css/canvas_demo.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+    <script src="lissajous_curve.js"></script>
+</head>
+<body>
+<div class="config">
+    <h1>Lissajous Curve Animation</h1>
+    (work in progress) <br>
+    <a href="https://en.wikipedia.org/wiki/Lissajous_curve">Math Explination</a>
+    <div class="line">
+        Canvas Resolution:
+            <span class="right">
+            <input class="wide_num" type="number" id="res_x" value="500">
+            </span>
+    </div>
+    <div class="line">
+        Line Width
+            <span class="right">
+            <input class="wide_num" type="number" id="input_line_width"
+                   value="3">
+            </span>
+    </div>
+    <div class="line">
+        a:
+        <span class="right">
+            <input type="number" id="input_a" value="5">
+        </span>
+    </div>
+    <div class="line">
+        b:
+        <span class="right">
+            <input type="number" id="input_b" value="4">
+        </span>
+    </div>
+    <div class="line">
+        Speed:
+        <span class="right">
+            <input type="number" id="input_speed" value="4">
+        </span>
+    </div>
+</div>
+<canvas id="main_canvas" width="500" height="500"></canvas>
+</body>
+</html>
