@@ -38,7 +38,7 @@ $(document).ready(function () {
         set_fullscreen();
     }
 
-    /*unhide the config*/
+    /*unhide the config, undo fullscreen*/
     var KEYCODE_ESC = 27;
     $(document).keyup(function (e) {
         if (e.keyCode == KEYCODE_ESC) {
