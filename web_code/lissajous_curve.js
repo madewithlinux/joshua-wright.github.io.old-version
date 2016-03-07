@@ -6,6 +6,7 @@ function lissajous_curve(a, b, sigma, t) {
 }
 $(document).ready(function() {
     var sigma = 0;
+    var div_config = $("div.config");
     var main_canvas = $('#main_canvas');
     var main_canvas_0 = main_canvas[0];
     var input_res_x = document.getElementById("res_x");
@@ -52,14 +53,10 @@ $(document).ready(function() {
     }, 1000 / 60);
 
     function set_fullscreen() {
-        $("div.config").hide();
-        //var input_res_x = document.getElementById("res_x");
-        //var input_res_y = document.getElementById("res_y");
+        div_config.hide();
         input_res_x.value = window.innerWidth;
         input_res_y.value = window.innerHeight;
-        c.width = size;
-        c.height = size;
-        $("#main_canvas").css({"margin": "auto", "float": "none"});
+        main_canvas.css({"margin": "auto", "float": "none"});
     }
     $('#fullscreen_button').click(set_fullscreen);
     if (window.location.toString().endsWith("#fullscreen")) {
@@ -72,8 +69,8 @@ $(document).ready(function() {
         if (e.keyCode == KEYCODE_ESC) {
             input_res_x.value = 500;
             input_res_y.value = 500;
-            $("div.config").show();
-            $("#main_canvas").css({"margin": "0", "float": "right"});
+            div_config.show();
+            main_canvas.css({"margin": "0", "float": "right"});
         }
     });
 
