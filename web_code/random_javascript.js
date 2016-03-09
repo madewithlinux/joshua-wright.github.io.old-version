@@ -97,7 +97,6 @@ $(document).ready(function () {
     /*also trigger the action when the button is clicked*/
     $("#prime_button").click(find_max_primes);
     $("#prime_clear").click(function () {
-        //$("#prime_output").empty();
         prime_output_0.innerHTML = "";
     });
 

@@ -16,10 +16,11 @@ $(document).ready(function () {
 
     /*make the canvas device-width if it starts out as wider*/
     (function () {
-        //var canvas = $('#main_canvas')[0];
         if (window.innerWidth < c.width) {
             $('#clock_size')[0].value = window.innerWidth;
             c.width = window.innerWidth;
+            /*it's square, so we set height to width*/
+            //noinspection JSSuspiciousNameCombination
             c.height = window.innerWidth;
         }
     })();
@@ -135,7 +136,6 @@ $(document).ready(function () {
     function render_clock_normal(hours, minutes, seconds, use_numbers) {
         draw_clock_circle(use_numbers);
         $.each([seconds, minutes, hours], function (i, v) {
-            // v *= -1;
             v -= 0.25;
             var line_padding = 60 * i;
             ctx.beginPath();

@@ -37,7 +37,6 @@ $(document).ready(function() {
 
         context.beginPath();
         context.strokeStyle = "#000";
-        //context.lineWidth = 2;
         context.lineWidth = input_line_width.value;
 
         context.moveTo(point[0] * scale_x + middle[0], point[1] * scale_y + middle[1]);

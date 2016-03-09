@@ -5,12 +5,13 @@
 
 $(document).ready(function () {
 
-    /*pixel map layout:*/
-    // 00 01 02
-    // 03 04 05
-    // 06 07 08
-    // 09 10 11
-    // 12 13 14
+    /*pixel map layout:
+      00 01 02
+      03 04 05
+      06 07 08
+      09 10 11
+      12 13 14
+     */
     pixel_maps = {
         "0": [1, 1, 1, 1, 0, 1, 1, 0, 1, 1, 0, 1, 1, 1, 1],
         "1": [0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0],
@@ -33,14 +34,10 @@ $(document).ready(function () {
             this.subpixels.push(this.dom_object.find(".subpixel_" + i));
         }
         this.set_display = function (val) {
-            /*TODO*/
-            //console.log(val);
             if (!val in pixel_maps) {
-                //console.log(val);
                 return;
             }
             for (var i = 0; i < 16; i++) {
-                //console.log(val, i);
                 if (pixel_maps[val][i] == 1) {
                     //console.log(val, i, pixel_maps[val][i]);
                     this.subpixels[i].css("background", "#333");
@@ -84,7 +81,6 @@ $(document).ready(function () {
         for (var i = 0; i < 8; i++) {
             pixels[i].set_display(time_str[i]);
         }
-        //setTimeout(update_time, 100);
     }
     update_time();
     setInterval(update_time, 1000);

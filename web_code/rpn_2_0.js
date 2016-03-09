@@ -254,7 +254,6 @@ function render_expression(node) {
         };
         var op_txt = document.createElement('div');
         op_txt.classList.add("operatorContainer");
-        //op_txt.textContent = operators[node.operation];
         op_txt.textContent = node.op.unicode;
         op_parent.appendChild(op_txt);
         container.appendChild(op_parent);
@@ -295,14 +294,11 @@ function toggle_help_visibility() {
     if (help_screen.style.opacity == 0) {
         /*show the help screen*/
         help_screen.style.display = "block";
-        //document.body.style.zIndex = 1;
-        //help_screen.style.opacity = "1";
         /*use a 0-delay timeout so that it has a chance to update the partial css*/
         setTimeout(function () {
             help_screen.style.opacity = 1;
         }, 1);
     } else {
-        //help_screen.style.display = "none";
         help_screen.style.opacity = 0;
         setTimeout(function () {
             /*use a delay such that it will not really hide until it is fully
@@ -434,7 +430,6 @@ main_input_box.onkeyup = function (e) {
                 /*process the next, adding line breaks only as needed*/
                 output = eval_tree(tree[i]);
                 out_locale += '<tr><td>';
-                //out_locale += '<br>';
                 out_locale += output.toLocaleString();
                 out_locale += '</td><td>=</td><td>';
                 out_locale += print_as_infix(tree[i]);
@@ -445,7 +440,6 @@ main_input_box.onkeyup = function (e) {
             out_locale += '</tbody></table>';
             output_div.innerHTML = out_locale;
             output_hidden.innerHTML = out_raw;
-            //console.log(print_as_infix(tree[0]));
         }
     }
 };
