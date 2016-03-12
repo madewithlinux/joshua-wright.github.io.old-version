@@ -1,3 +1,23 @@
+/**
+ * compute x-coordinate of a circle
+ * @param  {number} r     radius
+ * @param  {number} theta angle in radians
+ * @return {number}       x coordinate of point
+ */
+function circle_x(r, theta) {
+    return r * Math.cos(theta);
+}
+
+/**
+ * compute y-coordinate of a circle
+ * @param  {number} r     radius
+ * @param  {number} theta angle in radians
+ * @return {number}       y coordinate of point
+ */
+function circle_y(r, theta) {
+    return r * Math.sin(theta);
+}
+
 $(document).ready(function () {
     var c = $("#main_canvas")[0];
     var ctx = c.getContext('2d');
@@ -12,7 +32,7 @@ $(document).ready(function () {
     var radio_number_style_all = document.getElementById('clock_number_style_all');
     var radio_number_style_major = document.getElementById('clock_number_style_major');
     var radio_number_style_none = document.getElementById('clock_number_style_none');
-    
+
 
     /*make the canvas device-width if it starts out as wider*/
     (function () {
@@ -34,6 +54,7 @@ $(document).ready(function () {
         c.height = size;
         $("#main_canvas").css({"margin": "auto", "float": "none"});
     }
+
     $('#fullscreen_button').click(set_fullscreen);
     if (window.location.toString().endsWith("#fullscreen")) {
         set_fullscreen();
@@ -49,26 +70,6 @@ $(document).ready(function () {
     });
 
     /**
-     * compute x-coordinate of a circle
-     * @param  {number} r     radius
-     * @param  {number} theta angle in radians
-     * @return {number}       x coordinate of point
-     */
-    function circle_x(r, theta) {
-        return r * Math.cos(theta);
-    }
-
-    /**
-     * compute y-coordinate of a circle
-     * @param  {number} r     radius
-     * @param  {number} theta angle in radians
-     * @return {number}       y coordinate of point
-     */
-    function circle_y(r, theta) {
-        return r * Math.sin(theta);
-    }
-
-    /**
      * draws the outer circle of the clock and the lines representing numbers
      * @param {bool} use_numbers  (optional) whether to use numbers. Legal values are false, "major", "all"
      * @return {none} none
@@ -78,6 +79,7 @@ $(document).ready(function () {
         function is_major_num(num) {
             return [0, 3, 6, 9].indexOf(Math.round(num / (2 * Math.PI) * 12)) > -1;
         }
+
         /*default argument*/
         if (use_numbers == null) {
             use_numbers = false;
@@ -124,7 +126,7 @@ $(document).ready(function () {
             }
             ctx.stroke();
         }
-    };
+    }
 
     /**
      * renders basic clock hands
@@ -147,8 +149,11 @@ $(document).ready(function () {
             );
             ctx.stroke();
         });
-    };
+    }
 
+
+    /*last_state is for the fancy end arcs*/
+    var last_state = [0, 0, 0];
 
     function render_clock_arc(hours, minutes, seconds, use_numbers) {
         /*constants*/
@@ -177,10 +182,20 @@ $(document).ready(function () {
             ctx.arc(
                 middle[0], middle[1],
                 middle[0] - spacing - (thickness / 2) - line_padding,
-                -Math.PI / 2,
+                /*last state controls starting point*/
+                (-Math.PI / 2) - last_state[i] * 2 * Math.PI,
                 (v - 0.25) * 2 * Math.PI,
                 false
             );
+            /*decrement the last state*/
+            if (last_state[i] > 0) {
+                last_state[i] -= 1/60;
+            }
+            /* if we're at the end then set the last state for the fancy
+             * transition to start next frame*/
+            if (Math.abs(1 - v) < 0.001) {
+                last_state[i] = 1;
+            }
             ctx.stroke();
 
             if (use_numbers != "none" && use_numbers != null) {
@@ -221,8 +236,8 @@ $(document).ready(function () {
             ctx.stroke();
         }
 
-    };
-    
+    }
+
     function get_number_style() {
         if (radio_number_style_all.checked) {
             return "all";
@@ -256,7 +271,8 @@ $(document).ready(function () {
         } else if (radio_style_modern.checked) {
             render_clock_arc(hours, minutes, seconds, get_number_style());
         }
-    };
+    }
+
     /*60 fps*/
-    setInterval(updateTime, 1000/60);
+    setInterval(updateTime, 1000 / 60);
 });
