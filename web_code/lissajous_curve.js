@@ -26,7 +26,7 @@ $(document).ready(function() {
 
         var a = input_a.value;
         var b = input_b.value;
-        var step = 0.005 * Math.PI;
+        var step = 0.001 * Math.PI;
         var point = lissajous_curve(a, b, sigma, 0);
         var canvas_width = main_canvas_0.width;
         var canvas_height = main_canvas_0.height;
@@ -38,6 +38,7 @@ $(document).ready(function() {
         context.beginPath();
         context.strokeStyle = "#000";
         context.lineWidth = input_line_width.value;
+        context.lineCap = "round";
 
         context.moveTo(point[0] * scale_x + middle[0], point[1] * scale_y + middle[1]);
         for (var i = 0; i < 2 * Math.PI; i += step) {
