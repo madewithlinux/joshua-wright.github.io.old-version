@@ -56,19 +56,21 @@ $(document).ready(function () {
         var max_prime_value = max_prime_0.value;
         /*clear the output box*/
         prime_output_0.innerHTML = "";
-        var i = 2; /*the starting prime*/
         /*allocate an array of primes. uint8 is the smallest typed (fast) array
          * in JavaScript*/
         var primes = new Uint8Array(max_prime_value);
         /*fill it with true, and we'll 'cross out' the ones for which prime isn't true */
         primes.fill(1);
+
         /*cross out the non-primes*/
-        while (i * i < max_prime_value) {
-            for (var j = i * i; j < max_prime_value; j += i) {
-                primes[j] = 0;
+        for (var i = 2; (i*i) < max_prime_value; i++) {
+            if (primes[i] == 1) {
+                for (var j = i; j < max_prime_value; j += i) {
+                    primes[j] = 0;
+                }
             }
-            i++;
         }
+
         /*get the ending time*/
         var time_taken = new Date().getTime() - time_start;
         /*output the remaining primes that passed the test*/
@@ -77,7 +79,7 @@ $(document).ready(function () {
          * bit one at a time*/
         var output = "Time: " + time_taken + "ms<br>";
         for (var k = 2; k < primes.length; k++) {
-            if (primes[k]) {
+            if (primes[k] == 1) {
                 output += k + " ";
             }
         }
