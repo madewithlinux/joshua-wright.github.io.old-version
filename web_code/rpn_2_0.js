@@ -104,9 +104,8 @@ function Operator(row, index) {
     this.needs_replacement = (this.unicode != this.ASCII);
     this.param_count = row[2];
     this.color = row[3];
-    this.is_function = row[6];
-    this.priority = row[6];
-    this.apply = row[7];
+    this.priority = row[5];
+    this.apply = row[6];
     this.prints = row[4];
 }
 function Ops(op_table) {
@@ -169,26 +168,23 @@ function Node(value, children, idx_left, idx_right) {
         }
         ret += this.op.prints[this.op.prints.length - 1];
         return ret;
+    };
+
+    this.evaluate = function() {
+        if (this.type == Node.type_number) {
+            return this.value;
+        }
+        var stack = children.map(function(v) {
+            return v.evaluate();
+        });
+        return this.op.apply(stack);
     }
+
 
 }
 Node.type_number = 0;
 Node.type_operator = 1;
 
-
-function eval_tree(n) {
-    if (n == undefined) {
-        return 0;
-    }
-    if (n.type == Node.type_number) {
-        return n.value;
-    }
-    var stack = [];
-    n.children.forEach(function(v,i) {
-        stack.push(eval_tree(v));
-    });
-    return n.op.apply(stack);
-}
 function parse_expression(expr) {
     var stack = [];
     var idx_left = 0;
@@ -430,12 +426,11 @@ main_input_box.onkeyup = function (e) {
 
             /*parse the rpn expression into an expression tree*/
             var tree = parse_expression(main_input_box.value);
-            a = tree;
             /*display the tree*/
             display_expression(tree);
 
             /*evaluate the tree for a numerical value*/
-            var output = eval_tree(tree[0]);
+            var output = tree[0].evaluate();
             /*make the table*/
             var out_locale = '<table class="output"> <tbody class="output">';
 
@@ -452,7 +447,7 @@ main_input_box.onkeyup = function (e) {
 
             for (var i = 1; i < tree.length; i++) {
                 /*process the next*/
-                output = eval_tree(tree[i]);
+                output = tree[i].evaluate();
                 out_locale += '<tr><td>';
                 out_locale += output.toLocaleString();
                 out_locale += '</td><td>=</td><td>';
