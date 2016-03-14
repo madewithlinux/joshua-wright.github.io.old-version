@@ -27,7 +27,7 @@ if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(naviga
 
 /*
  gigantic expression to make a nice grid for color testing:
- 1 sin 2 cos + 3 tan 4 asin  − × 7 acos 8 atan ÷ 3 abs 8 ln \ ⬆ % ! 7 log 8 exp C 2 10⬆ 6 2⬆ P atan2 √
+ 1 sin ℯ^ 2 cos abs ln + π tan 10^ 1 sin⁻¹ log − × 0 cos⁻¹ 2^ 1 tan⁻¹ lg
  */
 var colors = [
     "rgb(244, 67, 54)",
@@ -60,24 +60,24 @@ var bare_ops_table = [
 ['%',               '%',     2, colors[ 4], ['', '%', ''],        1, function(s){return s[0]%s[1];}],
 ['^',               '^',     2, colors[ 5], ['', '^', ''],        4, function(s){return Math.pow(s[0],s[1]);}],
 ['\\',              '\\',    2, colors[ 6], ['', '\\', ''],       2, function(s){return s[1]/s[0];}],
-['\u221A',          'sqrt',  1, colors[ 7], ['sqrt(', ')'],       1, function(s){return Math.sqrt(s[0]);}],
-['sin',             'sin',   1, colors[ 8], ['sin(',  ')'],       1, function(s){return Math.sin(s[0]);}],
-['cos',             'cos',   1, colors[ 9], ['cos(',  ')'],       1, function(s){return Math.cos(s[0]);}],
-['tan',             'tan',   1, colors[10], ['tan(',  ')'],       1, function(s){return Math.tan(s[0]);}],
-['sin\u207b\u00b9', 'asin',  1, colors[11], ['asin(', ')'],       1, function(s){return Math.asin(s[0]);}],
-['cos\u207b\u00b9', 'acos',  1, colors[12], ['acos(', ')'],       1, function(s){return Math.acos(s[0]);}],
-['tan\u207b\u00b9', 'atan',  1, colors[13], ['atan(', ')'],       1, function(s){return Math.atan(s[0]);}],
-['atan2',           'atan2', 2, colors[14], ['atan2(', ',', ')'], 2, function(s){return Math.atan2(s[0],s[1]);}],
-['ln',              'ln',    1, colors[ 0], ['ln(',  ')'],        1, function(s){return Math.log(s[0]);}],
-['log',             'log',   1, colors[ 1], ['log(', ')'],        1, function(s){return Math.log10(s[0]);}],
-['lg',              'lg',    1, colors[ 2], ['lg(',  ')'],        1, function(s){return Math.log2(s[0]);}],
-['\u212f^',         'exp',   1, colors[ 3], ['exp(', ')'],        1, function(s){return Math.exp(s[0]);}],
+['\u221A',          'sqrt',  1, colors[ 7], ['sqrt(', ')'],       9, function(s){return Math.sqrt(s[0]);}],
+['sin',             'sin',   1, colors[ 8], ['sin(',  ')'],       9, function(s){return Math.sin(s[0]);}],
+['cos',             'cos',   1, colors[ 9], ['cos(',  ')'],       9, function(s){return Math.cos(s[0]);}],
+['tan',             'tan',   1, colors[10], ['tan(',  ')'],       9, function(s){return Math.tan(s[0]);}],
+['sin\u207b\u00b9', 'asin',  1, colors[11], ['asin(', ')'],       9, function(s){return Math.asin(s[0]);}],
+['cos\u207b\u00b9', 'acos',  1, colors[12], ['acos(', ')'],       9, function(s){return Math.acos(s[0]);}],
+['tan\u207b\u00b9', 'atan',  1, colors[13], ['atan(', ')'],       9, function(s){return Math.atan(s[0]);}],
+['atan2',           'atan2', 2, colors[14], ['atan2(', ',', ')'], 9, function(s){return Math.atan2(s[0],s[1]);}],
+['ln',              'ln',    1, colors[ 0], ['ln(',  ')'],        9, function(s){return Math.log(s[0]);}],
+['log',             'log',   1, colors[ 1], ['log(', ')'],        9, function(s){return Math.log10(s[0]);}],
+['lg',              'lg',    1, colors[ 2], ['lg(',  ')'],        9, function(s){return Math.log2(s[0]);}],
+['\u212f^',         'exp',   1, colors[ 3], ['exp(', ')'],        9, function(s){return Math.exp(s[0]);}],
 ['10^',             '10^',   1, colors[ 4], ['10^', ''],          4, function(s){return Math.pow(10,s[0]);}],
 ['2^',              '2^',    1, colors[ 5], ['2^',  ''],          4, function(s){return Math.pow(2,s[0]);}],
 ['!',               '!',     1, colors[14], ['', '!'],            6, function(s){return math.factorial(s[0]);}],
-['C',               'C',     2, colors[15], ['C(', ',', ')'],     1, function(s){return math.combinations(s[0],s[1]);}],
-['P',               'P',     2, colors[16], ['P(', ',', ')'],     1, function(s){return math.permutations(s[0],s[1]);}],
-['abs',             'abs',   1, colors[17], ['abs(', ')'],        1, function(s){return Math.abs(s[0]);}],
+['C',               'C',     2, colors[15], ['C(', ',', ')'],     9, function(s){return math.combinations(s[0],s[1]);}],
+['P',               'P',     2, colors[16], ['P(', ',', ')'],     9, function(s){return math.permutations(s[0],s[1]);}],
+['abs',             'abs',   1, colors[17], ['abs(', ')'],        9, function(s){return Math.abs(s[0]);}],
 ];
 // @formatter:on
 var constants = {
@@ -155,13 +155,23 @@ function Node(value, children, idx_left, idx_right) {
         }
         var ret = this.op.prints[0];
         for (var i = 0; i < this.children.length; i++) {
-            if (this.children[i].type && this.children[i].op.priority < this.op.priority) {
+            /*if this isn't a function
+             * AND the child has a defined priority
+             * AND that priority is less than ours
+             * (priority 9 is reserved for functions)*/
+            if (this.op.priority != 9
+                && this.children[i].type
+                && this.children[i].op.priority < this.op.priority) {
                 ret += '(';
             }
             ret += this.children[i].as_infix();
-            if (this.children[i].type && this.children[i].op.priority < this.op.priority) {
+            if (this.op.priority != 9
+                && this.children[i].type
+                && this.children[i].op.priority < this.op.priority) {
                 ret += ')';
             }
+            /*if we have another thing to print
+            * AND we aren't on the last item*/
             if (this.op.prints.length > 2 && i < (this.children.length - 1)) {
                 ret += this.op.prints[1];
             }
@@ -170,17 +180,15 @@ function Node(value, children, idx_left, idx_right) {
         return ret;
     };
 
-    this.evaluate = function() {
+    this.evaluate = function () {
         if (this.type == Node.type_number) {
             return this.value;
         }
-        var stack = children.map(function(v) {
+        var stack = children.map(function (v) {
             return v.evaluate();
         });
         return this.op.apply(stack);
     }
-
-
 }
 Node.type_number = 0;
 Node.type_operator = 1;
