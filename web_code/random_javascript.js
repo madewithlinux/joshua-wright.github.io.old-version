@@ -21,10 +21,12 @@ $(document).ready(function () {
         var num = number_to_factor_0.value;
         /*this strategy for updating the HTML all at once is faster than updating
          * it inside the loop*/
-        var output = "";
+        var output = "<tr><td> A </td><td> B </td><td> A-B </td><td> A+B </td></tr>";
         for (var i = 1; i <= num; i++) {
             if (num % i === 0) {
-                output += "<tr><td>" + i + "</td><td>" + (num / i) + "</tr></td>";
+                var a = i;
+                var b = num / i;
+                output += "<tr><td>" + a + "</td><td>" + b + "</td><td>" + (a - b) + "</td><td>" + (a + b) + "</td></tr>";
             }
         }
         factor_output_0.innerHTML = output;
@@ -63,7 +65,7 @@ $(document).ready(function () {
         primes.fill(1);
 
         /*cross out the non-primes*/
-        for (var i = 2; (i*i) < max_prime_value; i++) {
+        for (var i = 2; (i * i) < max_prime_value; i++) {
             if (primes[i] == 1) {
                 for (var j = i; j < max_prime_value; j += i) {
                     primes[j] = 0;
