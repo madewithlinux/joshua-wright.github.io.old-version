@@ -62,16 +62,19 @@ $(document).ready(function () {
     var input = $("#phrase_input");
     var output = $("#output_table")[0];
     var spaces_checkbox = $("#remove_spaces");
+    var count_span_0 = $("#count")[0];
     var spaces_checkbox_0 = spaces_checkbox[0];
 
     function spell_input() {
         output.innerHTML = "";
         var phrase = input.val();
+        var count = 0;
         for (var i = 0; i < phrase.length; i++) {
             if (chars.hasOwnProperty(phrase[i].toUpperCase())) {
                 if (spaces_checkbox_0.checked && phrase[i] == " ") {
                     continue;
                 }
+                count++;
                 /*print the stuff if we have a word for this character*/
                 output_table.innerHTML += "<tr><td>" + chars[phrase[i].toUpperCase()][0] +
                     "</td><td>" + chars[phrase[i].toUpperCase()][1] +
@@ -81,6 +84,7 @@ $(document).ready(function () {
                 output_table.innerHTML += "<tr><td>" + phrase[i].toUpperCase() + "</td><td></td><td></td></tr>";
             }
         }
+        count_span_0.innerHTML = "Count: " + count;
     }
 
     input.keyup(function (e) {
