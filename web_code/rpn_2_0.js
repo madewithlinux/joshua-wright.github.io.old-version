@@ -18,17 +18,18 @@ var class_operator = "operator";
 var class_number = "number";
 var class_numberContainer = 'numberContainer';
 
+/*detect if we're running in mobile*/
 var is_mobile = true;
-if( /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ) {
+if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
     is_mobile = false;
 }
 
 
 /*
  gigantic expression to make a nice grid for color testing:
- 1 sin 2 cos + 3 tan 4 asin  − × 7 acos 8 atan ÷ 3 abs 8 ln \ ⬆ % ! 7 log 8 exp C 2 10⬆ 6 2⬆ P atan2 √
+ 1 sin ℯ^ 2 cos abs ln + π tan 10^ 1 sin⁻¹ log − × 0 cos⁻¹ 2^ 1 tan⁻¹ lg
  */
-var material_colors = [
+var colors = [
     "rgb(244, 67, 54)",
     "rgb(233, 30, 99)",
     "rgb(156, 39, 176)",
@@ -49,34 +50,34 @@ var material_colors = [
     "rgb(158, 158, 158)",
     "rgb(96, 125, 139)"
 ];
-/*Unicode operator, ASCII operator, number of operands, color, function(evaluator, stack) */
+/*Unicode operator, ASCII operator, number of operands, color, priority, function(evaluator, stack) */
 // @formatter:off
 var bare_ops_table = [
-['+',               '+',     2, material_colors[ 0], ['(', '+', ')'],      function(e,s){return e(s[0])+e(s[1]);}],
-['−',               '-',     2, material_colors[ 1], ['(', '−', ')'],      function(e,s){return e(s[0])-e(s[1]);}],
-['×',               '*',     2, material_colors[ 2], ['(', '×', ')'],      function(e,s){return e(s[0])*e(s[1]);}],
-['÷',               '/',     2, material_colors[ 3], ['(', '÷', ')'],      function(e,s){return e(s[0])/e(s[1]);}],
-['%',               '%',     2, material_colors[ 4], ['(', '%', ')'],      function(e,s){return e(s[0])%e(s[1]);}],
-['^',               '^',     2, material_colors[ 5], ['(', '^', ')'],      function(e,s){return Math.pow(e(s[0]),e(s[1]));}],
-['\\',              '\\',    2, material_colors[ 6], ['(', '\\', ')'],     function(e,s){return e(s[1])/e(s[0]);}],
-['\u221A',          'sqrt',  1, material_colors[ 7], ['sqrt(', ')'],       function(e,s){return Math.sqrt(e(s[0]));}],
-['sin',             'sin',   1, material_colors[ 8], ['sin(',  ')'],       function(e,s){return Math.sin(e(s[0]));}],
-['cos',             'cos',   1, material_colors[ 9], ['cos(',  ')'],       function(e,s){return Math.cos(e(s[0]));}],
-['tan',             'tan',   1, material_colors[10], ['tan(',  ')'],       function(e,s){return Math.tan(e(s[0]));}],
-['sin\u207b\u00b9', 'asin',  1, material_colors[11], ['asin(', ')'],       function(e,s){return Math.asin(e(s[0]));}],
-['cos\u207b\u00b9', 'acos',  1, material_colors[12], ['acos(', ')'],       function(e,s){return Math.acos(e(s[0]));}],
-['tan\u207b\u00b9', 'atan',  1, material_colors[13], ['atan(', ')'],       function(e,s){return Math.atan(e(s[0]));}],
-['atan2',           'atan2', 2, material_colors[14], ['atan2(', ',', ')'], function(e,s){return Math.atan2(e(s[0]),e(s[1]));}],
-['ln',              'ln',    1, material_colors[ 0], ['ln(',  ')'],        function(e,s){return Math.log(e(s[0]));}],
-['log',             'log',   1, material_colors[ 1], ['log(', ')'],        function(e,s){return Math.log10(e(s[0]));}],
-['lg',              'lg',    1, material_colors[ 2], ['lg(',  ')'],        function(e,s){return Math.log2(e(s[0]));}],
-['\u212f^',         'exp',   1, material_colors[ 3], ['exp(', ')'],        function(e,s){return Math.exp(e(s[0]));}],
-['10^',             '10^',   1, material_colors[ 4], ['10^(', ')'],        function(e,s){return Math.pow(10,e(s[0]));}],
-['2^',              '2^',    1, material_colors[ 5], ['2^(',  ')'],        function(e,s){return Math.pow(2,e(s[1]));}],
-['!',               '!',     1, material_colors[14], ['(',   ')!'],        function(e,s){return math.factorial(e(s[0]));}],
-['C',               'C',     2, material_colors[15], ['C(', ',', ')'],     function(e,s){return math.combinations(e(s[0]),e(s[1]));}],
-['P',               'P',     2, material_colors[16], ['P(', ',', ')'],     function(e,s){return math.permutations(e(s[0]),e(s[1]));}],
-['abs',             'abs',   1, material_colors[17], ['abs(', ')'],        function(e,s){return Math.abs(e(s[0]));}],
+['+',               '+',     2, colors[ 0], ['', '+', ''],        1, function(s){return s[0]+s[1];}],
+['−',               '-',     2, colors[ 1], ['', '−', ''],        1, function(s){return s[0]-s[1];}],
+['×',               '*',     2, colors[ 2], ['', '×', ''],        2, function(s){return s[0]*s[1];}],
+['÷',               '/',     2, colors[ 3], ['', '÷', ''],        2, function(s){return s[0]/s[1];}],
+['%',               '%',     2, colors[ 4], ['', '%', ''],        1, function(s){return s[0]%s[1];}],
+['^',               '^',     2, colors[ 5], ['', '^', ''],        4, function(s){return Math.pow(s[0],s[1]);}],
+['\\',              '\\',    2, colors[ 6], ['', '\\', ''],       2, function(s){return s[1]/s[0];}],
+['\u221A',          'sqrt',  1, colors[ 7], ['sqrt(', ')'],       9, function(s){return Math.sqrt(s[0]);}],
+['sin',             'sin',   1, colors[ 8], ['sin(',  ')'],       9, function(s){return Math.sin(s[0]);}],
+['cos',             'cos',   1, colors[ 9], ['cos(',  ')'],       9, function(s){return Math.cos(s[0]);}],
+['tan',             'tan',   1, colors[10], ['tan(',  ')'],       9, function(s){return Math.tan(s[0]);}],
+['sin\u207b\u00b9', 'asin',  1, colors[11], ['asin(', ')'],       9, function(s){return Math.asin(s[0]);}],
+['cos\u207b\u00b9', 'acos',  1, colors[12], ['acos(', ')'],       9, function(s){return Math.acos(s[0]);}],
+['tan\u207b\u00b9', 'atan',  1, colors[13], ['atan(', ')'],       9, function(s){return Math.atan(s[0]);}],
+['atan2',           'atan2', 2, colors[14], ['atan2(', ',', ')'], 9, function(s){return Math.atan2(s[0],s[1]);}],
+['ln',              'ln',    1, colors[ 0], ['ln(',  ')'],        9, function(s){return Math.log(s[0]);}],
+['log',             'log',   1, colors[ 1], ['log(', ')'],        9, function(s){return Math.log10(s[0]);}],
+['lg',              'lg',    1, colors[ 2], ['lg(',  ')'],        9, function(s){return Math.log2(s[0]);}],
+['\u212f^',         'exp',   1, colors[ 3], ['exp(', ')'],        9, function(s){return Math.exp(s[0]);}],
+['10^',             '10^',   1, colors[ 4], ['10^', ''],          4, function(s){return Math.pow(10,s[0]);}],
+['2^',              '2^',    1, colors[ 5], ['2^',  ''],          4, function(s){return Math.pow(2,s[0]);}],
+['!',               '!',     1, colors[14], ['', '!'],            6, function(s){return math.factorial(s[0]);}],
+['C',               'C',     2, colors[15], ['C(', ',', ')'],     9, function(s){return math.combinations(s[0],s[1]);}],
+['P',               'P',     2, colors[16], ['P(', ',', ')'],     9, function(s){return math.permutations(s[0],s[1]);}],
+['abs',             'abs',   1, colors[17], ['abs(', ')'],        9, function(s){return Math.abs(s[0]);}],
 ];
 // @formatter:on
 var constants = {
@@ -103,7 +104,8 @@ function Operator(row, index) {
     this.needs_replacement = (this.unicode != this.ASCII);
     this.param_count = row[2];
     this.color = row[3];
-    this.apply = row[5];
+    this.priority = row[5];
+    this.apply = row[6];
     this.prints = row[4];
 }
 function Ops(op_table) {
@@ -146,35 +148,51 @@ function Node(value, children, idx_left, idx_right) {
     }
     this.idx_left = idx_left;
     this.idx_right = idx_right;
+
+    this.as_infix = function () {
+        if (this.type == Node.type_number) {
+            return this.value.toLocaleString();
+        }
+        var ret = this.op.prints[0];
+        for (var i = 0; i < this.children.length; i++) {
+            /*if this isn't a function
+             * AND the child has a defined priority
+             * AND that priority is less than ours
+             * (priority 9 is reserved for functions)*/
+            if (this.op.priority != 9
+                && this.children[i].type
+                && this.children[i].op.priority < this.op.priority) {
+                ret += '(';
+            }
+            ret += this.children[i].as_infix();
+            if (this.op.priority != 9
+                && this.children[i].type
+                && this.children[i].op.priority < this.op.priority) {
+                ret += ')';
+            }
+            /*if we have another thing to print
+            * AND we aren't on the last item*/
+            if (this.op.prints.length > 2 && i < (this.children.length - 1)) {
+                ret += this.op.prints[1];
+            }
+        }
+        ret += this.op.prints[this.op.prints.length - 1];
+        return ret;
+    };
+
+    this.evaluate = function () {
+        if (this.type == Node.type_number) {
+            return this.value;
+        }
+        var stack = children.map(function (v) {
+            return v.evaluate();
+        });
+        return this.op.apply(stack);
+    }
 }
 Node.type_number = 0;
 Node.type_operator = 1;
 
-
-function eval_tree(n) {
-    if (n == undefined) {
-        return 0;
-    }
-    if (n.type == Node.type_number) {
-        return n.value;
-    }
-    var val;
-    return n.op.apply(eval_tree, n.children);
-}
-function print_as_infix(n) {
-    if (n.type == Node.type_number) {
-        return n.value.toLocaleString();
-    }
-    var ret = n.op.prints[0];
-    for (var i = 0; i < n.children.length; i++) {
-        ret += print_as_infix(n.children[i]);
-        if (n.op.prints.length > 2 && i < (n.children.length - 1)) {
-            ret += n.op.prints[1];
-        }
-    }
-    ret += n.op.prints[n.op.prints.length - 1];
-    return ret;
-}
 function parse_expression(expr) {
     var stack = [];
     var idx_left = 0;
@@ -254,7 +272,6 @@ function render_expression(node) {
         };
         var op_txt = document.createElement('div');
         op_txt.classList.add("operatorContainer");
-        //op_txt.textContent = operators[node.operation];
         op_txt.textContent = node.op.unicode;
         op_parent.appendChild(op_txt);
         container.appendChild(op_parent);
@@ -295,14 +312,11 @@ function toggle_help_visibility() {
     if (help_screen.style.opacity == 0) {
         /*show the help screen*/
         help_screen.style.display = "block";
-        //document.body.style.zIndex = 1;
-        //help_screen.style.opacity = "1";
         /*use a 0-delay timeout so that it has a chance to update the partial css*/
         setTimeout(function () {
             help_screen.style.opacity = 1;
         }, 1);
     } else {
-        //help_screen.style.display = "none";
         help_screen.style.opacity = 0;
         setTimeout(function () {
             /*use a delay such that it will not really hide until it is fully
@@ -407,6 +421,7 @@ main_input_box.onkeyup = function (e) {
         main_input_box.focus();
         main_input_box.setSelectionRange(old_start, old_end);
     } else {
+        /*normal keys*/
         if (!/\S/.test(main_input_box.value)) {
             /*if the input box is empty*/
             output_div.innerHTML = "";
@@ -416,36 +431,44 @@ main_input_box.onkeyup = function (e) {
             /*handle constants and unicode and such*/
             do_replacements();
             //console.log("e.keyCode: " + e.keyCode);
+
             /*parse the rpn expression into an expression tree*/
             var tree = parse_expression(main_input_box.value);
             /*display the tree*/
             display_expression(tree);
+
             /*evaluate the tree for a numerical value*/
-            var output = eval_tree(tree[0]);
-            /*process the first separately*/
+            var output = tree[0].evaluate();
+            /*make the table*/
             var out_locale = '<table class="output"> <tbody class="output">';
+
+            /*process the first separately*/
             out_locale += '<tr><td>';
+            /*number*/
             out_locale += output.toLocaleString();
             out_locale += '</td><td>=</td><td>';
-            out_locale += print_as_infix(tree[0]);
+            /*expression*/
+            out_locale += tree[0].as_infix();
             out_locale += '</td></tr>';
+            /*raw, for copying*/
             var out_raw = output.toString();
+
             for (var i = 1; i < tree.length; i++) {
-                /*process the next, adding line breaks only as needed*/
-                output = eval_tree(tree[i]);
+                /*process the next*/
+                output = tree[i].evaluate();
                 out_locale += '<tr><td>';
-                //out_locale += '<br>';
                 out_locale += output.toLocaleString();
                 out_locale += '</td><td>=</td><td>';
-                out_locale += print_as_infix(tree[i]);
+                out_locale += tree[i].as_infix();
                 out_locale += '</td></tr>';
+                /*this way we only add raw line breaks between the numbers as
+                 *needed, avoiding a trailing newline*/
                 out_raw += '<br>' + output.toString();
             }
             /*set the HTML content*/
             out_locale += '</tbody></table>';
             output_div.innerHTML = out_locale;
             output_hidden.innerHTML = out_raw;
-            //console.log(print_as_infix(tree[0]));
         }
     }
 };

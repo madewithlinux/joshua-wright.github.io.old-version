@@ -85,12 +85,11 @@ function generate_lissajous(a,b,_step, canvas_width) {
     var scale = canvas_width / 2.1;
     var out_x = [];
     var out_y = [];
-    // /*start at the starting point of (1,0) */
+    /*start at the starting point of (1,0) */
     /*step in terms of PI so it will add up evenly*/
     var step = _step * Math.PI;
     /*use a threshold to determine when we've gone all the way around*/
     var threshold = 1e-5;
-    // var i = step;
     var new_point;
     for (var i=0; i<2*Math.PI; i+=step) {
         /*get the next point*/
@@ -239,7 +238,6 @@ $(document).ready(function() {
             /*update progress on percentages*/
             /*same reason for rounding here as above*/
             if (i % Math.round(max_len / 25) == 0) {
-                //progress.html("Progress: " + Math.round(100 - 100 * i / max_len) + "%");
                 progress_0.innerHTML = "Progress: " + Math.round(100 - 100 * i / max_len) + "%";
                 progress_bar_0.style.width = (100 - 100 * i / max_len) + "%";
                 /*100 - because we start at the far end*/

@@ -104,6 +104,34 @@ h2 + p {
     margin-top: 4px;
 }
 
+
+/*alternating row colors*/
+table tr:nth-child(odd) {
+    background-color: #f2f2f2;
+}
+/*special first row*/
+table tr:nth-child(1) {
+    background-color: #c3c3c3;
+}
+table tr:nth-child(1) td {
+    /*background-color: #8F8F8C;*/
+    border-bottom: 2px solid #000;
+}
+/*padding and text alignment*/
+table.numeric_table tr td {
+    padding: 5px;
+    padding-left: 15px;
+    text-align: right;
+}
+
+
+
+
+
+
+
+
+
 a.btn {
     font-size: 1.2em;
     text-decoration: none; /*no underline*/

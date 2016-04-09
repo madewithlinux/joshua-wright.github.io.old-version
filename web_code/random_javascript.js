@@ -21,10 +21,12 @@ $(document).ready(function () {
         var num = number_to_factor_0.value;
         /*this strategy for updating the HTML all at once is faster than updating
          * it inside the loop*/
-        var output = "";
+        var output = "<tr><td> A </td><td> B </td><td> A-B </td><td> A+B </td></tr>";
         for (var i = 1; i <= num; i++) {
             if (num % i === 0) {
-                output += "<tr><td>" + i + "</td><td>" + (num / i) + "</tr></td>";
+                var a = i;
+                var b = num / i;
+                output += "<tr><td>" + a + "</td><td>" + b + "</td><td>" + (a - b) + "</td><td>" + (a + b) + "</td></tr>";
             }
         }
         factor_output_0.innerHTML = output;
@@ -56,19 +58,21 @@ $(document).ready(function () {
         var max_prime_value = max_prime_0.value;
         /*clear the output box*/
         prime_output_0.innerHTML = "";
-        var i = 2; /*the starting prime*/
         /*allocate an array of primes. uint8 is the smallest typed (fast) array
          * in JavaScript*/
         var primes = new Uint8Array(max_prime_value);
         /*fill it with true, and we'll 'cross out' the ones for which prime isn't true */
         primes.fill(1);
+
         /*cross out the non-primes*/
-        while (i * i < max_prime_value) {
-            for (var j = i * i; j < max_prime_value; j += i) {
-                primes[j] = 0;
+        for (var i = 2; (i * i) < max_prime_value; i++) {
+            if (primes[i] == 1) {
+                for (var j = i; j < max_prime_value; j += i) {
+                    primes[j] = 0;
+                }
             }
-            i++;
         }
+
         /*get the ending time*/
         var time_taken = new Date().getTime() - time_start;
         /*output the remaining primes that passed the test*/
@@ -77,7 +81,7 @@ $(document).ready(function () {
          * bit one at a time*/
         var output = "Time: " + time_taken + "ms<br>";
         for (var k = 2; k < primes.length; k++) {
-            if (primes[k]) {
+            if (primes[k] == 1) {
                 output += k + " ";
             }
         }
@@ -97,7 +101,6 @@ $(document).ready(function () {
     /*also trigger the action when the button is clicked*/
     $("#prime_button").click(find_max_primes);
     $("#prime_clear").click(function () {
-        //$("#prime_output").empty();
         prime_output_0.innerHTML = "";
     });
 
