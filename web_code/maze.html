@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Maze</title>
+    <!-- this meta viewport tag makes stuff work on mobile devices -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!--make the chrome nav bar match the background-->
+    <meta name="theme-color" content="#272822">
+    <link rel="icon" href="/favicon.png">
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" media="screen" href="../css/canvas_demo.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+    <script src="../js/graph.js"></script>
+    <script src="../js/maze.js"></script>
+</head>
+<body>
+<div class="config">
+    <h1>Mazes</h1>
+    <p> WIP </p>
+    <div class="line">
+        Canvas Resolution:
+            <span class="right">
+            <input class="wide_num" type="number" id="res_x" value="500"> x
+            <input class="wide_num" type="number" id="res_y" value="500">
+            </span>
+    </div>
+</div>
+<canvas id="main_canvas" width="500" height="500"></canvas>
+</body>
+</html>
