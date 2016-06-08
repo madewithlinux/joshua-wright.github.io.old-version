@@ -15,69 +15,70 @@
 </head>
 
 <body>
-    <div class="config">
-        <h1>Parametric Waves</h1>
-        <p>Plotted using the HTML5 &lt;canvas&gt; tag and JavaScript. 
-        <a href="https://en.wikipedia.org/wiki/Rose_(mathematics)" title="parametric rose">Here</a> is an explanation of the rose and 
+<div class="config">
+    <h1>Parametric Waves</h1>
+    <p>Plotted using the HTML5 &lt;canvas&gt; tag and JavaScript.
+        <a href="https://en.wikipedia.org/wiki/Rose_(mathematics)" title="parametric rose">Here</a> is an explanation of
+        the rose and
         <a href="https://en.wikipedia.org/wiki/Lissajous_curve">here</a> is an explanation of the Lissajous curve.</p>
-        <div class="line">
-            Canvas Resolution:
+    <div class="line">
+        Canvas Resolution:
             <span class="right">
             <input class="wide_num" type="number" id="res_x" value="500"> x
             <input class="wide_num" type="number" id="res_y" value="500">
             </span>
-        </div>
-        <div class="line">
-            Step:
+    </div>
+    <div class="line">
+        Step:
             <span class="right">
             <input class="wide_num" type="number" id="input_step" value="0.03">
             </span>
-        </div>
-        <div class="line">
-            k =
+    </div>
+    <div class="line">
+        k =
             <span class="right">
             <input type="number" id="input_n" value="3"> /
             <input type="number" id="input_d" value="5">
             </span>
-        </div>
-        <div class="line">
-            Line Width:
+    </div>
+    <div class="line">
+        Line Width:
             <span class="right">
             <input type="number" id="input_linewidth" value="3">
             </span>
-        </div>
-        <div class="line">
-            Wavy?
+    </div>
+    <div class="line">
+        Wavy?
             <span class="right">
                 <input type="checkbox" id="waves">
                 <label for="waves"></label>
             </span>
-        </div>
-        <div class="line">
-            Wave Size:
+    </div>
+    <div class="line">
+        Wave Size:
             <span class="right">
                 <input class="wide_num" type="number" id="input_wavyness"
                        value="8">
             </span>
-        </div>
-        <div class="line">
-            Hide while rendering?:
+    </div>
+    <div class="line">
+        Hide while rendering?:
             <span class="right">
                 <input type="checkbox" id="hide_while_rendering" checked>
                 <label for="hide_while_rendering"></label>
             </span>
-        </div>
-        <div class="line">
-            Curve Type:
+    </div>
+    <div class="line">
+        Curve Type:
             <span class="right wide_column">
                 <input type="radio" name="curve_type" id="curve_type_rose" checked/>
                 <label class="full_wide" for="curve_type_rose">Rose</label><br>
                 <input type="radio" name="curve_type" id="curve_type_lissajous"/>
                 <label class="full_wide" for="curve_type_lissajous">Lissajous</label><br>
             </span>
-        </div>
-        <div class="line">
-            Color:
+    </div>
+    <div class="line">
+        Color:
             <span class="right wide_column">
                 <input type="radio" name="colormap" id="colormap_gray"
                        value="colormap_gray">
@@ -90,9 +91,9 @@
                        value="colormap_hot" checked="checked">
                 <label class="full_wide" for="colormap_hot">Fire</label> <br>
             </span>
-        </div>
-        <div class="line">
-            Wave Type:
+    </div>
+    <div class="line">
+        Wave Type:
             <span class="right wide_column">
                 <input type="radio" name="wave_type" id="wave_type_sine"
                        value="wave_type_sine" checked="checked">
@@ -106,20 +107,20 @@
                 <label class="full_wide"
                        for="wave_type_triangle">triangle</label> <br>
             </span>
-        </div>
-        <div class="line">
-            <div id="progress"></div>
-            <div id="progress_bar_container">
-                <div id="progress_bar"></div>
-            </div>
-        </div>
-        <div class="line">
-            <div class="center">
-                <input class="go_button" type="button" id="btn_render" value="Render">
-            </div>
+    </div>
+    <div class="line">
+        <div id="progress"></div>
+        <div id="progress_bar_container">
+            <div id="progress_bar"></div>
         </div>
     </div>
-    <canvas id="main_canvas" width="500" height="500"></canvas>
+    <div class="line">
+        <div class="center">
+            <input class="go_button" type="button" id="btn_render" value="Render">
+        </div>
+    </div>
+</div>
+<canvas id="main_canvas" width="500" height="500"></canvas>
 </body>
 
 </html>
