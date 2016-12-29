@@ -32,6 +32,18 @@ div#output {
     text-align: right;
 }
 
+#help_text_hide_button {
+    background: #999;
+    color: #000;
+    font-weight: bolder;
+    padding: 0 0.125em;
+    text-decoration: none;
+}
+#help_text {
+    background: #eee;
+    padding: 0 0.125em;
+}
+
 div.tree {
     width: 100%;
     background: #bbbbbb;

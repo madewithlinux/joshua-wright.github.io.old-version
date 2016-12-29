@@ -21,7 +21,9 @@
                 data-clipboard-target="#output_hidden" style="display: none;">
         </button>
     </div>
-    <h3 id="help_popup">Press "?" to show help screen</h3>
+    <h3 id="help_popup">
+        <a id="help_text_hide_button" href="#">X</a><span id="help_text">Press "?" to show help screen</span>
+    </h3>
     <div class="tree" id="main_tree">
     </div>
     <div id="help_screen_container">
@@ -32,35 +34,35 @@
                     <tbody>
                     <tr>
                         <td><strong>+</strong></td>
-                        <td> addition</td>
+                        <td>addition</td>
                     </tr>
                     <tr>
                         <td><strong>−</strong></td>
-                        <td> subtraction</td>
+                        <td>subtraction</td>
                     </tr>
                     <tr>
                         <td><strong>* </strong>or<strong> ×</strong></td>
-                        <td> multiplication</td>
+                        <td>multiplication</td>
                     </tr>
                     <tr>
                         <td><strong>/ </strong>or<strong> ÷</strong></td>
-                        <td> division</td>
+                        <td>division</td>
                     </tr>
                     <tr>
                         <td><strong>%</strong></td>
-                        <td> modulo</td>
+                        <td>modulo</td>
                     </tr>
                     <tr>
                         <td><strong>\</strong></td>
-                        <td> reverse division</td>
+                        <td>reverse division</td>
                     </tr>
                     <tr>
                         <td><strong>sin</strong></td>
-                        <td> sine</td>
+                        <td>sine</td>
                     </tr>
                     <tr>
                         <td><strong>cos</strong></td>
-                        <td> cosine</td>
+                        <td>cosine</td>
                     </tr>
                     </tbody>
                 </table>
@@ -68,35 +70,35 @@
                     <tbody>
                     <tr>
                         <td><strong>tan</strong></td>
-                        <td> tangent</td>
+                        <td>tangent</td>
                     </tr>
                     <tr>
                         <td><strong>asin</strong></td>
-                        <td> arc sine</td>
+                        <td>arc sine</td>
                     </tr>
                     <tr>
                         <td><strong>acos</strong></td>
-                        <td> arc cosine</td>
+                        <td>arc cosine</td>
                     </tr>
                     <tr>
                         <td><strong>atan</strong></td>
-                        <td> arc tangent</td>
+                        <td>arc tangent</td>
                     </tr>
                     <tr>
                         <td><strong>abs</strong></td>
-                        <td> absolute value</td>
+                        <td>absolute value</td>
                     </tr>
                     <tr>
                         <td><strong>exp</strong></td>
-                        <td> e to power</td>
+                        <td>e to power</td>
                     </tr>
                     <tr>
                         <td><strong>10^</strong></td>
-                        <td> 10 to power</td>
+                        <td>10 to power</td>
                     </tr>
                     <tr>
                         <td><strong>2^</strong></td>
-                        <td> 2 to power</td>
+                        <td>2 to power</td>
                     </tr>
                     </tbody>
                 </table>
@@ -104,44 +106,42 @@
                     <tbody>
                     <tr>
                         <td><strong>^</strong></td>
-                        <td> power</td>
+                        <td>power</td>
                     </tr>
                     <tr>
                         <td><strong>ln</strong></td>
-                        <td> base e</td>
+                        <td>base e</td>
                     </tr>
                     <tr>
                         <td><strong>log</strong></td>
-                        <td> base 10</td>
+                        <td>base 10</td>
                     </tr>
                     <tr>
                         <td><strong>lg</strong></td>
-                        <td> base 2</td>
+                        <td>base 2</td>
                     </tr>
                     <tr>
                         <td><strong>!</strong></td>
-                        <td> factorial</td>
+                        <td>factorial</td>
                     </tr>
                     <tr>
                         <td><strong>C</strong></td>
-                        <td> combinations</td>
+                        <td>combinations</td>
                     </tr>
                     <tr>
                         <td><strong>P</strong></td>
-                        <td> permutations</td>
+                        <td>permutations</td>
                     </tr>
                     <tr>
                         <td><strong>atan2</strong></td>
-                        <td> arc tangent of (x,y)</td>
+                        <td>arc tangent of (x,y)</td>
                     </tr>
                     </tbody>
                 </table>
             </div>
             <br>
             <div class="block">
-
                 Keyboard Shortcuts:
-                <!--<div class="operator_table_container">-->
                 <table cellspacing="0">
                     <tbody>
                     <tr>
@@ -154,24 +154,20 @@
                     </tr>
                     </tbody>
                 </table>
-                <!--</div>-->
-                <!--<br>-->
             </div>
             <div class="block">
                 Constants:
-                <!--<div class="operator_table_container">-->
                 <table cellspacing="0" class="constants_table">
                     <tbody>
                     <tr>
-                        <td><strong>pi </strong></td>
+                        <td><strong>pi</strong></td>
                         <td>or</td>
-                        <td><strong> π</strong></td>
+                        <td><strong>π</strong></td>
                     </tr>
                     <tr>
-                        <td><strong>e </strong></td>
+                        <td><strong>e</strong></td>
                         <td>or</td>
-                        <td><strong> ℯ</strong></td>
-                        <!--<td>Show Help Screen</td>-->
+                        <td><strong>ℯ</strong></td>
                     </tr>
                     <tr>
                         <td><strong>inf </strong></td>
@@ -186,7 +182,6 @@
                     </tr>
                     </tbody>
                 </table>
-                <!--</div>-->
             </div>
             <div class="block">
                 <input type="checkbox" id="do_unicode_replacement" checked>

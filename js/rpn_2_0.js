@@ -10,6 +10,8 @@ var main_input_box = document.getElementById('input');
 var copy_button = document.getElementById("copy_button");
 var help_screen = document.getElementById("help_screen_container");
 var help_screen_tip = document.getElementById("help_popup");
+var help_text = document.getElementById("help_text");
+var help_text_hide_button = document.getElementById("help_text_hide_button");
 var do_unicode_replacement = document.getElementById("do_unicode_replacement");
 
 var class_container = "container";
@@ -50,6 +52,7 @@ var colors = [
     "rgb(158, 158, 158)",
     "rgb(96, 125, 139)"
 ];
+/*global math*/
 /*Unicode operator, ASCII operator, number of operands, color, priority, function(evaluator, stack) */
 // @formatter:off
 var bare_ops_table = [
@@ -188,7 +191,7 @@ function Node(value, children, idx_left, idx_right) {
             return v.evaluate();
         });
         return this.op.apply(stack);
-    }
+    };
 }
 Node.type_number = 0;
 Node.type_operator = 1;
@@ -297,7 +300,7 @@ function display_expression(node) {
         /*assume it's iterable*/
         node.forEach(function (v, i) {
             nodes.push(render_expression(v));
-        })
+        });
     }
     if (nodes.length > 0) {
         tree_root.innerHTML = "";
@@ -325,6 +328,14 @@ function toggle_help_visibility() {
         }, 1000 / 4);
     }
 }
+help_text.onclick = toggle_help_visibility;
+help_text_hide_button.onclick = function() {
+    help_screen_tip.style.opacity = 0;
+    setTimeout(function () {
+        help_screen_tip.style.display = "none";
+    }, 300);
+};
+
 function trim_last_char() {
     /*trim the character right behind the cursor*/
     var cursor_idx = main_input_box.selectionStart;
@@ -387,10 +398,6 @@ main_input_box.onkeyup = function (e) {
         /*question mark*/
         trim_last_char();
         toggle_help_visibility();
-        help_screen_tip.style.opacity = 0;
-        setTimeout(function () {
-            help_screen_tip.style.display = "none";
-        }, 300);
     } else if (e.keyCode == KEYCODE_R && e.shiftKey) {
         trim_last_char();
         /*we need to de-focus the input box, so we need to bakckup the cursor index*/
@@ -404,7 +411,7 @@ main_input_box.onkeyup = function (e) {
         output_hidden.style.display = "block";
         /*add the hidden output to the selection range*/
         range.selectNode(output_hidden);
-        d = window.getSelection();
+        var d = window.getSelection();
         /*remove whatever was selected before, because the selection must be contiguous*/
         d.removeAllRanges();
         /*select the selection object*/
@@ -476,7 +483,5 @@ main_input_box.onkeyup = function (e) {
 main_input_box.onkeyup({});
 /*make sure the output is always focused*/
 console.log(setInterval(function () {
-    main_input_box.focus()
+    main_input_box.focus();
 }, 100));
-
-
