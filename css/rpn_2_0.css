@@ -166,6 +166,8 @@ table.constants_table tbody tr td {
 
 div.block {
     display: inline-block;
+    float: left;
+    margin-right: 15px;
 }
 
 
