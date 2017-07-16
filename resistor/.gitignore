@@ -1,0 +1,4 @@
+.idea/
+figwheel_server.log
+resistor-color-codes*.iml
+target/
