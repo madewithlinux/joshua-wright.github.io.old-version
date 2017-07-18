@@ -13,5 +13,4 @@ resources/public/js/resistor-color-codes.js: src/resistor_color_codes/core.cljs
 
 all: index.html js/compiled/resistor-color-codes.js css/style.css
 clean:
-	rm -rf $^
 	rm -rf css/ js/

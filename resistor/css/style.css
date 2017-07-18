@@ -2,7 +2,7 @@
 
 html {
     font-family: 'Open Sans', sans-serif;
-    font-size: 1.5em;
+    font-size: 1.4em;
 }
 
 h1 {
@@ -99,7 +99,6 @@ option {
 
 input[type="button"] {
     font-size: 1.1em;
-    border: 2px #000;
 }
 
 option:nth-child( 1) { background-color: Black;  color: #fff;}
