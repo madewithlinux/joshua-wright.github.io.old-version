@@ -1,0 +1,81 @@
+@import url(https://fonts.googleapis.com/css?family=Inconsolata);
+
+html {
+    font-family: 'Inconsolata', sans-serif;
+    transition:  opacity 0.25s ease-in-out;
+}
+
+h1 {
+    margin:     0;
+    text-align: center;
+    /*font-family: 'Anonymous Pro', sans-serif;*/
+    font-size:  45px;
+}
+
+h3 {
+    opacity:     1;
+    transition:  opacity 0.25s ease-in-out;
+    font-family: inherit;
+    font-weight: inherit;
+}
+
+input {
+    font-family: inherit;
+    font-weight: inherit;
+    font-size:   35px;
+    width:       100%;
+}
+
+/* ----------------------------- */
+
+.container {
+    font-size: 60px;
+}
+
+.tree-head {
+    display:          flex;
+    font-size:        45px;
+    /* set the background color here to avoid the background of the number-container visibly overflowing */
+    background-color: #66D9EF;
+}
+
+.tree-internal-node {
+    display: flex;
+    /*height:  100%;*/
+    width:   100%;
+}
+
+.tree-left-container1 {
+    /*height:           100%;*/
+}
+
+.tree-left-container2 {
+    /*height:          50%;*/
+    display:         flex;
+    align-items:     center;
+    justify-content: flex-end;
+}
+
+.tree-operator {
+    display:       flex;
+    width:         100%;
+    align-items:   center;
+    border-left:   10px solid #000000;
+    border-top:    10px solid transparent;
+    border-bottom: 10px solid transparent;
+}
+
+.number-container {
+    padding:         10px;
+    display:         flex;
+    align-items:     center;
+    justify-content: flex-end;
+}
+
+.operator-container {
+    padding:      10px;
+    /* extra padding left to account for border left */
+    padding-left: 20px;
+    align-items:  center;
+    min-width:    40px;
+}
