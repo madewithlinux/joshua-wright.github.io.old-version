@@ -36,17 +36,20 @@
    "rgb(121, 85, 72)"
    "rgb(158, 158, 158)"
    "rgb(96, 125, 139)"])
-(def ^:const op-colors
-  {'+ "rgb(244, 67, 54)"
-   '- "rgb(233, 30, 99)"
-   '* "rgb(156, 39, 176)"
-   '/ "rgb(103, 58, 183)"})
-(def ^:const op-funcs
-  {'+ +
-   '- -
-   '* *
-   ;'/ (fn [a b] (/ b a))
-   '/ /})
+(def ^:const op-colors {'+ "rgb(244, 67, 54)"
+                        '- "rgb(233, 30, 99)"
+                        '* "rgb(156, 39, 176)"
+                        '/ "rgb(103, 58, 183)"})
+(def ^:const op-funcs {'+ +
+                       '- -
+                       '* *
+                       '/ /
+                       'sqrt Math/sqrt})
+(def ^:const op-arity {'+ 2
+                       '- 2
+                       '* 2
+                       '/ 2
+                       'sqrt 1})
 
 (defn rpn-eval-node [node]
   (if (number? node)
@@ -61,12 +64,12 @@
 (defn rpn-fold [xs x]
   (if (number? x)
     (conj xs x)
-    ; TODO won't work for functions that aren't binary
-    (let [[a b] (subvec xs (- (count xs) 2))
-          stack (subvec xs 0 (- (count xs) 2))]
+    (let [arity (op-arity x)
+          args (subvec xs (- (count xs) arity))
+          stack (subvec xs 0 (- (count xs) arity))]
       (conj
         stack
-        [x a b]))))
+        (into [x] args)))))
 
 (defn read-token [tok]
   (let [num (js/parseFloat tok)]
@@ -84,7 +87,7 @@
     true 1))
 
 (def ^:const leaf-height
-  "height of text" 80)
+  "height of text" 60)
 (def ^:const op-border-height
   "total border height (top+bottom)" 20)
 (defn render-node
@@ -128,7 +131,7 @@
 
 (defn rpn []
   (let
-    [expr (r/atom "0.5 1 2 + 3 + + 4 5 * /")]
+    [expr (r/atom "1 4 / sqrt 1 2 + 3 + + 4 5 * /")]
     (fn []
       (let [tree (parse-rpn @expr)]
         [:div
