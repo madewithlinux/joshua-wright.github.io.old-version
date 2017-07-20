@@ -66,7 +66,7 @@ input {
 }
 
 .number-container {
-    padding:         10px;
+    padding:         0 12px;
     display:         flex;
     align-items:     center;
     justify-content: flex-end;

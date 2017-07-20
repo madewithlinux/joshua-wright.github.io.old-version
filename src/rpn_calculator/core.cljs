@@ -106,7 +106,7 @@
       (conj xs (->number-node
                  (in 0)
                  ((in 1) 0)
-                 ((in 1) 1)))
+                 (count ((in 1) 1))))
       (let [arity    (op-arity tok)
             children (subvec xs (- (count xs) arity))
             stack    (subvec xs 0 (- (count xs) arity))]
@@ -116,7 +116,7 @@
             (in 0)
             children
             ((in 1) 0)
-            ((in 1) 1)))))))
+            (count ((in 1) 1))))))))
 
 
 (defn read-token [tok]
@@ -136,34 +136,38 @@
   "height of text" 60)
 (def ^:const op-border-height
   "total border height (top+bottom)" 20)
+(def ^:const main-input-id "main-input-id")
+(defn on-click-set-selection [offset length]
+  (fn [e] (let [input (.getElementById js/document main-input-id)]
+            (.focus input)
+            (.setSelectionRange
+              input offset (+ offset length)))))
 (defn render-node
   "renders a single node to reagent vector. Returns [node height-in-px]"
   [node]
   (tree-fold
     node
     (fn [{:keys [number offset length]}]
-      [[:div {:class 'number-container
-              :style {:height (str leaf-height "px")}}
+      [[:div {:class    'number-container
+              :style    {:height (str leaf-height "px")}
+              :on-click (on-click-set-selection offset length)}
         number]
        leaf-height])
     (fn [{:keys [op children offset length]} child-node-results]
-      ; TODO support different arity
-      (let [[r-node r-height] (nth child-node-results 0)
-            [l-node l-height] (nth child-node-results 1)
-            full-height (+ r-height l-height)]
+      (let [full-height (apply + (map #(% 1) child-node-results))]
         [[:div {:class 'tree-internal-node}
-          [:div {:class 'tree-left-container1
-                 :style {:height (str full-height "px")}}
-           [:div {:class 'tree-left-container2
-                  :style {:height (str r-height "px")}}
-            r-node]
-           [:div {:class 'tree-left-container2
-                  :style {:height (str l-height "px")}}
-            l-node]]
+          (into [:div {:class 'tree-left-container1
+                       :style {:height (str full-height "px")}}]
+                (map (fn [[node height]]
+                       [:div {:class 'tree-left-container2
+                              :style {:height (str height "px")}}
+                        node])
+                     child-node-results))
           [:div {:style {:background-color (op-colors op)
                          :height           (str (- full-height op-border-height) "px")}
                  :class 'tree-operator}
-           [:div {:class 'operator-container}
+           [:div {:class    'operator-container
+                  :on-click (on-click-set-selection offset length)}
             op]]]
          full-height]))))
 
@@ -177,12 +181,13 @@
 
 (defn rpn []
   (let
-    [expr (r/atom "1 4 / 1 2 + 3 + + 4 5 * /")]
+    [expr (r/atom "21 43 / 12 999 + 0.0003 - + 4 65 * sqrt /")]
     (fn []
       (let [tree (parse-rpn @expr)]
         [:div {:class 'container}
          [:input {:type      :text
                   :value     @expr
+                  :id        main-input-id
                   :on-change (fn [e]
                                (->> e
                                     .-target
