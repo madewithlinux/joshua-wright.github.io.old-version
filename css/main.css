@@ -104,6 +104,15 @@ h2 + p {
     margin-top: 4px;
 }
 
+.section-title, .section-title > a {
+    margin-bottom: 5px;
+}
+
+.section-description {
+    margin-top: 0;
+    padding-left: 3em;
+}
+
 
 /*alternating row colors*/
 table tr:nth-child(odd) {
