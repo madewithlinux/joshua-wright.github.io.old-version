@@ -45,7 +45,7 @@
                ;; lein cljsbuild once min
                {:id "min"
                 :source-paths ["src"]
-                :compiler {:output-to "resources/public/js/compiled/rpn_calculator.js"
+                :compiler {:output-to "resources/public/js/compiled/rpn_calculator.min.js"
                            :main rpn-calculator.core
                            :optimizations :advanced
                            :rewrite-polyfills true
