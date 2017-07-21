@@ -2,7 +2,6 @@
   (:require [reagent.core :as r]
             [clojure.string :as str]))
 
-
 (enable-console-print!)
 
 (defn regex-modifiers
@@ -22,57 +21,45 @@
         (recur (conj res (vec (cons (.-index m) m))))
         res))))
 
-(def ^:const colors
-  ["rgb(244, 67, 54)"
-   "rgb(233, 30, 99)"
-   "rgb(156, 39, 176)"
-   "rgb(103, 58, 183)"
-   "rgb(63, 81, 181)"
-   "rgb(33, 150, 243)"
-   "rgb(3, 169, 244)"
-   "rgb(0, 188, 212)"
-   "rgb(0, 150, 136)"
-   "rgb(76, 175, 80)"
-   "rgb(139, 195, 74)"
-   "rgb(205, 220, 57)"
-   "rgb(255, 235, 59)"
-   "rgb(255, 193, 7)"
-   "rgb(255, 152, 0)"
-   "rgb(255, 87, 34)"
-   "rgb(121, 85, 72)"
-   "rgb(158, 158, 158)"
-   "rgb(96, 125, 139)"])
-(def ^:const op-colors {'+           "rgb(244, 67, 54)"
-                        '-           "rgb(233, 30, 99)"
-                        '*           "rgb(156, 39, 176)"
-                        '/           "rgb(103, 58, 183)"
-                        'sqrt        "rgb(63, 81, 181)"
-                        (symbol "^") "rgb(33, 150, 243)"})
-;"rgb(3, 169, 244)"
-;"rgb(0, 188, 212)"
-;"rgb(0, 150, 136)"
-;"rgb(76, 175, 80)"
-;"rgb(139, 195, 74)"
-;"rgb(205, 220, 57)"
-;"rgb(255, 235, 59)"
-;"rgb(255, 193, 7)"
-;"rgb(255, 152, 0)"
 ;"rgb(255, 87, 34)"
 ;"rgb(121, 85, 72)"
 ;"rgb(158, 158, 158)"
 ;"rgb(96, 125, 139)"})
-(def ^:const op-funcs {'+           +
-                       '-           -
-                       '*           *
-                       '/           /
-                       'sqrt        Math/sqrt
-                       (symbol "^") Math/pow})
-(def ^:const op-arity {'+           2
-                       '-           2
-                       '*           2
-                       '/           2
-                       'sqrt        1
-                       (symbol "^") 2})
+(defrecord op-record [display token function arity color])
+(def ops
+  (map
+    #(apply ->op-record %)
+    [["+" "+" + 2 "rgb(244,  67,  54)"]
+     ["−" "-" - 2 "rgb(233,  30,  99)"]
+     ["×" "*" * 2 "rgb(156,  39, 176)"]
+     ["÷" "/" / 2 "rgb(103,  58, 183)"]
+     ["\\" "\\" (fn [a b] (/ b a)) 2 "rgb(255, 152, 0)"]
+     ["^" "^" Math/pow 2 "rgb( 63,  81, 181)"]
+     ["\u221A" "sqrt" Math/sqrt 1 "rgb(33, 150, 243)"]
+     ["sin" "sin" Math/sin 1 "rgb(3, 169, 244)"]
+     ["cos" "cos" Math/cos 1 "rgb(0, 188, 212)"]
+     ["tan" "tan" Math/tan 1 "rgb(0, 150, 136)"]
+     ["sin\u207b\u00b9" "asin" Math/asin 1 "rgb(76, 175, 80)"]
+     ["cos\u207b\u00b9" "acos" Math/acos 1 "rgb(139, 195, 74)"]
+     ["tan\u207b\u00b9" "atan" Math/atan 1 "rgb(205, 220, 57)"]
+     ["atan2" "atan2" Math/atan2 2 "rgb(255, 235, 59)"]
+     ["ln" "ln" Math/log 1 "rgb(255, 193, 7)"]
+     ["log" "log" Math/log10 1 "rgb(255, 152, 0)"]
+     ["lg" "lg" Math/log2 1 "rgb(255, 87, 34)"]
+     ["%" "%" mod 2 "rgb(3, 169, 244)"]
+     ["\u212f^" "exp" Math/exp 1 "rgb(0, 188, 212)"]
+     ["10^" "10^" #(Math/pow 10 %) 1 "rgb(0, 150, 136)"]
+     ["2^" "2^" #(Math/pow 2 %) 1 "rgb(76, 175, 80)"]
+     ["abs" "abs" Math/abs 1 "rgb(139, 195, 74)"]
+     ["!" "!" 1 js/math.factorial "rgb(205, 220, 57)"]
+     ["C" "C" 2 js/math.combinations "rgb(255, 235, 59)"]
+     ["P" "P" 2 js/math.permutations "rgb(255, 193, 7)"]]))
+(def get-op
+  ; allow retrieving operators by symbol or label
+  (merge
+    (zipmap (map :token ops) ops)
+    (zipmap (map :display ops) ops)))
+
 
 (defrecord number-node [number offset length])
 (defrecord op-node [op children offset length])
@@ -94,7 +81,9 @@
   (tree-fold node
              (fn [{:keys [number]}] number)
              (fn [{:keys [op]} child-values]
-               (apply (op-funcs op)
+               ;(println op)
+               ;(println (:function op))
+               (apply (:function op)
                       child-values))))
 
 (defn rpn-eval [nodes]
@@ -103,16 +92,16 @@
 (defn rpn-fold [xs in]
   (let [[tok _] in]
     (if (number? tok)
-      (conj xs (->number-node
+      (conj xs (number-node.
                  (in 0)
                  ((in 1) 0)
                  (count ((in 1) 1))))
-      (let [arity    (op-arity tok)
+      (let [arity    (:arity tok)
             children (subvec xs (- (count xs) arity))
             stack    (subvec xs 0 (- (count xs) arity))]
         (conj
           stack
-          (->op-node
+          (op-node.
             (in 0)
             children
             ((in 1) 0)
@@ -120,10 +109,9 @@
 
 
 (defn read-token [tok]
-  (let [num (js/parseFloat tok)]
-    (if-not (js/isNaN num)
-      num
-      (symbol tok))))
+  (if-let [op (get-op tok)]
+    op
+    (js/parseFloat tok)))
 
 (defn parse-rpn [expr-str]
   (let [raw-tokens (re-pos #"[^\s]+" expr-str)]
@@ -163,12 +151,12 @@
                               :style {:height (str height "px")}}
                         node])
                      child-node-results))
-          [:div {:style {:background-color (op-colors op)
+          [:div {:style {:background-color (:color op)
                          :height           (str (- full-height op-border-height) "px")}
                  :class 'tree-operator}
            [:div {:class    'operator-container
                   :on-click (on-click-set-selection offset length)}
-            op]]]
+            (:display op)]]]
          full-height]))))
 
 
@@ -181,7 +169,7 @@
 
 (defn rpn []
   (let
-    [expr (r/atom "21 43 / 12 999 + 0.0003 - + 4 65 * sqrt /")]
+    [expr (r/atom "300 lg 200 log 500 ln + * 2 3 ^ sin acos / 1 3 sqrt atan2 2^ 10^ \\")]
     (fn []
       (let [tree (parse-rpn @expr)]
         [:div {:class 'container}
@@ -202,3 +190,5 @@
 
 (r/render [rpn]
           (.getElementById js/document "render-target2"))
+; focus input as soon as page loads
+(.focus (.getElementById js/document main-input-id))
