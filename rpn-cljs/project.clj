@@ -36,7 +36,6 @@
                            :output-to "resources/public/js/compiled/rpn_calculator.js"
                            :output-dir "resources/public/js/compiled/out"
                            :source-map-timestamp true
-                           :rewrite-polyfills true
                            ;; To console.log CLJS data-structures make sure you enable devtools in Chrome
                            ;; https://github.com/binaryage/cljs-devtools
                            :preloads [devtools.preload]}}
@@ -48,7 +47,6 @@
                 :compiler {:output-to "resources/public/js/compiled/rpn_calculator.min.js"
                            :main rpn-calculator.core
                            :optimizations :advanced
-                           :rewrite-polyfills true
                            :pretty-print false}}]}
 
   :figwheel {;; :http-server-root "public" ;; default and assumes "resources"

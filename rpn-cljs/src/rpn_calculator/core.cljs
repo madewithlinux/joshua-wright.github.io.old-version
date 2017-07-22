@@ -51,9 +51,9 @@
      ["10^" "10^" #(Math/pow 10 %) 1 "rgb(0, 150, 136)"]
      ["2^" "2^" #(Math/pow 2 %) 1 "rgb(76, 175, 80)"]
      ["abs" "abs" Math/abs 1 "rgb(139, 195, 74)"]
-     ["!" "!" 1 js/math.factorial "rgb(205, 220, 57)"]
-     ["C" "C" 2 js/math.combinations "rgb(255, 235, 59)"]
-     ["P" "P" 2 js/math.permutations "rgb(255, 193, 7)"]]))
+     ["!" "!" js/math.factorial 1 "rgb(205, 220, 57)"]
+     ["C" "C" js/math.combinations 2 "rgb(255, 235, 59)"]
+     ["P" "P" js/math.permutations 2 "rgb(255, 193, 7)"]]))
 (def get-op
   ; allow retrieving operators by symbol or label
   (merge
@@ -124,21 +124,20 @@
   "height of text" 60)
 (def ^:const op-border-height
   "total border height (top+bottom)" 20)
-(def ^:const main-input-id "main-input-id")
-(defn on-click-set-selection [offset length]
-  (fn [e] (let [input (.getElementById js/document main-input-id)]
+(defn on-click-set-selection [rinput offset length]
+  (fn [e] (when-let [input @rinput]
             (.focus input)
             (.setSelectionRange
               input offset (+ offset length)))))
 (defn render-node
   "renders a single node to reagent vector. Returns [node height-in-px]"
-  [node]
+  [node input-atom]
   (tree-fold
     node
     (fn [{:keys [number offset length]}]
       [[:div {:class    'number-container
               :style    {:height (str leaf-height "px")}
-              :on-click (on-click-set-selection offset length)}
+              :on-click (on-click-set-selection input-atom offset length)}
         number]
        leaf-height])
     (fn [{:keys [op children offset length]} child-node-results]
@@ -155,13 +154,13 @@
                          :height           (str (- full-height op-border-height) "px")}
                  :class 'tree-operator}
            [:div {:class    'operator-container
-                  :on-click (on-click-set-selection offset length)}
+                  :on-click (on-click-set-selection input-atom offset length)}
             (:display op)]]]
          full-height]))))
 
 
-(defn render-tree-node [node]
-  (let [[rendered height] (render-node node)
+(defn render-tree-node [node input-atom]
+  (let [[rendered height] (render-node node input-atom)
         height (str height "px")]
     [:div {:class 'tree-head
            :style {:height height}}
@@ -169,19 +168,23 @@
 
 (defn rpn []
   (let
-    [expr (r/atom "300 lg 200 log 500 ln + * 2 3 ^ sin acos / 1 3 sqrt atan2 2^ 10^ \\")]
+    [expr  (r/atom "300 lg 200 log 500 ln + * 2 3 ^ sin acos / 1 3 sqrt atan2 2^ 10^ \\")
+     input (r/atom nil)]
     (fn []
       (let [tree (parse-rpn @expr)]
         [:div {:class 'container}
          [:input {:type      :text
                   :value     @expr
-                  :id        main-input-id
+                  :ref       (fn [x]
+                               (reset! input x)
+                               ; focus input when it is created
+                               (if x (.focus x)))
                   :on-change (fn [e]
                                (->> e
                                     .-target
                                     .-value
                                     (reset! expr)))}]
-         (into [:div] (map render-tree-node tree))
+         (into [:div] (map #(render-tree-node % input) tree))
          (into [:div {:class 'result-container}]
                (map #(vector :div
                              {:class 'result}
@@ -190,5 +193,3 @@
 
 (r/render [rpn]
           (.getElementById js/document "render-target2"))
-; focus input as soon as page loads
-(.focus (.getElementById js/document main-input-id))
