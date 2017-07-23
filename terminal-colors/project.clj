@@ -11,7 +11,7 @@
                  [org.clojure/core.async  "0.3.442"
                   :exclusions [org.clojure/tools.reader]]
                  [reagent "0.6.1"]
-                 [cljsjs/jscolor "2.0.4-0"]]
+                 [thi.ng/color "1.2.0"]]
 
   :plugins [[lein-figwheel "0.5.10"]
             [lein-cljsbuild "1.1.5" :exclusions [[org.clojure/clojure]]]]
