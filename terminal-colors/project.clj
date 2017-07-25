@@ -11,6 +11,7 @@
                  [org.clojure/core.async  "0.3.442"
                   :exclusions [org.clojure/tools.reader]]
                  [reagent "0.6.1"]
+                 [reagent-utils "0.2.1"]
                  [thi.ng/color "1.2.0"]]
 
   :plugins [[lein-figwheel "0.5.10"]
@@ -36,6 +37,11 @@
                            :asset-path "js/compiled/out"
                            :output-to "resources/public/js/compiled/terminal_colors.js"
                            :output-dir "resources/public/js/compiled/out"
+                           :externs ["externs.js"]
+                           ;:foreign-libs [{:file "js/ansi_up.js"
+                           ;                :provides ["ansi_up"]}
+                           ;               {:file "jsColorPicker.min.js"
+                           ;                :provides ["jsColorPicker"]}]
                            :source-map-timestamp true
                            ;; To console.log CLJS data-structures make sure you enable devtools in Chrome
                            ;; https://github.com/binaryage/cljs-devtools
@@ -47,6 +53,8 @@
                 :source-paths ["src"]
                 :compiler {:output-to "resources/public/js/compiled/terminal_colors.min.js"
                            :main terminal-colors.core
+                           ;:externs ["externs.js"]
+                           :libs ["js/ansi_up.js" "js/jsColorPicker.js"]
                            :optimizations :advanced
                            :pretty-print false}}]}
 
