@@ -113,8 +113,8 @@
           (str "<pre>" (st-export colors) "</pre>"))))
 (update-ansi-colors ansi-colors)
 
-;(def ansi-up (new js/AnsiUp))
-(def ansi-up ((object/get js/window "AnsiUp")))
+(def ansi-up (new js/AnsiUp))
+;(def ansi-up ((object/get js/window "AnsiUp")))
 (object/set ansi-up "use_classes" true)
 
 (def ansi-reset "\033[0m")
@@ -122,7 +122,8 @@
   (set! (.-innerHTML (.getElementById js/document "terminal-display"))
         (str
           "<pre>"
-          (apply str (map #((object/get ansi-up "ansi_to_html") (str ansi-reset "\n" %)) chunks))
+          ;(apply str (map #((object/get ansi-up "ansi_to_html") (str ansi-reset "\n" %)) chunks))
+          (apply str (map #(.ansi-to-html ansi-up (str ansi-reset "\n" %)) chunks))
           "</pre>")))
 (render-ansi-chunks data/colortest-16 data/htop data/ipython data/dstat)
 
@@ -176,8 +177,9 @@
               :ref (fn [elem]
                      (when elem
                        (set! (.-innerHTML elem) "")
-                       ;(reset! picker (new js/ColorPicker))
-                       (reset! picker ((object/get js/window "ColorPicker"
+                       (reset! picker (new js/ColorPicker
+                       ;(reset! picker (
+                       ;                 (object/get js/window "ColorPicker")
                                         (clj->js {"appendTo"
                                                   elem
                                                   "color"
@@ -185,7 +187,7 @@
                                                   "renderCallback"
                                                   (fn [a]
                                                     (swap! colors assoc @selected (.-HEX a))
-                                                    (update-ansi-colors @colors))}))))))}]
+                                                    (update-ansi-colors @colors))})))))}]
        [:div
         "Import/export as JSON "
         [:input {
