@@ -91,3 +91,8 @@ body { height: 100%; }
 .ansi-bright-cyan-fg { font-weight: bold; }
 
 .ansi-bright-white-fg { font-weight: bold; }
+
+.import-export, .import-export > input {
+    font-size: 30px;
+    margin-bottom: 10px;
+}

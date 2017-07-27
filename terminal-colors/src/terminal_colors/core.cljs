@@ -6,8 +6,6 @@
             [thi.ng.color.core :as col]
             [goog.string :as gstring]
             [goog.string.format]
-    ;[ansi_up]
-    ;[jsColorPicker]
             [goog.object :as object]))
 
 (enable-console-print!)
@@ -114,7 +112,6 @@
 (update-ansi-colors ansi-colors)
 
 (def ansi-up (new js/AnsiUp))
-;(def ansi-up ((object/get js/window "AnsiUp")))
 (object/set ansi-up "use_classes" true)
 
 (def ansi-reset "\033[0m")
@@ -147,8 +144,8 @@
       :on-click (fn []
                   (reset! aselected ansi-label)
                   (when-let [picker @apicker]
-                    ((object/get picker "setColor") (@acolors @aselected) "RGB" 1 true)
-                    ((object/get picker "saveAsBackground"))))}
+                    (.setColor picker (@acolors @aselected) "RGB" 1 true)
+                    (.saveAsBackground picker)))}
      [:div {:class (str "color"
                         (if (= ansi-label @aselected)
                           " color-selected"))}
@@ -178,8 +175,6 @@
                      (when elem
                        (set! (.-innerHTML elem) "")
                        (reset! picker (new js/ColorPicker
-                       ;(reset! picker (
-                       ;                 (object/get js/window "ColorPicker")
                                         (clj->js {"appendTo"
                                                   elem
                                                   "color"
@@ -188,7 +183,7 @@
                                                   (fn [a]
                                                     (swap! colors assoc @selected (.-HEX a))
                                                     (update-ansi-colors @colors))})))))}]
-       [:div
+       [:div.import-export
         "Import/export as JSON "
         [:input {
                  :value     (->> ansi-color-labels
