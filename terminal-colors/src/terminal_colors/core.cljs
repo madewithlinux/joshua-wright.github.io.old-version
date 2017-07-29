@@ -99,6 +99,10 @@
 
 (def ^:const ansi-colors-dom (.getElementById js/document "ansi-colors"))
 (def ^:const config-dom (.getElementById js/document "config-display"))
+;"pre {"
+;   " background-color: #" (colors "background") ";"
+;   "color: #" (colors "foreground") ";"
+;   "}"
 (defn update-ansi-colors [colors]
   (cookies/set! cookie-key colors)
   (let [css (apply str (map (fn [[class color]]
@@ -108,7 +112,7 @@
                             colors))]
     (set! (.-innerText ansi-colors-dom) css)
     (set! (.-innerHTML config-dom)
-          (str "<pre>" (st-export colors) "</pre>"))))
+          (str "<pre class=\"background-bg foreground-fg\">" (st-export colors) "</pre>"))))
 (update-ansi-colors ansi-colors)
 
 (def ansi-up (new js/AnsiUp))
@@ -118,7 +122,7 @@
 (defn render-ansi-chunks [& chunks]
   (set! (.-innerHTML (.getElementById js/document "terminal-display"))
         (str
-          "<pre>"
+          "<pre class=\"background-bg foreground-fg\">"
           ;(apply str (map #((object/get ansi-up "ansi_to_html") (str ansi-reset "\n" %)) chunks))
           (apply str (map #(.ansi-to-html ansi-up (str ansi-reset "\n" %)) chunks))
           "</pre>")))
@@ -175,14 +179,14 @@
                      (when elem
                        (set! (.-innerHTML elem) "")
                        (reset! picker (new js/ColorPicker
-                                        (clj->js {"appendTo"
-                                                  elem
-                                                  "color"
-                                                  (@colors @selected)
-                                                  "renderCallback"
-                                                  (fn [a]
-                                                    (swap! colors assoc @selected (.-HEX a))
-                                                    (update-ansi-colors @colors))})))))}]
+                                           (clj->js {"appendTo"
+                                                     elem
+                                                     "color"
+                                                     (@colors @selected)
+                                                     "renderCallback"
+                                                     (fn [a]
+                                                       (swap! colors assoc @selected (.-HEX a))
+                                                       (update-ansi-colors @colors))})))))}]
        [:div.import-export
         "Import/export as JSON "
         [:input {
