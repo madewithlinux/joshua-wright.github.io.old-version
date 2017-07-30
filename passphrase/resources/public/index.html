@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="css/style.css" rel="stylesheet" type="text/css">
+    <link rel="icon" href="https://clojurescript.org/images/cljs-logo-icon-32.png">
+</head>
+<body>
+<div id="container">
+    <div id="header">
+        <h1>CorrectHorseBatteryStaple</h1>
+        <p>
+            This is a password generator inspired by <a href="https://xkcd.com/936/">xkcd comic 936</a>.
+            Put in your password criteria, and you get a password.
+            <br>
+            Separators are chosen randomly from the characters given.
+            <br>
+            Selects words from Google's most common 10,000 English non-swear words
+            (retrieved from <a href="https://github.com/first20hours/google-10000-english">here</a>)
+        </p>
+    </div>
+    <div id="app">
+        <p>Loading word list...</p>
+    </div>
+</div>
+<script src="js/compiled/passphrase.js" type="text/javascript"></script>
+</body>
+</html>

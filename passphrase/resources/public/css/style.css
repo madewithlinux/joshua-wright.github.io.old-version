@@ -1,0 +1,68 @@
+/* some style */
+@import url('https://fonts.googleapis.com/css?family=Inconsolata');
+
+#container {
+    max-width:  400px;
+    margin:     auto;
+    background: #eee;
+    padding:    10px;
+}
+
+.main {
+    max-width: 400px;
+}
+
+.setting {
+    clear: both;
+}
+
+input.setting-input {
+    text-align: right;
+}
+
+.setting-label {
+    width: 150px;
+}
+
+.setting-input {
+    float:   right;
+    display: inline-flex;
+}
+
+#regenerate {
+    margin:     15px;
+    text-align: center;
+    clear:      both;
+}
+
+.output {
+    font-family: Inconsolata, monospace;
+}
+
+.password-display {
+    clear: both;
+}
+
+.clipboard {
+    border: 0;
+}
+
+.password-copy {
+    padding-right: 5px;
+}
+
+.password-display {
+    padding: 2px;
+}
+
+.password {
+    vertical-align: middle;
+}
+
+/*hide up/down arrows on input field */
+input[type='number'] { -moz-appearance: textfield; }
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+}
