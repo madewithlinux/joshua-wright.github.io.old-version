@@ -1,3 +1,4 @@
+!resources/public/js/compiled/passphrase.js
 /resources/public/js/compiled/**
 figwheel_server.log
 pom.xml
@@ -11,3 +12,4 @@ pom.xml
 .lein-plugins/
 .repl
 .nrepl-port
+

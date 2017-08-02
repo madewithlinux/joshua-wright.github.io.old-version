@@ -2,18 +2,27 @@
 @import url('https://fonts.googleapis.com/css?family=Inconsolata');
 
 #container {
-    max-width:  400px;
+    max-width:  600px;
     margin:     auto;
     background: #eee;
     padding:    10px;
 }
 
-.main {
+#header h1 {
+    text-align: center;
+}
+
+#header p {
     max-width: 400px;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 .setting {
+    max-width: 400px;
     clear: both;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 input.setting-input {
@@ -27,6 +36,7 @@ input.setting-input {
 .setting-input {
     float:   right;
     display: inline-flex;
+    width: 80px;
 }
 
 #regenerate {
