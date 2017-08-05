@@ -100,8 +100,8 @@
     "\t[15] = \"#" (colors "ansi-bright-cyan") "\", /* cyan    */ \n"
     "\t[16] = \"#" (colors "ansi-bright-white") "\", /* white   */ \n"
     "\t/* special colors */\n"
-    "\t[256] = #" (colors "background") "\", /* background */\n"
-    "\t[257] = #" (colors "foreground") "\", /* foreground */\n"
+    "\t[256] = #\"" (colors "background") "\", /* background */\n"
+    "\t[257] = #\"" (colors "foreground") "\", /* foreground */\n"
     "};\n"))
 
 (def ^:const ansi-colors-dom (.getElementById js/document "ansi-colors"))
