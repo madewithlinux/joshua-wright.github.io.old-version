@@ -6,7 +6,8 @@
             [thi.ng.color.core :as col]
             [goog.string :as gstring]
             [goog.string.format]
-            [goog.object :as object]))
+            [goog.object :as object]
+            cljsjs.clipboard))
 
 (enable-console-print!)
 
@@ -73,6 +74,12 @@
 
 (defn st-export [colors]
   (str
+    "/*\n"
+    (->> ansi-color-labels
+         (map colors)
+         clj->js
+         js/JSON.stringify)
+    "\n*/\n"
     "static const char *colorname[] = {\n"
     "\t/* 8 normal colors */\n"
     "\t[ 1] = \"#" (colors "ansi-black") "\", /* black   */ \n"
@@ -112,7 +119,10 @@
                             colors))]
     (set! (.-innerText ansi-colors-dom) css)
     (set! (.-innerHTML config-dom)
-          (str "<pre class=\"background-bg foreground-fg\">" (st-export colors) "</pre>"))))
+          (str
+            "<input id=\"copy-config\" type=\"button\" value=\"copy config\" data-clipboard-target=\"#st-config\"></input>"
+            "<pre id=\"st-config\" class=\"background-bg foreground-fg\">" (st-export colors) "</pre>"))
+    (new js/Clipboard "#copy-config")))
 (update-ansi-colors ansi-colors)
 
 (def ansi-up (new js/AnsiUp))
