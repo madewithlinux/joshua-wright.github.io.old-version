@@ -1,12 +1,14 @@
-var x;
 (function () {
     'use strict';
+
+    var canvas = document.getElementById("main_canvas");
+    var size = 1000;
+    var step_delay = 100;
 
     function array_transform(matrices) {
         var code = "";
         code += "(function (points, out){\n";
 
-        // TODO iterate by two instead of by one?
         code += "for (var i=0; i < points.length/2; ++i) {\n";
 
         // helper function to eliminate empty subexpressions
@@ -96,57 +98,74 @@ var x;
         ]
     ];
 
-    console.log("build source");
-    var transform_source = array_transform(sierpinski);
-    console.log(transform_source);
+    function display_points(points) {
+        // setup canvas
+        canvas.width = size;
+        canvas.height = size;
+        var ctx = canvas.getContext("2d");
+        ctx.fillStyle = 'rgb(0,0,0)';
+        ctx.rect(0, 0, size, size);
+        ctx.fill();
 
-    console.log("eval source");
-    var transformer = eval(array_transform(sierpinski));
 
-    // console.log(transformer(new Float64Array([0, 0]), new Float64Array(3)));
-    var n_points = 1;
-    console.log("allocate array");
-    var points = new Float64Array(n_points * 2);
-    console.log("fill with data");
-    for (var i = 0; i < 2 * n_points; i++) {
-        points[i] = Math.random() * 2 - 1;
+        var image_data = ctx.createImageData(size, size);
+        // start with black background
+        for (var i = 0; i < image_data.data.length; i += 4) {
+            image_data.data[i] = 0;
+            image_data.data[i + 1] = 0;
+            image_data.data[i + 2] = 0;
+            image_data.data[i + 3] = 255;
+        }
+        // then add points
+        for (var i = 0; i < points.length / 2; ++i) {
+            var point_x = points[i * 2];
+            var point_y = points[i * 2 + 1];
+            var x = (point_x * size / 2 + size / 2) | 0;
+            var y = size - (point_y * size / 2 + size / 2) | 0;
+            var offset = 4 * (y * size + x);
+            image_data.data[offset] = 255;
+            image_data.data[offset + 1] = 255;
+            image_data.data[offset + 2] = 255;
+            image_data.data[offset + 3] = 255;
+            // image_data[4 * (point_x * size + point_y) + 3] = 255;
+        }
+        console.log(image_data);
+        ctx.putImageData(image_data, 0, 0);
     }
-    console.log("begin calculate");
-    // for (i = 0; i < 16; i++) {
-    //     points = transformer(points);
-    // }
-    while (points.length < 1e6) {
-        var new_points = new Float64Array(sierpinski.length * points.length);
-        transformer(points, new_points);
-        points = new_points;
+
+    function set_transforms(transforms) {
+
+        console.log("build function");
+        var transform_source = array_transform(transforms);
+        // console.log(transform_source);
+        var transformer = eval(transform_source);
+
+        // start with two random points
+        var points = new Float64Array([Math.random() * 2 - 1, Math.random() * 2 - 1]);
+
+        while (points.length < 10) {
+            var new_points = new Float64Array(transforms.length * points.length);
+            transformer(points, new_points);
+            points = new_points;
+        }
+
+        display_points(points);
+
+        // calculate rest of points async
+        function continue_render() {
+            if (points.length < 3e6) {
+                var new_points = new Float64Array(transforms.length * points.length);
+                transformer(points, new_points);
+                points = new_points;
+                display_points(points);
+                setTimeout(continue_render, step_delay);
+            }
+        }
+
+        setTimeout(continue_render, step_delay);
+
     }
 
-    console.log("calculate finished, size=" + points.length);
-
-    // setup canvas
-    var size = 1000;
-    var canvas = document.getElementById("main_canvas");
-    canvas.width = size;
-    canvas.height = size;
-    var ctx = canvas.getContext("2d");
-    ctx.fillStyle = 'rgb(0,0,0)';
-    ctx.rect(0, 0, size, size);
-    ctx.fill();
-
-    // fill points
-    var image_data = ctx.getImageData(0, 0, size, size);
-    console.log(image_data);
-    for (var i = 0; i < points.length / 2; ++i) {
-        var point_x = points[i * 2];
-        var point_y = points[i * 2 + 1];
-        var x = (point_x * size / 2 + size / 2) | 0;
-        var y = size - (point_y * size / 2 + size / 2) | 0;
-        var offset = 4 * (y * size + x);
-        image_data.data[offset] = 255;
-        image_data.data[offset + 1] = 255;
-        image_data.data[offset + 2] = 255;
-        // image_data[4 * (point_x * size + point_y) + 3] = 255;
-    }
-    ctx.putImageData(image_data, 0, 0);
+    set_transforms(sierpinski);
 
 })();
