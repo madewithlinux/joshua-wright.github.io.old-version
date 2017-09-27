@@ -1,9 +1,27 @@
 (function () {
     'use strict';
 
+    var input_textarea = document.getElementById("transforms");
+    input_textarea.value = "[\n" +
+        "    [\n" +
+        "        [0.5, 0.0, -0.5],\n" +
+        "        [0.0, 0.5, -0.5]\n" +
+        "    ],\n" +
+        "    [\n" +
+        "        [0.5, 0.0, 0.5],\n" +
+        "        [0.0, 0.5, -0.5]\n" +
+        "    ],\n" +
+        "    [\n" +
+        "        [0.5, 0.0, 0.0],\n" +
+        "        [0.0, 0.5, 0.5]\n" +
+        "    ]\n" +
+        "]";
+    var go_button = document.getElementById("btn_render");
     var canvas = document.getElementById("main_canvas");
+    var res_x = document.getElementById('res_x');
+    var res_y = document.getElementById('res_y');
     var size = 1000;
-    var step_delay = 100;
+    var step_delay = 0;
 
     function array_transform(matrices) {
         var code = "";
@@ -56,59 +74,18 @@
         return code
     }
 
-    // doesn't work very well
-    // var barnsley_fern = [
-    //     [
-    //         [0, 0, 0],
-    //         [0, 0.16, 0],
-    //         [0, 0, 1]
-    //     ],
-    //     [
-    //         [0.85, 0.04, 0],
-    //         [-0.04, 0.85, 1.60],
-    //         [0, 0, 1]
-    //     ],
-    //     [
-    //         [0.20, -0.26, 0],
-    //         [ 0.23, 0.22, 1.60],
-    //         [0, 0, 1]
-    //     ],
-    //     [
-    //         [-0.15, 0.28, 0],
-    //         [0.26, 0.24, 0.44],
-    //         [0, 0, 1]
-    //     ]
-    // ];
-
-    var sierpinski = [
-        [
-            [0.5, 0.0, -0.5],
-            [0.0, 0.5, -0.5],
-            [0.0, 0.0, 1.0]
-        ],
-        [
-            [0.5, 0.0, 0.5],
-            [0.0, 0.5, -0.5],
-            [0.0, 0.0, 1.0]
-        ],
-        [
-            [0.5, 0.0, 0.0],
-            [0.0, 0.5, 0.5],
-            [0.0, 0.0, 1.0]
-        ]
-    ];
-
     function display_points(points) {
         // setup canvas
-        canvas.width = size;
-        canvas.height = size;
+        var width = canvas.width | 0;
+        var height = canvas.height | 0;
+        console.log(width, height);
         var ctx = canvas.getContext("2d");
         ctx.fillStyle = 'rgb(0,0,0)';
-        ctx.rect(0, 0, size, size);
+        ctx.rect(0, 0, width, height);
         ctx.fill();
 
 
-        var image_data = ctx.createImageData(size, size);
+        var image_data = ctx.createImageData(width, height);
         // start with black background
         for (var i = 0; i < image_data.data.length; i += 4) {
             image_data.data[i] = 0;
@@ -120,16 +97,14 @@
         for (var i = 0; i < points.length / 2; ++i) {
             var point_x = points[i * 2];
             var point_y = points[i * 2 + 1];
-            var x = (point_x * size / 2 + size / 2) | 0;
-            var y = size - (point_y * size / 2 + size / 2) | 0;
-            var offset = 4 * (y * size + x);
+            var x = (point_x * width / 2 + width / 2) | 0;
+            var y = height - (point_y * height / 2 + height / 2) | 0;
+            var offset = 4 * (y * width + x);
             image_data.data[offset] = 255;
             image_data.data[offset + 1] = 255;
             image_data.data[offset + 2] = 255;
             image_data.data[offset + 3] = 255;
-            // image_data[4 * (point_x * size + point_y) + 3] = 255;
         }
-        console.log(image_data);
         ctx.putImageData(image_data, 0, 0);
     }
 
@@ -166,6 +141,13 @@
 
     }
 
-    set_transforms(sierpinski);
+    go_button.onclick = function () {
+        var transforms = JSON.parse(input_textarea.value);
+        canvas.width = res_x.value;
+        canvas.height = res_y.value;
+        set_transforms(transforms);
+    };
+
+    go_button.onclick();
 
 })();

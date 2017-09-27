@@ -3,8 +3,36 @@
 <head>
     <meta charset="UTF-8">
     <title>Iterated Affine Transform</title>
+    <!-- this meta viewport tag makes stuff work on mobile devices -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!--make the chrome nav bar match the background-->
+    <meta name="theme-color" content="#272822">
+    <link rel="icon" href="/favicon.png">
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" media="screen" href="css/canvas_demo.css">
 </head>
 <body>
+
+<div class="config">
+    <h1>Iterated Affine Transform Fractals</h1>
+    <div class="line">
+        Canvas Resolution:
+        <span class="right">
+            <input class="wide_num" type="number" id="res_x" value="800"> x
+            <input class="wide_num" type="number" id="res_y" value="800">
+            </span>
+    </div>
+    <span>Transforms:</span>
+    <textarea id="transforms" style="height: 300px" class="full_wide">
+
+    </textarea>
+    <div class="line">
+        <div class="center">
+            <input class="go_button" type="button" id="btn_render" value="Render">
+        </div>
+    </div>
+</div>
+
 <canvas id="main_canvas" width="1000" height="1000"></canvas>
 </body>
 <script src="js/iat.js"></script>

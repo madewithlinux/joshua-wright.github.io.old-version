@@ -48,7 +48,7 @@ div.line {
     overflow: auto;
     margin: 4px 0;
 }
-`
+
 div#progress {
     text-align: center;
     width: 100%;
@@ -159,7 +159,7 @@ input.wide_num {
     width: 60px;
 }
 
-input.full_wide {
+.full_wide {
     width: 100%;
 }
 
