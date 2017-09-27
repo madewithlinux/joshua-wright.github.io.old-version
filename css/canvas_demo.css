@@ -109,13 +109,16 @@ div.center {
     padding: 3px;
 }
 
-input.go_button {
-    width: 100%;
-    /*width: auto;*/
+input[type='button'] {
     padding: 4px;
+    width: auto;
     background: #F8F8F2;
     border: 3px solid #66D9EF;
-    margin: auto;
+    /*margin: auto;*/
+}
+
+input.go_button {
+    width: 100%;
 }
 
 input[type="number"] {
