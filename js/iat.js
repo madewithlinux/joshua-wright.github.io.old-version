@@ -36,9 +36,38 @@
         "        [0.0, 0.5, 0.5]\n" +
         "    ]\n" +
         "]";
+
+    var source_l_shape = "[\n" +
+        "    [\n" +
+        "        \"image\",\n" +
+        "        [ [ 1, 1], [ 0.25, 0.25] ],\n" +
+        "        [ [ 1,-1], [ 0.25,-0.25] ],\n" +
+        "        [ [-1,-1], [-0.25,-0.25] ]\n" +
+        "    ],\n" +
+        "    [\n" +
+        "        \"image\",\n" +
+        "        [ [ 1, 1], [0,1] ],\n" +
+        "        [ [ 1,-1], [1,1] ],\n" +
+        "        [ [-1,-1], [1,0] ]\n" +
+        "    ],\n" +
+        "    [\n" +
+        "        \"image\",\n" +
+        "        [ [ 1, 1], [1,0] ],\n" +
+        "        [ [ 1,-1], [1,-1] ],\n" +
+        "        [ [-1,-1], [0,-1] ]\n" +
+        "    ],\n" +
+        "    [\n" +
+        "        \"image\",\n" +
+        "        [ [ 1, 1], [0,-1] ],\n" +
+        "        [ [ 1,-1], [-1,-1] ],\n" +
+        "        [ [-1,-1], [-1,0] ]\n" +
+        "    ]\n" +
+        "]";
+
     var fractal_sources = {
         sierpinski: source_sierpinski,
         hangman: source_hangman,
+        l_shape: source_l_shape,
     };
 
     function image(px, py, p2x, p2y, qx, qy, q2x, q2y, rx, ry, r2x, r2y) {
@@ -130,6 +159,7 @@
     var res_x = document.getElementById('res_x');
     var res_y = document.getElementById('res_y');
     var render_delay = document.getElementById('render_delay');
+    var max_points = document.getElementById('max_points');
 
     function array_transform(matrices) {
         var code = "";
@@ -236,7 +266,7 @@
 
         // calculate rest of points async
         function continue_render() {
-            if (points.length < 3e6) {
+            if (points.length < max_points.value) {
                 var new_points = new Float64Array(transforms.length * points.length);
                 transformer(points, new_points);
                 points = new_points;
