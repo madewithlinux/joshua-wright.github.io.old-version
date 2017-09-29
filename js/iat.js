@@ -1,68 +1,93 @@
 (function () {
     'use strict';
 
-    const source_hangman = "[\n" +
-        "    [\n" +
-        "        \"image\",\n" +
-        "        [ [-1,1],  [0,1] ],\n" +
-        "        [ [0,1],   [0,0.5] ],\n" +
-        "        [ [0,0.5], [-0.25,0.5] ]\n" +
-        "    ],\n" +
-        "    [\n" +
-        "        \"image\",\n" +
-        "        [ [-1,1],  [0,0] ],\n" +
-        "        [ [0,1],   [0.5,0] ],\n" +
-        "        [ [0,0.5], [0.5, -0.25] ]\n" +
-        "    ],\n" +
-        "    [\n" +
-        "        \"image\",\n" +
-        "        [ [0,1], [-0.5,0] ],\n" +
-        "        [ [0,0.5], [-0.5,-0.25] ],\n" +
-        "        [ [-0.25,0.5], [-0.625,-0.25] ]\n" +
-        "    ]\n" +
-        "]";
+    function pretty_print_transform(transforms) {
+        let out = "[\n";
+        for (let [i, t] of transforms.entries()) {
+            if (t[0] === "image") {
+                out += "  [ \"image\",\n";
+                out += "    " + JSON.stringify(t[1]) + ",\n";
+                out += "    " + JSON.stringify(t[2]) + ",\n";
+                out += "    " + JSON.stringify(t[3]) + "\n";
+                out += "  ]";
+            } else {
+                out += "  [\n";
+                out += "      " + JSON.stringify(t[0]) + ",\n";
+                out += "      " + JSON.stringify(t[1]) + "\n";
+                out += "  ]";
+            }
 
-    const source_sierpinski = "[\n" +
-        "    [\n" +
-        "        [0.5, 0.0, -0.5],\n" +
-        "        [0.0, 0.5, -0.5]\n" +
-        "    ],\n" +
-        "    [\n" +
-        "        [0.5, 0.0, 0.5],\n" +
-        "        [0.0, 0.5, -0.5]\n" +
-        "    ],\n" +
-        "    [\n" +
-        "        [0.5, 0.0, 0.0],\n" +
-        "        [0.0, 0.5, 0.5]\n" +
-        "    ]\n" +
-        "]";
+            if (i !== transforms.length - 1) {
+                out += ",";
+            }
+            out += "\n";
+        }
+        out += "]";
+        return out;
+    }
 
-    const source_l_shape = "[\n" +
-        "    [\n" +
-        "        \"image\",\n" +
-        "        [ [ 1, 1], [ 0.25, 0.25] ],\n" +
-        "        [ [ 1,-1], [ 0.25,-0.25] ],\n" +
-        "        [ [-1,-1], [-0.25,-0.25] ]\n" +
-        "    ],\n" +
-        "    [\n" +
-        "        \"image\",\n" +
-        "        [ [ 1, 1], [0,1] ],\n" +
-        "        [ [ 1,-1], [1,1] ],\n" +
-        "        [ [-1,-1], [1,0] ]\n" +
-        "    ],\n" +
-        "    [\n" +
-        "        \"image\",\n" +
-        "        [ [ 1, 1], [1,0] ],\n" +
-        "        [ [ 1,-1], [1,-1] ],\n" +
-        "        [ [-1,-1], [0,-1] ]\n" +
-        "    ],\n" +
-        "    [\n" +
-        "        \"image\",\n" +
-        "        [ [ 1, 1], [0,-1] ],\n" +
-        "        [ [ 1,-1], [-1,-1] ],\n" +
-        "        [ [-1,-1], [-1,0] ]\n" +
-        "    ]\n" +
-        "]";
+    const source_hangman = [
+        [
+            "image",
+            [[-1, 1], [0, 1]],
+            [[0, 1], [0, 0.5]],
+            [[0, 0.5], [-0.25, 0.5]]
+        ],
+        [
+            "image",
+            [[-1, 1], [0, 0]],
+            [[0, 1], [0.5, 0]],
+            [[0, 0.5], [0.5, -0.25]]
+        ],
+        [
+            "image",
+            [[0, 1], [-0.5, 0]],
+            [[0, 0.5], [-0.5, -0.25]],
+            [[-0.25, 0.5], [-0.625, -0.25]]
+        ]
+    ];
+
+    const source_sierpinski = [
+        [
+            [0.5, 0.0, -0.5],
+            [0.0, 0.5, -0.5]
+        ],
+        [
+            [0.5, 0.0, 0.5],
+            [0.0, 0.5, -0.5]
+        ],
+        [
+            [0.5, 0.0, 0.0],
+            [0.0, 0.5, 0.5]
+        ]
+    ];
+
+    const source_l_shape = [
+        [
+            "image",
+            [[1, 1], [0.25, 0.25]],
+            [[1, -1], [0.25, -0.25]],
+            [[-1, -1], [-0.25, -0.25]]
+        ],
+        [
+            "image",
+            [[1, 1], [0, 1]],
+            [[1, -1], [1, 1]],
+            [[-1, -1], [1, 0]]
+        ],
+        [
+            "image",
+            [[1, 1], [1, 0]],
+            [[1, -1], [1, -1]],
+            [[-1, -1], [0, -1]]
+        ],
+        [
+            "image",
+            [[1, 1], [0, -1]],
+            [[1, -1], [-1, -1]],
+            [[-1, -1], [-1, 0]]
+        ]
+    ];
 
     const fractal_sources = {
         sierpinski: source_sierpinski,
@@ -153,7 +178,7 @@
     }
 
     const input_textarea = document.getElementById("transforms");
-    input_textarea.value = source_sierpinski;
+    input_textarea.value = pretty_print_transform(source_sierpinski);
     const go_button = document.getElementById("btn_render");
     const canvas = document.getElementById("main_canvas");
     const res_x = document.getElementById('res_x');
@@ -214,10 +239,9 @@
 
     function display_points(points) {
         let i;
-// setup canvas
+        // setup canvas
         const width = canvas.width | 0;
         const height = canvas.height | 0;
-        console.log(width, height);
         const ctx = canvas.getContext("2d");
         ctx.fillStyle = 'rgb(0,0,0)';
         ctx.rect(0, 0, width, height);
@@ -280,20 +304,23 @@
 
     }
 
+    let current_fractal = source_sierpinski;
+
     function render_fractal() {
-        const transforms_ = JSON.parse(input_textarea.value);
-        const transforms = calculate_transforms(transforms_);
+        const transforms = calculate_transforms(current_fractal);
         canvas.width = res_x.value;
         canvas.height = res_y.value;
         set_transforms(transforms);
     }
 
     go_button.onclick = render_fractal;
-    go_button.onclick();
+    render_fractal();
 
     function pre_defined_fractal_btn(e) {
         console.log(e.target.value);
-        input_textarea.value = fractal_sources[e.target.value];
+        current_fractal = fractal_sources[e.target.value];
+        input_textarea.value = pretty_print_transform(current_fractal);
+        // console.log(pretty_print_transform(JSON.parse(fractal_sources[e.target.value])));
         render_fractal();
     }
 
@@ -301,8 +328,5 @@
     for (const btn of buttons) {
         btn.onclick = pre_defined_fractal_btn;
     }
-    // for (var i = 0; i < buttons.length; i++) {
-    //     buttons[i].onclick = pre_defined_fractal_btn;
-    // }
 
 })();
