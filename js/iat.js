@@ -136,6 +136,22 @@
         rotate(0, 0, Math.PI / 6)
     ));
 
+    let koch_snowflake = [];
+    for (let i = 0; i < 6; i++) {
+        const theta = i / 6 * 2 * Math.PI;
+        const x = cos(theta);
+        const y = sin(theta);
+        koch_snowflake.push(scale(x, y, 1 / 3));
+    }
+    for (let i = 0; i < 6; i++) {
+        const r = 1/3*Math.sqrt(3);
+        const theta = (i + 0.5) / 6 * 2 * Math.PI;
+        const x = r * cos(theta);
+        const y = r * sin(theta);
+        koch_snowflake.push(scale(x, y, 1 / 3));
+    }
+    koch_snowflake.push(scale(0, 0, 1 / 3));
+
     let pentaflake = [];
     for (let i = 0; i < 5; i++) {
         const theta = (i + 0.25) / 5 * 2 * Math.PI;
@@ -149,6 +165,7 @@
         hangman: source_hangman,
         l_shape: source_l_shape,
         hex_flower: hex_flower,
+        koch_snowflake: koch_snowflake,
         pentaflake: pentaflake,
     };
 
@@ -353,6 +370,7 @@
         // calculate rest of points async
         function continue_render() {
             if (points.length < max_points.value && depth < max_depth.value) {
+                // sometimes this can fail if we need more than 2^32 entries
                 const new_points = new Float64Array(transforms.length * points.length);
                 transformer(points, new_points);
                 points = new_points;
