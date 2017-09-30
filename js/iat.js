@@ -1,6 +1,40 @@
 (function () {
     'use strict';
 
+    //////////////////////////////////////////////////
+
+    const sin = Math.sin;
+    const cos = Math.cos;
+
+    const translate = (x, y) => [
+        [1, 0, x],
+        [0, 1, y],
+    ];
+
+    const scale = (x, y, a) => [
+        [a, 0, (1 - a) * x],
+        [0, a, (1 - a) * y],
+    ];
+
+    const rotate = (x, y, theta) => [
+        [cos(theta), -sin(theta), x + y * sin(theta) - x * cos(theta)],
+        [sin(theta), cos(theta), y - y * cos(theta) - x * sin(theta)],
+    ];
+
+    // matrix multiplication, ignoring bottom row
+    const compose = (m1, m2) => [
+        [
+            m1[0][0] * m2[0][0] + m1[0][1] * m2[1][0] + m1[0][2],
+            m1[0][0] * m2[0][1] + m1[0][1] * m2[1][1] + m1[0][2],
+            m1[0][0] * m2[0][2] + m1[0][1] * m2[1][2] + m1[0][2],],
+        [
+            m1[1][0] * m2[0][0] + m1[1][1] * m2[1][0] + m1[1][2],
+            m1[1][0] * m2[0][1] + m1[1][1] * m2[1][1] + m1[1][2],
+            m1[1][0] * m2[0][2] + m1[1][1] * m2[1][2] + m1[1][2],],
+    ];
+
+    //////////////////////////////////////////////////
+
     function pretty_print_transform(transforms) {
         let out = "[\n";
         for (let [i, t] of transforms.entries()) {
@@ -89,10 +123,33 @@
         ]
     ];
 
+    let hex_flower = [];
+    for (let i = 0; i < 6; i++) {
+        const theta = i / 6 * 2 * Math.PI;
+        const x = cos(theta);
+        const y = sin(theta);
+        hex_flower.push(scale(x, y, 1 / 3));
+    }
+    // hex_flower.push(scale(0, 0, 1 / 3));
+    hex_flower.push(compose(
+        scale(0, 0, 0.4),
+        rotate(0, 0, Math.PI / 6)
+    ));
+
+    let pentaflake = [];
+    for (let i = 0; i < 5; i++) {
+        const theta = (i + 0.25) / 5 * 2 * Math.PI;
+        const x = cos(theta);
+        const y = sin(theta);
+        pentaflake.push(scale(x, y, 0.381966011250105151795413165634361882279690820194237137864));
+    }
+
     const fractal_sources = {
         sierpinski: source_sierpinski,
         hangman: source_hangman,
         l_shape: source_l_shape,
+        hex_flower: hex_flower,
+        pentaflake: pentaflake,
     };
 
     function image(px, py, p2x, p2y, qx, qy, q2x, q2y, rx, ry, r2x, r2y) {
@@ -184,7 +241,10 @@
     const res_x = document.getElementById('res_x');
     const res_y = document.getElementById('res_y');
     const render_delay = document.getElementById('render_delay');
+    const config_form = document.getElementById('config_form');
     const max_points = document.getElementById('max_points');
+    const max_depth = document.getElementById('max_depth');
+
 
     function array_transform(matrices) {
         let code = "";
@@ -280,6 +340,7 @@
 
         // start with two random points
         let points = new Float64Array([Math.random() * 2 - 1, Math.random() * 2 - 1]);
+        let depth = 0;
 
         while (points.length < 10) {
             const new_points = new Float64Array(transforms.length * points.length);
@@ -291,12 +352,13 @@
 
         // calculate rest of points async
         function continue_render() {
-            if (points.length < max_points.value) {
+            if (points.length < max_points.value && depth < max_depth.value) {
                 const new_points = new Float64Array(transforms.length * points.length);
                 transformer(points, new_points);
                 points = new_points;
                 display_points(points);
                 setTimeout(continue_render, render_delay.value);
+                ++depth;
             }
         }
 
@@ -304,10 +366,8 @@
 
     }
 
-    let current_fractal = source_sierpinski;
-
     function render_fractal() {
-        const transforms = calculate_transforms(current_fractal);
+        const transforms = calculate_transforms(JSON.parse(input_textarea.value));
         canvas.width = res_x.value;
         canvas.height = res_y.value;
         set_transforms(transforms);
@@ -318,15 +378,18 @@
 
     function pre_defined_fractal_btn(e) {
         console.log(e.target.value);
-        current_fractal = fractal_sources[e.target.value];
-        input_textarea.value = pretty_print_transform(current_fractal);
+        input_textarea.value = pretty_print_transform(fractal_sources[e.target.value]);
         // console.log(pretty_print_transform(JSON.parse(fractal_sources[e.target.value])));
         render_fractal();
     }
 
-    const buttons = document.getElementsByClassName('fractal-btn');
-    for (const btn of buttons) {
+    for (const btn of document.getElementsByClassName('fractal-btn')) {
         btn.onclick = pre_defined_fractal_btn;
+    }
+
+    config_form.onsubmit = (e) => {
+        e.preventDefault(); // do not reload page
+        render_fractal();
     }
 
 })();

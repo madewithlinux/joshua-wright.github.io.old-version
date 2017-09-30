@@ -15,40 +15,51 @@
 
 <div class="config">
     <h1>Iterated Affine Transform Fractals</h1>
-    <div class="line">
-        Canvas Resolution:
-        <span class="right">
+    <form id="config_form">
+        <div class="line">
+            Canvas Resolution:
+            <span class="right">
             <input class="wide_num" type="number" id="res_x" value="800"> x
             <input class="wide_num" type="number" id="res_y" value="800">
         </span>
-    </div>
-    <div class="line">
-        Render step delay (ms):
-        <span class="right">
-            <input class="wide_num" type="number" id="render_delay" value="5">
+        </div>
+        <div class="line">
+            Render step delay (ms):
+            <span class="right">
+            <input class="wide_num" type="number" id="render_delay" value="0">
         </span>
-    </div>
-    <div class="line">
-        Max points:
-        <span class="right">
+        </div>
+        <div class="line">
+            Max points:
+            <span class="right">
             <input class="wide_num" type="number" id="max_points" value="3e6">
         </span>
-    </div>
-    <div class="line">
-        Pre defined:
-        <input type="button" value="sierpinski" class="fractal-btn">
-        <input type="button" value="hangman" class="fractal-btn">
-        <input type="button" value="l_shape" class="fractal-btn">
-    </div>
-    <span>Transforms:</span>
-    <textarea id="transforms" style="height: 300px" class="full_wide">
+        </div>
+        <div class="line">
+            Max depth:
+            <span class="right">
+            <input class="wide_num" type="number" id="max_depth" value="10">
+        </span>
+        </div>
+        <div class="line">
+            Pre defined:
+            <input type="button" value="sierpinski" class="fractal-btn">
+            <input type="button" value="hangman" class="fractal-btn">
+            <input type="button" value="l_shape" class="fractal-btn">
+            <input type="button" value="pentaflake" class="fractal-btn">
+            <input type="button" value="hex_flower" class="fractal-btn">
+        </div>
+        <span>Transforms:</span>
+        <textarea id="transforms" style="height: 300px" class="full_wide">
 
     </textarea>
-    <div class="line">
-        <div class="center">
-            <input class="go_button" type="button" id="btn_render" value="Render">
+        <div class="line">
+            <div class="center">
+                <input class="go_button" type="button" id="btn_render" value="Render">
+            </div>
         </div>
-    </div>
+        <input type="submit" style="position: absolute; left: -9999px"/>
+    </form>
 </div>
 
 <canvas id="main_canvas" width="1000" height="1000"></canvas>
