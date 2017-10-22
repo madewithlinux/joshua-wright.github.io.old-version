@@ -144,7 +144,7 @@
         koch_snowflake.push(scale(x, y, 1 / 3));
     }
     for (let i = 0; i < 6; i++) {
-        const r = 1/3*Math.sqrt(3);
+        const r = 1 / 3 * Math.sqrt(3);
         const theta = (i + 0.5) / 6 * 2 * Math.PI;
         const x = r * cos(theta);
         const y = r * sin(theta);
@@ -264,9 +264,7 @@
 
     function array_transform(matrices) {
         let code = "";
-        code += "(function (points, out){\n";
-
-        code += "for (let i=0; i < points.length/2; ++i) {\n";
+        code += "(function (out, depth, base, size){\n";
 
         // helper function to eliminate empty subexpressions
         function calculate_row(ax, ay, c) {
@@ -276,15 +274,15 @@
             let code = "";
 
             if (ax !== 0 && ay !== 0) {
-                code = "points[2*i  ] * " + ax + " + points[2*i+1] * " + ay;
+                code = `x * ${ax} + y * ${ay}`;
             } else if (ax !== 0) {
-                code = "points[2*i  ] * " + ax;
+                code = `x * ${ax}`;
             } else if (ay !== 0) {
-                code = "points[2*i+1] * " + ay;
+                code = `y * ${ay}`;
             }
 
             if (c !== 0) {
-                code += " + " + c;
+                code += ` + ${c}`;
             }
 
             // handle rows that are just bad
@@ -295,22 +293,54 @@
             return code;
         }
 
+        code += "for (let i=base; i < (base+size); ++i) {\n";
+        code += '   let n = i;\n';
+        code += '   let x = 0;\n';
+        code += '   let y = 0;\n';
+
         // expand matrices
+        code += "   for (let index = 0; index < depth; index++) {\n";
+        code += '       let xp = 0;\n';
+        code += '       let yp = 0;\n';
+        code += `       switch (n % ${matrices.length}) {\n`;
         for (let idx = 0; idx < matrices.length; ++idx) {
             const m = matrices[idx];
-            code += "out[" + (2 * matrices.length) + "*i + " + (2 * idx + 0) + "] = ";
-            code += calculate_row(m[0][0], m[0][1], m[0][2]);
-            code += ";\n";
-
-            code += "out[" + (2 * matrices.length) + "*i + " + (2 * idx + 1) + "] = ";
-            code += calculate_row(m[1][0], m[1][1], m[1][2]);
-            code += ";\n";
+            code += `       case ${idx}:\n`;
+            code += `           xp = ${calculate_row(m[0][0], m[0][1], m[0][2])};\n`;
+            code += `           yp = ${calculate_row(m[1][0], m[1][1], m[1][2])};\n`;
+            code += `           break;\n`;
         }
+        code += "       }\n";
+        code += "       x = xp;\n";
+        code += "       y = yp;\n";
+        code += `       n = ((n | 0) / ${matrices.length}) | 0;\n`;
+        code += "   }\n";
+        code += `   out[2 * (i-base)] = x;\n`;
+        code += `   out[2 * (i-base) + 1] = y;\n`;
 
         code += "}\n";
-        code += "return out;\n";
         code += "})";
         return code
+    }
+
+
+    function clear_canvas() {
+        const width = canvas.width | 0;
+        const height = canvas.height | 0;
+        const ctx = canvas.getContext("2d");
+        ctx.fillStyle = 'rgb(0,0,0, 255)';
+        ctx.rect(0, 0, width, height);
+        ctx.fill();
+
+        const image_data = ctx.createImageData(width, height);
+        // start with black background
+        for (let i = 0; i < image_data.data.length; i += 4) {
+            image_data.data[i] = 0;
+            image_data.data[i + 1] = 0;
+            image_data.data[i + 2] = 0;
+            image_data.data[i + 3] = 255;
+        }
+        ctx.putImageData(image_data, 0, 0);
     }
 
     function display_points(points) {
@@ -319,19 +349,8 @@
         const width = canvas.width | 0;
         const height = canvas.height | 0;
         const ctx = canvas.getContext("2d");
-        ctx.fillStyle = 'rgb(0,0,0)';
-        ctx.rect(0, 0, width, height);
-        ctx.fill();
 
-
-        const image_data = ctx.createImageData(width, height);
-        // start with black background
-        for (i = 0; i < image_data.data.length; i += 4) {
-            image_data.data[i] = 0;
-            image_data.data[i + 1] = 0;
-            image_data.data[i + 2] = 0;
-            image_data.data[i + 3] = 255;
-        }
+        const image_data = ctx.getImageData(0, 0, width, height);
         // then add points
         for (i = 0; i < points.length / 2; ++i) {
             const point_x = points[i * 2];
@@ -347,39 +366,45 @@
         ctx.putImageData(image_data, 0, 0);
     }
 
+    let timeout = -1;
+
     function set_transforms(transforms) {
 
-        console.log("build function");
-        const transform_source = array_transform(transforms);
-        // console.log(transform_source);
-        const transformer = eval(transform_source);
-
-        // start with two random points
-        let points = new Float64Array([Math.random() * 2 - 1, Math.random() * 2 - 1]);
-        let depth = 0;
-
-        while (points.length < 10) {
-            const new_points = new Float64Array(transforms.length * points.length);
-            transformer(points, new_points);
-            points = new_points;
+        if (timeout !== -1) {
+            clearTimeout(timeout);
         }
 
-        display_points(points);
+        // console.log("build function");
+        const transform_source = array_transform(transforms);
+        // console.log("transform source", transform_source);
+        const transformer = eval(transform_source);
+
+        let depth = max_depth.value;
+        let n_points = Math.pow(transforms.length, depth);
+        if (n_points > max_points.value) {
+            console.log(n_points, max_points.value);
+            depth = Math.floor(Math.log(max_points.value) / Math.log(transforms.length));
+            n_points = Math.pow(transforms.length, depth);
+        }
+        let base = 0;
+        let size = 81920; // estimated magic number
+        if (size > n_points) {
+            size = n_points;
+        }
 
         // calculate rest of points async
         function continue_render() {
-            if (points.length < max_points.value && depth < max_depth.value) {
+            if (base < n_points) {
                 // sometimes this can fail if we need more than 2^32 entries
-                const new_points = new Float64Array(transforms.length * points.length);
-                transformer(points, new_points);
-                points = new_points;
+                const points = new Float64Array(2 * size);
+                transformer(points, depth, base, size);
                 display_points(points);
-                setTimeout(continue_render, render_delay.value);
-                ++depth;
+                timeout = setTimeout(continue_render, render_delay.value);
+                base += size;
             }
         }
 
-        setTimeout(continue_render, render_delay.value);
+        timeout = setTimeout(continue_render, render_delay.value);
 
     }
 
@@ -387,6 +412,7 @@
         const transforms = calculate_transforms(JSON.parse(editor.getValue()));
         canvas.width = res_x.value;
         canvas.height = res_y.value;
+        clear_canvas();
         set_transforms(transforms);
     }
 
