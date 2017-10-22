@@ -51,9 +51,9 @@
             <input type="button" value="koch_snowflake" class="fractal-btn">
         </div>
         <span>Transforms:</span>
-        <textarea id="transforms" style="height: 300px" class="full_wide">
 
-    </textarea>
+        <pre id="editor" style="height: 300px; font-size: 14px" class="full_wide"></pre>
+
         <div class="line">
             <div class="center">
                 <input class="go_button" type="button" id="btn_render" value="Render">
@@ -65,5 +65,14 @@
 
 <canvas id="main_canvas" width="1000" height="1000"></canvas>
 </body>
+<script src="js/ace-src-min-noconflict/ace.js"></script>
+<script>
+    var editor = ace.edit("editor");
+    editor.setTheme("ace/theme/monokai");
+//    editor.session.setMode("ace/mode/javascript");
+    editor.session.setMode("ace/mode/json");
+</script>
+
 <script src="js/iat.js"></script>
+
 </html>

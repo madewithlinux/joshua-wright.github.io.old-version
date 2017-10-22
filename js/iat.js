@@ -1,4 +1,4 @@
-(function () {
+(function (editor) {
     'use strict';
 
     //////////////////////////////////////////////////
@@ -251,8 +251,7 @@
         return out;
     }
 
-    const input_textarea = document.getElementById("transforms");
-    input_textarea.value = pretty_print_transform(source_sierpinski);
+    editor.setValue(pretty_print_transform(source_sierpinski));
     const go_button = document.getElementById("btn_render");
     const canvas = document.getElementById("main_canvas");
     const res_x = document.getElementById('res_x');
@@ -385,7 +384,7 @@
     }
 
     function render_fractal() {
-        const transforms = calculate_transforms(JSON.parse(input_textarea.value));
+        const transforms = calculate_transforms(JSON.parse(editor.getValue()));
         canvas.width = res_x.value;
         canvas.height = res_y.value;
         set_transforms(transforms);
@@ -396,7 +395,7 @@
 
     function pre_defined_fractal_btn(e) {
         console.log(e.target.value);
-        input_textarea.value = pretty_print_transform(fractal_sources[e.target.value]);
+        editor.setValue(pretty_print_transform(fractal_sources[e.target.value]));
         // console.log(pretty_print_transform(JSON.parse(fractal_sources[e.target.value])));
         render_fractal();
     }
@@ -410,4 +409,4 @@
         render_fractal();
     }
 
-})();
+})(window.editor);
