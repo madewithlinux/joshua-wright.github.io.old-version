@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Calendar Facts</title>
+</head>
+<body>
+
+<div id="container">
+    <div id="target"></div>
+    <div id="source">
+        <a href="https://m.xkcd.com/1930/">-xkcd 1930</a>
+    </div>
+</div>
+
+</body>
+<style type="text/css">
+    @import url('https://fonts.googleapis.com/css?family=Roboto');
+
+    div, span, h1, h2, h3, h4, p, a {
+        font-family: 'Roboto', sans-serif;
+    }
+
+    #target {
+        font-size: 1.75em;
+        text-align: center;
+        padding: 0 80px;
+    }
+
+    #source a {
+        color: #000;
+    }
+
+    #source {
+        font-size: 1em;
+        text-align: center;
+    }
+
+    #container {
+        position: absolute;
+        top: 50%;
+        width: 100%;
+        transform: translateY(-50%);
+    }
+</style>
+<script>
+    const Phrase = 1;
+    const Choice = 2;
+    const phrase = [Phrase,
+        [Phrase,
+            "Did you know that: ",
+            [Choice,
+                [Phrase, "the ", [Choice, "Fall", "Spring"], " Equinox"],
+                [Phrase, "the ", [Choice, "Winter", "Summer"], " ", [Choice, "Solstice", "Olympics"]],
+                [Phrase, "the ", [Choice, "Earliest", "Latest"], " ", [Choice, "Sunrise", "Sunset"]],
+                [Phrase, "Daylight ", [Choice, "Saving", "Savings"], " Time"],
+                [Phrase, "Leap ", [Choice, "Day", "Year"]],
+                "Easter",
+                [Phrase, "the ", [Choice, "Harvest", "Super", "Blood"], " Moon"],
+                "Toyota Truck Month",
+                "Shark Week",
+            ],
+        ],
+        " ",
+        [Choice,
+            [Phrase, "happens ", [Choice, "earlier", "later", "at the wrong time"], " every year"],
+            [Phrase,
+                "drifts out of sync with the ",
+                [Choice,
+                    "Sun",
+                    "Moon",
+                    "Zodiac",
+                    [Phrase, [Choice, "Gregorian", "Mayan", "Lunar", "iPhone"], "Calendar"],
+                    "atomic clock in Colorado",
+                ],
+            ],
+            [Phrase, "might ", [Choice, "not happen", "happen twice"], " this year"],
+        ],
+        " ",
+        [Phrase,
+            "because of ",
+            [Choice,
+                [Phrase, "time zone legislation in ", [Choice, "Indiana", "Arizona", "Russia"]],
+                "a decree by the pope in the 1500s",
+                [Phrase, [Choice, " precession", "libration", "nutation", "libation", "eccentricity", "obliquity"], " of the ",
+                    [Choice, "Moon",
+                        "Sun",
+                        "Earth's axis",
+                        "equator",
+                        "prime meridian"],
+                ],
+                [Phrase, [Choice, "international date", "mason-dixon"], " line"],
+                "magnetic field reversal",
+                [Phrase, "an arbitrary decision by ", [Choice, "Benjamin Franklin", "Isaac Newton", "FDR"]],
+            ]
+        ],
+        "?",
+    ];
+
+    function getPhrase(node) {
+        if (typeof(node) === "string") {
+            return node;
+        } else if (node[0] === Choice) {
+            const idx = Math.floor(Math.random() * (node.length - 1)) + 1;
+            if (idx <= 1 || idx >= node.length) {
+                console.log("fail");
+            }
+            let x = getPhrase(node[idx]);
+            console.log(x);
+            return x;
+        } else if (node[0] === Phrase) {
+            let out = "";
+            for (let i = 1; i < node.length; i++) {
+                out += getPhrase(node[i]);
+                console.log(out);
+            }
+            return out;
+        } else {
+            console.log("fail");
+        }
+    }
+
+    const target = document.getElementById('target');
+    target.innerHTML = getPhrase(phrase);
+
+</script>
+</html>
