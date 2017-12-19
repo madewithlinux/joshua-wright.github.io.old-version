@@ -95,6 +95,18 @@
             ]
         ],
         "?",
+        "<br>",
+        [Phrase,
+            "Apparently ",
+            [Choice,
+                [Phrase, "it causes a predictable increase in car accidents."],
+                [Phrase, "that's why we have leap seconds."],
+                [Phrase, "scientists are really worried."],
+                [Phrase, "it was even more extreme during the ",  [Choice, "Bronze Age.", "Ice Age.", "Cretaceous.", "1990s."]],
+                [Phrase, "there's a proposal to fix it, but it ", [Choice, "will never happen.", "actually makes things worse.", "is stalled in congress.", "might be unconstitutional."]],
+                [Phrase, "it's getting worse and no one knows why."],
+            ],
+        ]
     ];
 
     function getPhrase(node) {
