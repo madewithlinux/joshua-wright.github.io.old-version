@@ -13,7 +13,7 @@
                  [reagent "0.6.1"]
                  [reagent-utils "0.2.1"]
                  [thi.ng/color "1.2.0"]
-                 [cljsjs/clipboard "1.6.1-1"]]
+                 [cljsjs/clipboard "2.0.1-2"]]
 
   :plugins [[lein-figwheel "0.5.10"]
             [lein-cljsbuild "1.1.5" :exclusions [[org.clojure/clojure]]]]

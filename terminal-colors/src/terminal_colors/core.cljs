@@ -104,6 +104,42 @@
     "\t[257] = #\"" (colors "foreground") "\", /* foreground */\n"
     "};\n"))
 
+(defn xfce4-terminal-export [colors]
+  (str
+    "mkdir -p ~/.local/share/xfce4/terminal/colorschemes\n"
+    "cat > ~/.local/share/xfce4/terminal/colorschemes/custom.theme << EOF\n"
+    "[Scheme]\n"
+    "! json formatted config:\n"
+    "! " (->> ansi-color-labels
+              (map colors)
+              clj->js
+              js/JSON.stringify)
+    "Name=custom\n"
+    "ColorForeground=#" (colors "foreground") "\n"
+    "ColorBackground=#" (colors "background") "\n"
+    "ColorBold=#d0d0d0\n"
+    "ColorCursor=#d0d0d0\n"
+    "TabActivityColor=#dc322f\n"
+    "ColorPalette="
+    "#" (colors "ansi-black") ";"
+    "#" (colors "ansi-red") ";"
+    "#" (colors "ansi-green") ";"
+    "#" (colors "ansi-yellow") ";"
+    "#" (colors "ansi-blue") ";"
+    "#" (colors "ansi-magenta") ";"
+    "#" (colors "ansi-cyan") ";"
+    "#" (colors "ansi-white") ";"
+    "#" (colors "ansi-bright-black") ";"
+    "#" (colors "ansi-bright-red") ";"
+    "#" (colors "ansi-bright-green") ";"
+    "#" (colors "ansi-bright-yellow") ";"
+    "#" (colors "ansi-bright-blue") ";"
+    "#" (colors "ansi-bright-magenta") ";"
+    "#" (colors "ansi-bright-cyan") ";"
+    "#" (colors "ansi-bright-white") "\n"
+    "ColorBoldUseDefault=FALSE\n"
+    "EOF"))
+
 (def ^:const ansi-colors-dom (.getElementById js/document "ansi-colors"))
 (def ^:const config-dom (.getElementById js/document "config-display"))
 ;"pre {"
@@ -120,9 +156,11 @@
     (set! (.-innerText ansi-colors-dom) css)
     (set! (.-innerHTML config-dom)
           (str
-            "<input id=\"copy-config\" type=\"button\" value=\"copy config\" data-clipboard-target=\"#st-config\"></input>"
-            "<pre id=\"st-config\" class=\"background-bg foreground-fg\">" (st-export colors) "</pre>"))
-    (new js/Clipboard "#copy-config")))
+            "<input class=\"copy-config\" type=\"button\" value=\"copy config\" data-clipboard-target=\"#st-config\"></input>"
+            "<pre id=\"st-config\" class=\"background-bg foreground-fg\">" (st-export colors) "</pre>"
+            "<input class=\"copy-config\" type=\"button\" value=\"copy config\" data-clipboard-target=\"#xfce4-terminal-config\"></input>"
+            "<pre id=\"xfce4-terminal-config\" class=\"background-bg foreground-fg\">" (xfce4-terminal-export colors) "</pre>"))
+    (new js/ClipboardJS ".copy-config")))
 (update-ansi-colors ansi-colors)
 
 (def ansi-up (new js/AnsiUp))
