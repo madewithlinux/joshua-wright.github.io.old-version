@@ -113,7 +113,7 @@
     "! " (->> ansi-color-labels
               (map colors)
               clj->js
-              js/JSON.stringify)
+              js/JSON.stringify) "\n"
     "Name=custom\n"
     "ColorForeground=#" (colors "foreground") "\n"
     "ColorBackground=#" (colors "background") "\n"
