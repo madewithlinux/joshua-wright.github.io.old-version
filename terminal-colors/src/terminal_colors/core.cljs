@@ -174,7 +174,7 @@
           ;(apply str (map #((object/get ansi-up "ansi_to_html") (str ansi-reset "\n" %)) chunks))
           (apply str (map #(.ansi-to-html ansi-up (str ansi-reset "\n" %)) chunks))
           "</pre>")))
-(render-ansi-chunks data/colortest-16 data/htop data/ipython data/dstat)
+(render-ansi-chunks data/colortest-16 data/htop data/nvimrc data/ipython data/dstat)
 
 
 (defn equiv-grey [color]
